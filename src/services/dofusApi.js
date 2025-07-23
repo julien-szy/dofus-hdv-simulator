@@ -1,15 +1,12 @@
-// Service pour interagir avec l'API DofusDude
+// Service pour interagir avec l'API DofusDude via le SDK officiel
+import { DofusDudeClient } from 'dofusdude-js'
 import { mockItems, mockMaterials } from '../data/mockItems.js'
 
-// Déterminer l'URL de base selon l'environnement
-const getApiBaseUrl = () => {
-  // En développement, utiliser le proxy Vite
-  if (import.meta.env.DEV) {
-    return '/api'
-  }
-  // En production, utiliser notre fonction Netlify
-  return '/api'
-}
+// Initialiser le client DofusDude
+const client = new DofusDudeClient({
+  // Le SDK gère automatiquement les CORS et les bonnes URLs
+  apiKey: null // Pas besoin de clé API pour les endpoints publics
+})
 
 // Rechercher des objets
 export const searchItems = async (term) => {
@@ -18,33 +15,26 @@ export const searchItems = async (term) => {
   }
 
   try {
-    const baseUrl = getApiBaseUrl()
-    const url = `${baseUrl}/dofus3/v1/fr/items/equipment/search?query=${encodeURIComponent(term)}&limit=10`
-    console.log('URL de recherche:', url)
-    
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors'
+    console.log('Recherche avec le SDK DofusDude:', term)
+
+    // Utiliser le SDK officiel pour la recherche
+    const response = await client.getItemsEquipmentSearch({
+      language: 'fr',
+      game: 'dofus3',
+      query: term,
+      limit: 10
     })
-    
-    console.log('Réponse status:', response.status)
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    
-    const data = await response.json()
-    console.log('Données reçues:', data)
-    
-    // L'API DofusDude retourne un objet avec une propriété "value" contenant les résultats
-    const items = data.value || data.items || data || []
+
+    console.log('Réponse SDK:', response)
+
+    // Le SDK retourne directement les données
+    const items = response.data || response || []
     console.log('Items trouvés:', items.length)
-    
-    return items
+
+    // Filtrer les objets qui ont une recette
+    const itemsWithRecipe = items.filter(item => item.recipe && item.recipe.length > 0)
+
+    return itemsWithRecipe
   } catch (error) {
     console.error('Erreur lors de la recherche (utilisation des données de démonstration):', error)
 
@@ -61,14 +51,15 @@ export const searchItems = async (term) => {
 // Récupérer les détails d'un objet
 export const getItemDetails = async (itemId) => {
   try {
-    const baseUrl = getApiBaseUrl()
-    const response = await fetch(`${baseUrl}/dofus3/v1/fr/items/equipment/${itemId}`)
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    
-    return await response.json()
+    console.log('Récupération détails objet avec SDK:', itemId)
+
+    const response = await client.getItemsEquipmentSingle({
+      language: 'fr',
+      game: 'dofus3',
+      ankamaId: itemId
+    })
+
+    return response.data || response
   } catch (error) {
     console.error('Erreur lors de la récupération des détails:', error)
     throw error
@@ -78,14 +69,25 @@ export const getItemDetails = async (itemId) => {
 // Récupérer les détails d'un matériau
 export const getMaterialDetails = async (materialId, subtype) => {
   try {
-    const baseUrl = getApiBaseUrl()
-    const response = await fetch(`${baseUrl}/dofus3/v1/fr/items/${subtype}/${materialId}`)
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    console.log('Récupération détails matériau avec SDK:', materialId, subtype)
+
+    // Utiliser le bon endpoint selon le subtype
+    let response
+    if (subtype === 'resource') {
+      response = await client.getItemsResourcesSingle({
+        language: 'fr',
+        game: 'dofus3',
+        ankamaId: materialId
+      })
+    } else {
+      response = await client.getItemsConsumablesSingle({
+        language: 'fr',
+        game: 'dofus3',
+        ankamaId: materialId
+      })
     }
-    
-    return await response.json()
+
+    return response.data || response
   } catch (error) {
     console.error('Erreur lors de la récupération du matériau (utilisation des données de démonstration):', error)
 

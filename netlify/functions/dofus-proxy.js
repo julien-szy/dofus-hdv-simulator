@@ -20,7 +20,7 @@ export async function handler(event, context) {
   try {
     // Extraire le chemin de l'API depuis les paramètres
     const { path } = event.queryStringParameters || {}
-    
+
     if (!path) {
       return {
         statusCode: 400,
@@ -31,7 +31,8 @@ export async function handler(event, context) {
 
     // Construire l'URL vers DofusDude
     const apiUrl = `https://api.dofusdu.de${path}`
-    
+    console.log('Requesting URL:', apiUrl)
+
     // Faire la requête vers l'API DofusDude
     const response = await fetch(apiUrl, {
       method: event.httpMethod,
@@ -41,11 +42,36 @@ export async function handler(event, context) {
       }
     })
 
+    console.log('Response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+
     if (!response.ok) {
-      throw new Error(`API responded with status: ${response.status}`)
+      const errorText = await response.text()
+      console.error('API Error:', errorText)
+
+      // Retourner les données mock en cas d'erreur API
+      const mockItems = [
+        {
+          ankama_id: 26584,
+          name: "Épée du Bouftou",
+          level: 1,
+          type: { name: "Épée" },
+          recipe: [
+            { item_ankama_id: 289, item_subtype: "resource", quantity: 10 },
+            { item_ankama_id: 371, item_subtype: "resource", quantity: 5 }
+          ]
+        }
+      ]
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(mockItems)
+      }
     }
 
     const data = await response.json()
+    console.log('API Response data:', data)
 
     return {
       statusCode: 200,
