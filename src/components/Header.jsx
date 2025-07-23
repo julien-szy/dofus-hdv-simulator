@@ -29,11 +29,11 @@ const Header = ({
               <span className="nav-icon">🏠</span>
               <span>Accueil</span>
             </a>
-            <a href="#" className="nav-link">
+            <a href="#" className="nav-link disabled" title="Bientôt disponible !">
               <span className="nav-icon">📊</span>
               <span>Statistiques</span>
             </a>
-            <a href="#" className="nav-link">
+            <a href="#" className="nav-link disabled" title="Bientôt disponible !">
               <span className="nav-icon">📈</span>
               <span>Tendances</span>
             </a>

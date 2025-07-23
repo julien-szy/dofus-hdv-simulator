@@ -141,7 +141,9 @@ export default function UserAuth() {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="btn-modern btn-login"
+        className="btn-modern btn-login disabled"
+        title="Bientôt disponible !"
+        disabled
       >
         <span className="btn-icon">🔑</span>
         <span className="btn-text">Se connecter</span>
