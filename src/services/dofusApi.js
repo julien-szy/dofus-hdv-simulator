@@ -1,4 +1,5 @@
 // Service pour interagir avec l'API DofusDude
+import { mockItems, mockMaterials } from '../data/mockItems.js'
 
 // Déterminer l'URL de base selon l'environnement
 const getApiBaseUrl = () => {
@@ -6,8 +7,8 @@ const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {
     return '/api'
   }
-  // En production, utiliser un proxy CORS pour contourner les restrictions
-  return 'https://corsproxy.io/?https://api.dofusdu.de'
+  // En production, utiliser allorigins.win comme proxy CORS
+  return 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.dofusdu.de')
 }
 
 // Rechercher des objets
@@ -45,8 +46,15 @@ export const searchItems = async (term) => {
     
     return items
   } catch (error) {
-    console.error('Erreur lors de la recherche:', error)
-    throw error
+    console.error('Erreur lors de la recherche (utilisation des données de démonstration):', error)
+
+    // En cas d'erreur API, utiliser les données mock
+    const filteredMockItems = mockItems.filter(item =>
+      item.name.toLowerCase().includes(term.toLowerCase())
+    )
+
+    console.log('Utilisation des données de démonstration:', filteredMockItems.length, 'items')
+    return filteredMockItems
   }
 }
 
@@ -79,7 +87,19 @@ export const getMaterialDetails = async (materialId, subtype) => {
     
     return await response.json()
   } catch (error) {
-    console.error('Erreur lors de la récupération du matériau:', error)
-    throw error
+    console.error('Erreur lors de la récupération du matériau (utilisation des données de démonstration):', error)
+
+    // En cas d'erreur API, utiliser les données mock
+    const mockMaterial = mockMaterials[materialId]
+    if (mockMaterial) {
+      return mockMaterial
+    }
+
+    // Si pas de données mock, retourner un objet par défaut
+    return {
+      ankama_id: materialId,
+      name: `Matériau ${materialId}`,
+      level: 1
+    }
   }
 }
