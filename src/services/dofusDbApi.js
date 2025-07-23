@@ -18,9 +18,10 @@ export const searchItems = async (term) => {
     }
 
     console.log(`🌐 Cache miss, appel DofusDB.fr pour: "${term}"`)
-    
-    // 2. Appel API DofusDB.fr
-    const url = `${API_BASE_URL}/items?name.fr[$regex]=${encodeURIComponent(term)}&hasRecipe=true&$limit=10`
+
+    // 2. Appel API DofusDB.fr avec recherche par nom (avec accents)
+    const url = `${API_BASE_URL}/items?name.fr[$regex]=${encodeURIComponent(term)}&$limit=30`
+    console.log(`🔗 URL DofusDB.fr: ${url}`)
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -35,9 +36,17 @@ export const searchItems = async (term) => {
 
     const data = await response.json()
     const items = data.data || []
+    console.log(`📦 DofusDB.fr retourné: ${items.length} items total`)
 
-    // 3. Transformer les données pour correspondre à notre format
-    const transformedItems = items.map(item => ({
+    // 3. Filtrer les items qui ont une recette ET qui sont des armes
+    const itemsWithRecipe = items.filter(item =>
+      item.hasRecipe === true &&
+      item.type?.superTypeId === 2 // 2 = Armes
+    )
+    console.log(`⚔️ Items avec recettes filtrés: ${itemsWithRecipe.length} armes`)
+
+    // 4. Transformer les données pour correspondre à notre format
+    const transformedItems = itemsWithRecipe.map(item => ({
       ankama_id: item.id,
       name: item.name?.fr || item.name || 'Nom inconnu',
       level: item.level || 1,
@@ -51,9 +60,9 @@ export const searchItems = async (term) => {
       hasRecipe: item.hasRecipe || false
     }))
 
-    // 4. Mettre en cache le résultat
+    // 5. Mettre en cache le résultat
     await dataCache.cacheSearchResults(term, transformedItems)
-    console.log(`💾 Résultats DofusDB.fr mis en cache pour: "${term}"`)
+    console.log(`💾 Résultats DofusDB.fr mis en cache pour: "${term}" (${transformedItems.length} items avec recettes)`)
 
     return transformedItems
   } catch (error) {
