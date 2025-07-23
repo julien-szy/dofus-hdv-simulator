@@ -1,7 +1,7 @@
-import { neon } from '@neondatabase/serverless';
+const { neon } = require('@neondatabase/serverless');
 
 // Fonction Netlify pour gérer la base de données
-export async function handler(event, context) {
+exports.handler = async (event, context) => {
   // Headers CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
