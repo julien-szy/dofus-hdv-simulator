@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/storage.js'
-import { searchItems, getItemDetails, getMaterialDetails } from './services/dofusApi.js'
+// import { searchItems, getItemDetails, getMaterialDetails } from './services/dofusApi.js'
+import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe } from './services/dofusDbApi.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
 import Header from './components/Header.jsx'

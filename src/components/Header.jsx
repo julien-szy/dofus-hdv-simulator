@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import UserAuth from './UserAuth.jsx'
+import CacheStats from './CacheStats.jsx'
 
 const Header = ({
   setShowProfessionModal,
@@ -68,6 +69,9 @@ const Header = ({
             <span className="btn-text">Mes Métiers</span>
             <div className="btn-glow"></div>
           </button>
+
+          {/* Statistiques du cache */}
+          <CacheStats />
 
           {/* Authentification */}
           <div className="auth-container">

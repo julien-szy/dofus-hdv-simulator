@@ -1,5 +1,6 @@
-// Service pour interagir avec l'API DofusDude
+// Service pour interagir avec l'API DofusDude avec cache intelligent
 import { mockItems, mockMaterials } from '../data/mockItems.js'
+import dataCache from './dataCache.js'
 
 // Déterminer l'URL de base selon l'environnement
 const getApiBaseUrl = () => {
@@ -11,13 +12,23 @@ const getApiBaseUrl = () => {
   return '/.netlify/functions/dofus-proxy'
 }
 
-// Rechercher des objets
+// Rechercher des objets avec cache intelligent
 export const searchItems = async (term) => {
   if (!term || term.length < 3) {
     return []
   }
 
   try {
+    // 1. Vérifier le cache d'abord
+    const cachedResults = await dataCache.getCachedSearchResults(term)
+    if (cachedResults) {
+      console.log(`🚀 Cache hit pour recherche: "${term}"`)
+      return cachedResults
+    }
+
+    console.log(`🌐 Cache miss, appel API pour: "${term}"`)
+
+    // 2. Appel API si pas en cache
     const baseUrl = getApiBaseUrl()
 
     let url, response
@@ -55,6 +66,10 @@ export const searchItems = async (term) => {
     // Filtrer les objets qui ont une recette
     const itemsWithRecipe = items.filter(item => item.recipe && item.recipe.length > 0)
 
+    // 3. Mettre en cache le résultat
+    await dataCache.cacheSearchResults(term, itemsWithRecipe)
+    console.log(`💾 Résultats mis en cache pour: "${term}"`)
+
     return itemsWithRecipe
   } catch (error) {
     console.error('Erreur API, utilisation des données de démonstration:', error.message)
@@ -68,9 +83,19 @@ export const searchItems = async (term) => {
   }
 }
 
-// Récupérer les détails d'un objet
+// Récupérer les détails d'un objet avec cache
 export const getItemDetails = async (itemId) => {
   try {
+    // 1. Vérifier le cache d'abord
+    const cachedItem = await dataCache.getCachedItemDetails(itemId)
+    if (cachedItem) {
+      console.log(`🚀 Cache hit pour item: ${itemId}`)
+      return cachedItem
+    }
+
+    console.log(`🌐 Cache miss, appel API pour item: ${itemId}`)
+
+    // 2. Appel API si pas en cache
     const baseUrl = getApiBaseUrl()
 
     let url, response
@@ -86,16 +111,32 @@ export const getItemDetails = async (itemId) => {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    return await response.json()
+    const itemData = await response.json()
+
+    // 3. Mettre en cache le résultat
+    await dataCache.cacheItemDetails(itemId, itemData)
+    console.log(`💾 Item mis en cache: ${itemId}`)
+
+    return itemData
   } catch (error) {
     console.error('Erreur lors de la récupération des détails:', error.message)
     throw error
   }
 }
 
-// Récupérer les détails d'un matériau
+// Récupérer les détails d'un matériau avec cache
 export const getMaterialDetails = async (materialId, subtype) => {
   try {
+    // 1. Vérifier le cache d'abord
+    const cachedMaterial = await dataCache.getCachedMaterialDetails(materialId)
+    if (cachedMaterial) {
+      console.log(`🚀 Cache hit pour matériau: ${materialId}`)
+      return cachedMaterial
+    }
+
+    console.log(`🌐 Cache miss, appel API pour matériau: ${materialId}`)
+
+    // 2. Appel API si pas en cache
     const baseUrl = getApiBaseUrl()
 
     let url, response
@@ -111,7 +152,13 @@ export const getMaterialDetails = async (materialId, subtype) => {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    return await response.json()
+    const materialData = await response.json()
+
+    // 3. Mettre en cache le résultat
+    await dataCache.cacheMaterialDetails(materialId, materialData)
+    console.log(`💾 Matériau mis en cache: ${materialId}`)
+
+    return materialData
   } catch (error) {
     console.error('Erreur matériau, utilisation des données de démonstration:', error.message)
 
