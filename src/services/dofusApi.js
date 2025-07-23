@@ -7,8 +7,8 @@ const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {
     return '/api'
   }
-  // En production, utiliser allorigins.win comme proxy CORS
-  return 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.dofusdu.de')
+  // En production, utiliser notre fonction Netlify
+  return '/api'
 }
 
 // Rechercher des objets
