@@ -6,8 +6,8 @@ const getApiBaseUrl = () => {
   if (import.meta.env.DEV) {
     return '/api'
   }
-  // En production, utiliser l'URL directe (attention aux CORS)
-  return 'https://api.dofusdu.de'
+  // En production, utiliser un proxy CORS pour contourner les restrictions
+  return 'https://corsproxy.io/?https://api.dofusdu.de'
 }
 
 // Rechercher des objets
