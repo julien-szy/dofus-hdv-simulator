@@ -4,11 +4,13 @@ import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/
 import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkItemHasRecipe } from './services/dofusDbApi.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
+import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices } from './services/priceStorage.js'
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
 import ResultsSummary from './components/ResultsSummary.jsx'
 import ProfessionModal from './components/ProfessionModal.jsx'
+import PriceManager from './components/PriceManager.jsx'
 import './styles/App.css'
 
 function App() {
@@ -22,12 +24,17 @@ function App() {
   const [playerProfessions, setPlayerProfessions] = useState({})
   const [showProfessionModal, setShowProfessionModal] = useState(false)
   const [checkProfessionLevels, setCheckProfessionLevels] = useState(true)
+  const [showPriceManager, setShowPriceManager] = useState(false)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
     setCraftCalculations(loadFromLocalStorage(STORAGE_KEYS.CALCULATIONS, []))
     setPlayerProfessions(loadFromLocalStorage(STORAGE_KEYS.PROFESSIONS, {}))
     setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
+
+    // Charger les prix stockés
+    const storedPrices = getAllStoredPrices()
+    console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
   }, [])
 
   // Sauvegarder les calculs quand ils changent
@@ -138,16 +145,19 @@ function App() {
       
       setSelectedItem(enrichedItem)
 
-      // Initialiser les prix des matériaux à 0
+      // Initialiser les prix des matériaux avec les prix stockés
+      const storedPrices = getAllStoredPrices()
       const initialPrices = {}
       materialsWithDetails.forEach(material => {
-        initialPrices[material.item_ankama_id] = {
+        const materialId = material.item_ankama_id
+        initialPrices[materialId] = storedPrices[materialId] || {
           price_1: 0,
           price_10: 0,
           price_100: 0
         }
       })
       setMaterialPrices(initialPrices)
+      console.log(`💰 Prix initialisés avec ${Object.keys(storedPrices).length} prix stockés`)
     } catch (error) {
       console.error('Erreur lors de la sélection de l\'objet:', error)
       alert('Erreur lors du chargement de l\'objet. Veuillez réessayer.')
@@ -155,15 +165,57 @@ function App() {
     setLoading(false)
   }
 
-  // Mettre à jour le prix d'un matériau
+  // Mettre à jour le prix d'un matériau avec stockage persistant
   const updateMaterialPrice = (materialId, price, quantityType = 1) => {
+    const priceType = `price_${quantityType}`
+
+    // 1. Sauvegarder en localStorage
+    const updatedStoredPrices = savePrice(materialId, priceType, price)
+
+    // 2. Mettre à jour l'état local
     setMaterialPrices(prev => ({
       ...prev,
       [materialId]: {
         ...prev[materialId],
-        [`price_${quantityType}`]: parseFloat(price) || 0
+        [priceType]: parseFloat(price) || 0
       }
     }))
+
+    // 3. Mettre à jour tous les calculs existants
+    setCraftCalculations(prevCalculations =>
+      prevCalculations.map(calc => {
+        // Vérifier si ce calcul utilise ce matériau
+        const usesMaterial = calc.item.recipe?.some(material =>
+          material.item_ankama_id === materialId
+        )
+
+        if (usesMaterial) {
+          // Recalculer avec les nouveaux prix
+          const updatedMaterialPrices = {
+            ...calc.materialPrices,
+            [materialId]: updatedStoredPrices[materialId]
+          }
+
+          const craftResult = calculateCraftCost(calc.item, updatedMaterialPrices)
+          const newCraftCost = craftResult.totalCost
+          const netSellPrice = calc.sellPrice - Math.floor(calc.sellPrice * 0.02)
+          const newProfit = (netSellPrice - newCraftCost) * calc.quantity
+          const newProfitPercentage = newCraftCost > 0 ? ((netSellPrice - newCraftCost) / newCraftCost * 100) : 0
+
+          console.log(`🔄 Calcul mis à jour pour ${calc.item.name}: ${calc.craftCost} → ${newCraftCost}`)
+
+          return {
+            ...calc,
+            craftCost: newCraftCost,
+            profit: newProfit,
+            profitPercentage: newProfitPercentage,
+            materialPrices: updatedMaterialPrices
+          }
+        }
+
+        return calc
+      })
+    )
   }
 
   // Ajouter un calcul de craft
@@ -290,6 +342,7 @@ function App() {
     <div className="hdv-container">
       <Header
         setShowProfessionModal={setShowProfessionModal}
+        setShowPriceManager={setShowPriceManager}
         checkProfessionLevels={checkProfessionLevels}
         setCheckProfessionLevels={setCheckProfessionLevels}
       />
@@ -329,6 +382,11 @@ function App() {
         setShowModal={setShowProfessionModal}
         playerProfessions={playerProfessions}
         updateProfessionLevel={updateProfessionLevel}
+      />
+
+      <PriceManager
+        isOpen={showPriceManager}
+        onClose={() => setShowPriceManager(false)}
       />
     </div>
   )

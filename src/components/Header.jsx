@@ -4,6 +4,7 @@ import CacheStats from './CacheStats.jsx'
 
 const Header = ({
   setShowProfessionModal,
+  setShowPriceManager,
   checkProfessionLevels,
   setCheckProfessionLevels
 }) => {
@@ -67,6 +68,16 @@ const Header = ({
           >
             <span className="btn-icon">🔧</span>
             <span className="btn-text">Mes Métiers</span>
+            <div className="btn-glow"></div>
+          </button>
+
+          {/* Bouton Gestionnaire de Prix */}
+          <button
+            className="btn-modern btn-prices"
+            onClick={() => setShowPriceManager(true)}
+          >
+            <span className="btn-icon">💰</span>
+            <span className="btn-text">Prix</span>
             <div className="btn-glow"></div>
           </button>
 
