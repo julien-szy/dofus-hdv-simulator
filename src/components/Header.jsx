@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import UserAuth from './UserAuth.jsx'
 
 const Header = ({
@@ -5,38 +6,76 @@ const Header = ({
   checkProfessionLevels,
   setCheckProfessionLevels
 }) => {
+  const [showUserMenu, setShowUserMenu] = useState(false)
+
   return (
-    <div className="hdv-header">
-      <div className="header-controls">
-        <div>
-          <h1 className="hdv-title">⚒️ Calculateur de Craft Dofus</h1>
-          <p className="hdv-subtitle">Calculez la rentabilité de vos crafts avec les vraies recettes (DofusDude API)</p>
+    <header className="hdv-header">
+      <div className="header-content">
+        {/* Logo et titre */}
+        <div className="header-brand">
+          <div className="brand-logo">
+            <div className="logo-icon">⚒️</div>
+            <div className="brand-text">
+              <h1 className="hdv-title">Dofus HDV</h1>
+              <p className="hdv-subtitle">Calculator Pro</p>
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
-          <UserAuth />
 
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowProfessionModal(true)}
-            style={{ height: 'fit-content' }}
-          >
-            🔧 Mes Métiers
-          </button>
+        {/* Navigation principale */}
+        <nav className="header-nav">
+          <div className="nav-links">
+            <a href="#" className="nav-link active">
+              <span className="nav-icon">🏠</span>
+              <span>Accueil</span>
+            </a>
+            <a href="#" className="nav-link">
+              <span className="nav-icon">📊</span>
+              <span>Statistiques</span>
+            </a>
+            <a href="#" className="nav-link">
+              <span className="nav-icon">📈</span>
+              <span>Tendances</span>
+            </a>
+          </div>
+        </nav>
 
-          <div className="profession-toggle">
+        {/* Contrôles utilisateur */}
+        <div className="header-controls">
+          {/* Toggle métiers */}
+          <div className="profession-toggle-modern">
             <input
               type="checkbox"
               id="checkProfessionLevels"
               checked={checkProfessionLevels}
               onChange={(e) => setCheckProfessionLevels(e.target.checked)}
+              className="toggle-checkbox"
             />
-            <label htmlFor="checkProfessionLevels">
-              Vérifier les niveaux de métiers
+            <label htmlFor="checkProfessionLevels" className="toggle-label">
+              <span className="toggle-text">Vérifier métiers</span>
+              <div className="toggle-switch">
+                <div className="toggle-slider"></div>
+              </div>
             </label>
+          </div>
+
+          {/* Bouton Métiers moderne */}
+          <button
+            className="btn-modern btn-professions"
+            onClick={() => setShowProfessionModal(true)}
+          >
+            <span className="btn-icon">🔧</span>
+            <span className="btn-text">Mes Métiers</span>
+            <div className="btn-glow"></div>
+          </button>
+
+          {/* Authentification */}
+          <div className="auth-container">
+            <UserAuth />
           </div>
         </div>
       </div>
-    </div>
+    </header>
   )
 }
 

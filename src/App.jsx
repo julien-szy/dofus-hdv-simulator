@@ -275,41 +275,43 @@ function App() {
 
   return (
     <div className="hdv-container">
-      <Header 
+      <Header
         setShowProfessionModal={setShowProfessionModal}
         checkProfessionLevels={checkProfessionLevels}
         setCheckProfessionLevels={setCheckProfessionLevels}
       />
 
-      <SearchForm 
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        searchResults={searchResults}
-        loading={loading}
-        selectItem={selectItem}
-        playerProfessions={playerProfessions}
-        checkProfessionLevels={checkProfessionLevels}
-      />
+      <main className="main-content">
+        <SearchForm
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          searchResults={searchResults}
+          loading={loading}
+          selectItem={selectItem}
+          playerProfessions={playerProfessions}
+          checkProfessionLevels={checkProfessionLevels}
+        />
 
-      <RecipeDisplay 
-        selectedItem={selectedItem}
-        editingCalculation={editingCalculation}
-        playerProfessions={playerProfessions}
-        checkProfessionLevels={checkProfessionLevels}
-        materialPrices={materialPrices}
-        updateMaterialPrice={updateMaterialPrice}
-        addCraftCalculation={addCraftCalculation}
-        updateCraftCalculation={updateCraftCalculation}
-        cancelEditing={cancelEditing}
-      />
+        <RecipeDisplay
+          selectedItem={selectedItem}
+          editingCalculation={editingCalculation}
+          playerProfessions={playerProfessions}
+          checkProfessionLevels={checkProfessionLevels}
+          materialPrices={materialPrices}
+          updateMaterialPrice={updateMaterialPrice}
+          addCraftCalculation={addCraftCalculation}
+          updateCraftCalculation={updateCraftCalculation}
+          cancelEditing={cancelEditing}
+        />
 
-      <ResultsSummary 
-        craftCalculations={craftCalculations}
-        editCraftCalculation={editCraftCalculation}
-        removeCraftCalculation={removeCraftCalculation}
-      />
+        <ResultsSummary
+          craftCalculations={craftCalculations}
+          editCraftCalculation={editCraftCalculation}
+          removeCraftCalculation={removeCraftCalculation}
+        />
+      </main>
 
-      <ProfessionModal 
+      <ProfessionModal
         showModal={showProfessionModal}
         setShowModal={setShowProfessionModal}
         playerProfessions={playerProfessions}
