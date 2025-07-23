@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/storage.js'
 // import { searchItems, getItemDetails, getMaterialDetails } from './services/dofusApi.js'
-import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe } from './services/dofusDbApi.js'
+import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkItemHasRecipe } from './services/dofusDbApi.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
 import Header from './components/Header.jsx'
@@ -86,11 +86,23 @@ function App() {
   const selectItem = async (item) => {
     setLoading(true)
     try {
-      // Récupérer les détails complets de l'objet avec sa recette
+      // 1. Vérifier d'abord si l'item a une recette
+      console.log(`🔍 Vérification recette pour: ${item.name} (ID: ${item.ankama_id})`)
+      const hasRecipe = await checkItemHasRecipe(item.ankama_id)
+
+      if (!hasRecipe) {
+        alert(`❌ L'objet "${item.name}" ne peut pas être crafté.\n\nCet item n'a pas de recette de craft disponible.`)
+        setLoading(false)
+        return
+      }
+
+      console.log(`✅ Recette confirmée pour: ${item.name}`)
+
+      // 2. Récupérer les détails complets de l'objet avec sa recette
       const detailedItem = await getItemDetails(item.ankama_id)
-      
+
       if (!detailedItem.recipe || detailedItem.recipe.length === 0) {
-        alert('Cet objet n\'a pas de recette de craft disponible.')
+        alert('Erreur lors du chargement de la recette. Veuillez réessayer.')
         setLoading(false)
         return
       }

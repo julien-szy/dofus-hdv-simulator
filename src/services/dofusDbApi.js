@@ -3,6 +3,15 @@ import dataCache from './dataCache.js'
 
 const API_BASE_URL = 'https://api.dofusdb.fr'
 
+// Fonction pour normaliser les termes de recherche (enlever accents, etc.)
+const normalizeSearchTerm = (term) => {
+  return term
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Enlever les accents
+    .trim()
+}
+
 // Rechercher des objets avec DofusDB.fr
 export const searchItems = async (term) => {
   if (!term || term.length < 3) {
@@ -19,34 +28,78 @@ export const searchItems = async (term) => {
 
     console.log(`🌐 Cache miss, appel DofusDB.fr pour: "${term}"`)
 
-    // 2. Appel API DofusDB.fr avec recherche par nom (avec accents)
-    const url = `${API_BASE_URL}/items?name.fr[$regex]=${encodeURIComponent(term)}&$limit=30`
-    console.log(`🔗 URL DofusDB.fr: ${url}`)
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    })
+    // 2. Préparer plusieurs variantes de recherche
+    const searchVariants = [
+      term, // Terme original (avec accents si présents)
+      normalizeSearchTerm(term), // Terme sans accents
+    ]
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    let allItems = []
+
+    // 3. Essayer chaque variante de recherche
+    for (const searchTerm of searchVariants) {
+      if (searchTerm && searchTerm.length >= 3) {
+        console.log(`🔍 Recherche DofusDB.fr avec: "${searchTerm}"`)
+
+        // Recherche par nom
+        const nameUrl = `${API_BASE_URL}/items?name.fr[$regex]=${encodeURIComponent(searchTerm)}&$limit=20`
+        console.log(`🔗 URL nom: ${nameUrl}`)
+
+        try {
+          const nameResponse = await fetch(nameUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+          })
+
+          if (nameResponse.ok) {
+            const nameData = await nameResponse.json()
+            const nameItems = nameData.data || []
+            console.log(`📦 Recherche nom "${searchTerm}": ${nameItems.length} items`)
+            allItems.push(...nameItems)
+          }
+        } catch (error) {
+          console.warn(`⚠️ Erreur recherche nom "${searchTerm}":`, error.message)
+        }
+
+        // Recherche par slug (sans accents)
+        const slugUrl = `${API_BASE_URL}/items?slug.fr[$regex]=${encodeURIComponent(searchTerm)}&$limit=20`
+        console.log(`🔗 URL slug: ${slugUrl}`)
+
+        try {
+          const slugResponse = await fetch(slugUrl, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+          })
+
+          if (slugResponse.ok) {
+            const slugData = await slugResponse.json()
+            const slugItems = slugData.data || []
+            console.log(`📦 Recherche slug "${searchTerm}": ${slugItems.length} items`)
+            allItems.push(...slugItems)
+          }
+        } catch (error) {
+          console.warn(`⚠️ Erreur recherche slug "${searchTerm}":`, error.message)
+        }
+      }
     }
 
-    const data = await response.json()
-    const items = data.data || []
-    console.log(`📦 DofusDB.fr retourné: ${items.length} items total`)
-
-    // 3. Filtrer les items qui ont une recette ET qui sont des armes
-    const itemsWithRecipe = items.filter(item =>
-      item.hasRecipe === true &&
-      item.type?.superTypeId === 2 // 2 = Armes
+    // 4. Dédupliquer les résultats par ID
+    const uniqueItems = allItems.filter((item, index, self) =>
+      index === self.findIndex(i => i.id === item.id)
     )
-    console.log(`⚔️ Items avec recettes filtrés: ${itemsWithRecipe.length} armes`)
+    console.log(`📦 Total unique items: ${uniqueItems.length}`)
 
-    // 4. Transformer les données pour correspondre à notre format
-    const transformedItems = itemsWithRecipe.map(item => ({
+    // 5. Retourner TOUS les items trouvés (on vérifiera les recettes au clic)
+    console.log(`🎯 Items trouvés: ${uniqueItems.length} items`)
+
+    // 6. Transformer les données pour correspondre à notre format
+    const transformedItems = uniqueItems.map(item => ({
       ankama_id: item.id,
       name: item.name?.fr || item.name || 'Nom inconnu',
       level: item.level || 1,
@@ -60,9 +113,9 @@ export const searchItems = async (term) => {
       hasRecipe: item.hasRecipe || false
     }))
 
-    // 5. Mettre en cache le résultat
+    // 7. Mettre en cache le résultat
     await dataCache.cacheSearchResults(term, transformedItems)
-    console.log(`💾 Résultats DofusDB.fr mis en cache pour: "${term}" (${transformedItems.length} items avec recettes)`)
+    console.log(`💾 Résultats DofusDB.fr mis en cache pour: "${term}" (${transformedItems.length} items trouvés)`)
 
     return transformedItems
   } catch (error) {
@@ -81,7 +134,14 @@ export const getItemDetails = async (itemId) => {
     const cachedItem = await dataCache.getCachedItemDetails(itemId)
     if (cachedItem) {
       console.log(`🚀 Cache hit pour item: ${itemId}`)
-      return cachedItem
+
+      // Vérifier si l'item en cache a une recette vide mais devrait en avoir une
+      if ((!cachedItem.recipe || cachedItem.recipe.length === 0) && cachedItem.hasRecipe) {
+        console.log(`🔄 Item en cache sans recette mais hasRecipe=true, mise à jour du cache`)
+        // Continue pour recharger avec la recette
+      } else {
+        return cachedItem
+      }
     }
 
     console.log(`🌐 Cache miss, appel DofusDB.fr pour item: ${itemId}`)
@@ -96,7 +156,14 @@ export const getItemDetails = async (itemId) => {
 
     const item = await response.json()
 
-    // 3. Transformer les données
+    // 3. Récupérer la recette si l'item en a une
+    let recipe = []
+    if (item.hasRecipe) {
+      console.log(`🔍 Récupération de la recette pour item: ${itemId}`)
+      recipe = await getItemRecipe(itemId)
+    }
+
+    // 4. Transformer les données
     const transformedItem = {
       ankama_id: item.id,
       name: item.name?.fr || item.name || 'Nom inconnu',
@@ -107,11 +174,11 @@ export const getItemDetails = async (itemId) => {
       image_urls: {
         icon: item.img || `https://api.dofusdb.fr/img/items/${item.iconId}.png`
       },
-      recipe: [], // Sera rempli par getItemRecipe
+      recipe: recipe,
       hasRecipe: item.hasRecipe || false
     }
 
-    // 4. Mettre en cache le résultat
+    // 5. Mettre en cache le résultat
     await dataCache.cacheItemDetails(itemId, transformedItem)
     console.log(`💾 Item DofusDB.fr mis en cache: ${itemId}`)
 
@@ -130,8 +197,8 @@ export const getItemRecipe = async (itemId) => {
   try {
     console.log(`🔍 Récupération recette DofusDB.fr pour item: ${itemId}`)
 
-    // Récupérer la recette
-    const url = `${API_BASE_URL}/recipes?resultId=${itemId}&$limit=1`
+    // Récupérer la recette avec la syntaxe MongoDB
+    const url = `${API_BASE_URL}/recipes?resultId[$in][]=${itemId}&$limit=1`
     const response = await fetch(url)
 
     if (!response.ok) {
@@ -253,11 +320,46 @@ export const getAllItems = async (limit = 100, skip = 0) => {
   }
 }
 
+// Fonction pour vérifier si un item a une recette
+export const checkItemHasRecipe = async (itemId) => {
+  try {
+    console.log(`🔍 Vérification recette pour item ID: ${itemId}`)
+
+    // Utiliser la syntaxe MongoDB avec [$in][] même pour un seul ID
+    const recipeUrl = `${API_BASE_URL}/recipes?resultId[$in][]=${itemId}&$limit=1`
+    console.log(`🔗 URL recette: ${recipeUrl}`)
+
+    const response = await fetch(recipeUrl)
+
+    if (!response.ok) {
+      console.log(`❌ Erreur API recettes: ${response.status}`)
+      return false
+    }
+
+    const data = await response.json()
+    const recipes = data.data || []
+
+    console.log(`📜 Réponse API recettes:`, data)
+
+    if (recipes.length > 0) {
+      console.log(`✅ Recette trouvée pour item ${itemId}`)
+      return true
+    } else {
+      console.log(`❌ Aucune recette pour item ${itemId}`)
+      return false
+    }
+  } catch (error) {
+    console.error(`⚠️ Erreur vérification recette:`, error)
+    return false
+  }
+}
+
 export default {
   searchItems,
   getItemDetails,
   getItemRecipe,
   getMaterialDetails,
   getAllRecipes,
-  getAllItems
+  getAllItems,
+  checkItemHasRecipe
 }

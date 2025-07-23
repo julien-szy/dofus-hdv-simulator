@@ -58,7 +58,18 @@ const CacheStats = () => {
 
   return (
     <div className="cache-stats-modal">
-      <div className="cache-stats-content">
+      <div
+        className="cache-stats-content"
+        style={{
+          position: 'fixed',
+          top: '20vh',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000001,
+          maxHeight: '60vh',
+          overflowY: 'auto'
+        }}
+      >
         <div className="cache-stats-header">
           <h3>📊 Statistiques du Cache</h3>
           <button
