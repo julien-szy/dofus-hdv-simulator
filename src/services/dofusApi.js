@@ -1,5 +1,15 @@
 // Service pour interagir avec l'API DofusDude
 
+// Déterminer l'URL de base selon l'environnement
+const getApiBaseUrl = () => {
+  // En développement, utiliser le proxy Vite
+  if (import.meta.env.DEV) {
+    return '/api'
+  }
+  // En production, utiliser l'URL directe (attention aux CORS)
+  return 'https://api.dofusdu.de'
+}
+
 // Rechercher des objets
 export const searchItems = async (term) => {
   if (!term || term.length < 3) {
@@ -7,7 +17,8 @@ export const searchItems = async (term) => {
   }
 
   try {
-    const url = `/api/dofus3/v1/fr/items/equipment/search?query=${encodeURIComponent(term)}&limit=10`
+    const baseUrl = getApiBaseUrl()
+    const url = `${baseUrl}/dofus3/v1/fr/items/equipment/search?query=${encodeURIComponent(term)}&limit=10`
     console.log('URL de recherche:', url)
     
     const response = await fetch(url, {
@@ -42,7 +53,8 @@ export const searchItems = async (term) => {
 // Récupérer les détails d'un objet
 export const getItemDetails = async (itemId) => {
   try {
-    const response = await fetch(`/api/dofus3/v1/fr/items/equipment/${itemId}`)
+    const baseUrl = getApiBaseUrl()
+    const response = await fetch(`${baseUrl}/dofus3/v1/fr/items/equipment/${itemId}`)
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -58,7 +70,8 @@ export const getItemDetails = async (itemId) => {
 // Récupérer les détails d'un matériau
 export const getMaterialDetails = async (materialId, subtype) => {
   try {
-    const response = await fetch(`/api/dofus3/v1/fr/items/${subtype}/${materialId}`)
+    const baseUrl = getApiBaseUrl()
+    const response = await fetch(`${baseUrl}/dofus3/v1/fr/items/${subtype}/${materialId}`)
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
