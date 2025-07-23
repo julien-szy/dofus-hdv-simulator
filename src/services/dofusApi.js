@@ -8,7 +8,7 @@ const getApiBaseUrl = () => {
     return '/api'
   }
   // En production, utiliser notre fonction Netlify
-  return '/api'
+  return '/.netlify/functions/dofus-proxy'
 }
 
 // Rechercher des objets
@@ -19,15 +19,29 @@ export const searchItems = async (term) => {
 
   try {
     const baseUrl = getApiBaseUrl()
-    const url = `${baseUrl}/dofus3/v1/fr/items/equipment/search?query=${encodeURIComponent(term)}&limit=10`
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    })
+    let url, response
+    if (import.meta.env.DEV) {
+      // En développement, utiliser le proxy Vite
+      url = `${baseUrl}/dofus3/v1/fr/items/equipment/search?query=${encodeURIComponent(term)}&limit=10`
+      response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+    } else {
+      // En production, utiliser la fonction Netlify
+      url = `${baseUrl}?path=/dofus3/v1/fr/items/equipment/search&query=${encodeURIComponent(term)}&limit=10`
+      response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -58,9 +72,15 @@ export const searchItems = async (term) => {
 export const getItemDetails = async (itemId) => {
   try {
     const baseUrl = getApiBaseUrl()
-    const url = `${baseUrl}/dofus3/v1/fr/items/equipment/${itemId}`
 
-    const response = await fetch(url)
+    let url, response
+    if (import.meta.env.DEV) {
+      url = `${baseUrl}/dofus3/v1/fr/items/equipment/${itemId}`
+      response = await fetch(url)
+    } else {
+      url = `${baseUrl}?path=/dofus3/v1/fr/items/equipment/${itemId}`
+      response = await fetch(url)
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -77,9 +97,15 @@ export const getItemDetails = async (itemId) => {
 export const getMaterialDetails = async (materialId, subtype) => {
   try {
     const baseUrl = getApiBaseUrl()
-    const url = `${baseUrl}/dofus3/v1/fr/items/${subtype}/${materialId}`
 
-    const response = await fetch(url)
+    let url, response
+    if (import.meta.env.DEV) {
+      url = `${baseUrl}/dofus3/v1/fr/items/${subtype}/${materialId}`
+      response = await fetch(url)
+    } else {
+      url = `${baseUrl}?path=/dofus3/v1/fr/items/${subtype}/${materialId}`
+      response = await fetch(url)
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
