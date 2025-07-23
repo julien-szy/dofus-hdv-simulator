@@ -1,7 +1,9 @@
-const Header = ({ 
-  setShowProfessionModal, 
-  checkProfessionLevels, 
-  setCheckProfessionLevels 
+import UserAuth from './UserAuth.jsx'
+
+const Header = ({
+  setShowProfessionModal,
+  checkProfessionLevels,
+  setCheckProfessionLevels
 }) => {
   return (
     <div className="hdv-header">
@@ -11,14 +13,16 @@ const Header = ({
           <p className="hdv-subtitle">Calculez la rentabilité de vos crafts avec les vraies recettes (DofusDude API)</p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
-          <button 
+          <UserAuth />
+
+          <button
             className="btn btn-primary"
             onClick={() => setShowProfessionModal(true)}
             style={{ height: 'fit-content' }}
           >
             🔧 Mes Métiers
           </button>
-          
+
           <div className="profession-toggle">
             <input
               type="checkbox"
