@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import userService from '../services/userService';
+import UserProfile from './UserProfile.jsx';
 import '../styles/UserAuth.css';
 
 export default function UserAuth() {
@@ -125,16 +126,25 @@ export default function UserAuth() {
   if (user) {
     return (
       <div className="user-profile-header">
-        <div className="user-avatar-header">
-          <div className="avatar-circle-header">
-            {user.username.charAt(0).toUpperCase()}
+        <button
+          onClick={() => {
+            setShowModal(false)
+            window.dispatchEvent(new CustomEvent('openUserProfile'))
+          }}
+          className="profile-btn-header"
+          title="Mon Profil"
+        >
+          <div className="user-avatar-header">
+            <div className="avatar-circle-header">
+              {user.username.charAt(0).toUpperCase()}
+            </div>
+            <div className="user-status-dot-header"></div>
           </div>
-          <div className="user-status-dot-header"></div>
-        </div>
-        <div className="user-info-header">
-          <span className="user-name-header">{user.username}</span>
-          <span className="user-status-header">En ligne</span>
-        </div>
+          <div className="user-info-header">
+            <span className="user-name-header">{user.username}</span>
+            <span className="user-status-header">En ligne</span>
+          </div>
+        </button>
         <button
           onClick={handleLogout}
           className="logout-btn-header"

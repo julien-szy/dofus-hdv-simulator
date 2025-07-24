@@ -3,10 +3,7 @@ import UserAuth from './UserAuth.jsx'
 import CacheStats from './CacheStats.jsx'
 
 const Header = ({
-  setShowProfessionModal,
-  setShowPriceManager,
-  checkProfessionLevels,
-  setCheckProfessionLevels
+  setShowPriceManager
 }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
 
@@ -28,33 +25,6 @@ const Header = ({
 
         {/* Contrôles utilisateur */}
         <div className="header-controls">
-          {/* Toggle métiers */}
-          <div className="profession-toggle-modern">
-            <input
-              type="checkbox"
-              id="checkProfessionLevels"
-              checked={checkProfessionLevels}
-              onChange={(e) => setCheckProfessionLevels(e.target.checked)}
-              className="toggle-checkbox"
-            />
-            <label htmlFor="checkProfessionLevels" className="toggle-label">
-              <span className="toggle-text">Vérifier métiers</span>
-              <div className="toggle-switch">
-                <div className="toggle-slider"></div>
-              </div>
-            </label>
-          </div>
-
-          {/* Bouton Métiers moderne */}
-          <button
-            className="btn-modern btn-professions"
-            onClick={() => setShowProfessionModal(true)}
-          >
-            <span className="btn-icon">🔧</span>
-            <span className="btn-text">Mes Métiers</span>
-            <div className="btn-glow"></div>
-          </button>
-
           {/* Bouton Gestionnaire de Prix */}
           <button
             className="btn-modern btn-prices"

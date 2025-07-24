@@ -11,7 +11,7 @@ import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
 import ResultsSummary from './components/ResultsSummary.jsx'
-import ProfessionModal from './components/ProfessionModal.jsx'
+import UserProfile from './components/UserProfile.jsx'
 import PriceManager from './components/PriceManager.jsx'
 import CacheStats from './components/CacheStats.jsx'
 import UserAuth from './components/UserAuth.jsx'
@@ -26,7 +26,7 @@ function App() {
   const [materialPrices, setMaterialPrices] = useState({})
   const [editingCalculation, setEditingCalculation] = useState(null)
   const [playerProfessions, setPlayerProfessions] = useState({})
-  const [showProfessionModal, setShowProfessionModal] = useState(false)
+  const [showUserProfile, setShowUserProfile] = useState(false)
   const [checkProfessionLevels, setCheckProfessionLevels] = useState(true)
   const [showPriceManager, setShowPriceManager] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
@@ -144,10 +144,16 @@ function App() {
       setMaterialPrices({})
     })
 
+    // Écouter l'événement pour ouvrir le profil
+    window.addEventListener('openUserProfile', () => {
+      setShowUserProfile(true)
+    })
+
     return () => {
       window.removeEventListener('storage', handleUserChange)
       window.removeEventListener('userLogin', handleUserChange)
       window.removeEventListener('userLogout', () => setCurrentUser(null))
+      window.removeEventListener('openUserProfile', () => setShowUserProfile(true))
     }
   }, [])
 
@@ -517,10 +523,7 @@ function App() {
   return (
     <div className="hdv-container">
       <Header
-        setShowProfessionModal={setShowProfessionModal}
         setShowPriceManager={setShowPriceManager}
-        checkProfessionLevels={checkProfessionLevels}
-        setCheckProfessionLevels={setCheckProfessionLevels}
       />
 
       <main className="main-content">
@@ -553,11 +556,13 @@ function App() {
         />
       </main>
 
-      <ProfessionModal
-        showModal={showProfessionModal}
-        setShowModal={setShowProfessionModal}
+      <UserProfile
+        isOpen={showUserProfile}
+        onClose={() => setShowUserProfile(false)}
         playerProfessions={playerProfessions}
         updateProfessionLevel={updateProfessionLevel}
+        checkProfessionLevels={checkProfessionLevels}
+        setCheckProfessionLevels={setCheckProfessionLevels}
       />
 
       <PriceManager
