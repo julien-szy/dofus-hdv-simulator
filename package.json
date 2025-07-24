@@ -23,7 +23,8 @@
     "push": "node scripts-node/smartPush.js",
     "build-optimized": "node scripts-node/optimizedBuild.js",
     "build-simple": "node scripts-node/simpleBuild.js",
-    "force-deploy": "node scripts-node/forceDeploy.js"
+    "force-deploy": "node scripts-node/forceDeploy.js",
+    "quick-deploy": "node scripts-node/quickDeploy.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

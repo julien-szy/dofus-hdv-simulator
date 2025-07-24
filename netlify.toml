@@ -10,9 +10,7 @@
   NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
 
-# Cache des dépendances pour accélérer les builds
-[[plugins]]
-  package = "@netlify/plugin-cache-core"
+# Configuration simple sans plugins externes
 
 # Headers pour le cache des images
 [[headers]]

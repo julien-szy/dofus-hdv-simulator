@@ -117,6 +117,7 @@ L'application utilise un algorithme avancé qui :
 - `npm run deploy` - Déployer complet vers Netlify
 - `npm run deploy-images` - Déployer uniquement les images (rapide)
 - `npm run deploy-app` - Déployer uniquement l'application (rapide)
+- `npm run quick-deploy` - Déploiement rapide sans plugins
 
 ## 📖 Documentation
 
