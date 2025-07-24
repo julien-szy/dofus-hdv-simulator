@@ -10,7 +10,7 @@ on:
         default: 'false'
         type: boolean
       max_images:
-        description: 'Nombre max d\'images à télécharger (0 = illimité)'
+        description: 'Nombre max d images à télécharger (0 = illimité)'
         required: false
         default: '0'
         type: string
@@ -99,16 +99,7 @@ jobs:
         TOTAL_SIZE=$(du -sh public/images/ | cut -f1)
         
         # Commit avec message détaillé
-        git commit -m "📸 Mise à jour banque d'images DofusDB
-
-        ✨ Images téléchargées:
-        • 📦 Items: ${ITEMS_COUNT} images
-        • 🧱 Ressources: ${RESOURCES_COUNT} images
-        • 💾 Taille totale: ${TOTAL_SIZE}
-        
-        🤖 Téléchargement automatique via GitHub Actions
-        🌐 Banque d'images permanente pour tous les utilisateurs
-        ⚡ Chargement instantané (pas d'appels DofusDB)"
+        git commit -m "📸 Mise à jour banque d'images DofusDB - Items: ${ITEMS_COUNT}, Ressources: ${RESOURCES_COUNT}, Taille: ${TOTAL_SIZE}"
         
     - name: 🚀 Push vers le repository
       if: steps.verify-changes.outputs.changes == 'true'
