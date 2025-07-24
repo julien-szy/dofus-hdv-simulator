@@ -555,65 +555,39 @@ async function getCraftableItems(sql, profession = null, search = null) {
   try {
     console.log(`🔍 getCraftableItems appelé avec: profession=${profession}, search=${search}`);
 
-    // Vérifier si la table existe
-    const tableExists = await sql`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables
-        WHERE table_name = 'craftable_items'
-      )
-    `;
-
-    if (!tableExists[0].exists) {
-      console.log('⚠️ Table craftable_items n\'existe pas encore');
-      return [];
-    }
-
+    // Requête simple pour éviter les complications
     let query;
 
     if (profession && search) {
       query = sql`
-        SELECT * FROM craftable_items
+        SELECT item_id, item_name, item_type, profession, level_required
+        FROM craftable_items
         WHERE profession = ${profession}
-        AND (item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'})
+        AND item_name ILIKE ${'%' + search + '%'}
         ORDER BY item_name
-        LIMIT 1000
+        LIMIT 100
       `;
     } else if (profession) {
       query = sql`
-        SELECT * FROM craftable_items
+        SELECT item_id, item_name, item_type, profession, level_required
+        FROM craftable_items
         WHERE profession = ${profession}
         ORDER BY item_name
-        LIMIT 1000
+        LIMIT 100
       `;
     } else if (search) {
       query = sql`
-        SELECT * FROM craftable_items
-        WHERE item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'}
+        SELECT item_id, item_name, item_type, profession, level_required
+        FROM craftable_items
+        WHERE item_name ILIKE ${'%' + search + '%'}
         ORDER BY item_name
-        LIMIT 1000
+        LIMIT 100
       `;
     } else {
-      // Requête très limitée pour éviter les timeouts
+      // Juste un count pour les stats
       query = sql`
         SELECT COUNT(*) as total FROM craftable_items
       `;
-
-      const countResult = await query;
-      const total = countResult[0].total;
-
-      if (total > 1000) {
-        // Si trop d'items, retourner juste un échantillon
-        query = sql`
-          SELECT * FROM craftable_items
-          ORDER BY profession, item_name
-          LIMIT 100
-        `;
-      } else {
-        query = sql`
-          SELECT * FROM craftable_items
-          ORDER BY profession, item_name
-        `;
-      }
     }
 
     const items = await query;
@@ -621,8 +595,7 @@ async function getCraftableItems(sql, profession = null, search = null) {
     return items;
   } catch (error) {
     console.error('❌ Erreur getCraftableItems:', error);
-    console.error('❌ Stack:', error.stack);
-    // Retourner un tableau vide au lieu de throw pour éviter 502
+    // Retourner un tableau vide au lieu de throw
     return [];
   }
 }

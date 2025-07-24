@@ -78,18 +78,36 @@ class SyncService {
       console.log(`📥 ${calculations.length} calculs chargés depuis la BDD`);
       
       // Transformer les données pour correspondre au format local
-      return calculations.map(calc => ({
-        id: calc.id,
-        item: JSON.parse(calc.calculation_data).item,
-        sellPrice: calc.sell_price,
-        quantity: calc.quantity,
-        totalCost: calc.total_cost,
-        totalRevenue: calc.total_revenue,
-        profit: calc.profit,
-        roi: calc.roi,
-        materialPrices: JSON.parse(calc.calculation_data).materialPrices || {},
-        timestamp: calc.created_at
-      }));
+      return calculations.map(calc => {
+        try {
+          // Gérer le cas où calculation_data est déjà un objet ou une string
+          let calculationData;
+          if (typeof calc.calculation_data === 'string') {
+            calculationData = JSON.parse(calc.calculation_data);
+          } else if (typeof calc.calculation_data === 'object') {
+            calculationData = calc.calculation_data;
+          } else {
+            console.warn('⚠️ calculation_data invalide pour calcul:', calc.id);
+            calculationData = { item: null, materialPrices: {} };
+          }
+
+          return {
+            id: calc.id,
+            item: calculationData.item || null,
+            sellPrice: calc.sell_price,
+            quantity: calc.quantity,
+            totalCost: calc.total_cost,
+            totalRevenue: calc.total_revenue,
+            profit: calc.profit,
+            roi: calc.roi,
+            materialPrices: calculationData.materialPrices || {},
+            timestamp: calc.created_at
+          };
+        } catch (error) {
+          console.error(`❌ Erreur parsing calcul ${calc.id}:`, error);
+          return null; // Sera filtré
+        }
+      }).filter(calc => calc !== null); // Supprimer les calculs invalides
     } catch (error) {
       console.error('❌ Erreur chargement calculs:', error);
       return [];

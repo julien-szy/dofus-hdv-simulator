@@ -22,7 +22,13 @@ class DofusDataImporter {
 
       const data = await response.json()
       console.log(`✅ ${data.data?.length || 0} métiers récupérés sur ${data.total || 'inconnu'} total`)
-      console.log('📋 Métiers trouvés:', data.data?.map(j => `${j.name} (${j.id})`).join(', '))
+
+      if (data.data && data.data.length > 0) {
+        console.log('📋 Métiers trouvés:')
+        data.data.forEach((job, index) => {
+          console.log(`  ${index + 1}. ${job.name || 'Sans nom'} (ID: ${job.id || 'Sans ID'})`)
+        })
+      }
 
       return data.data || []
     } catch (error) {
@@ -338,29 +344,52 @@ class DofusDataImporter {
   async getImportStats() {
     try {
       const response = await fetch(`${this.dbUrl}?action=get_craftable_items`)
-      
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        console.warn(`⚠️ Erreur HTTP ${response.status} pour stats`)
+        return {
+          totalItems: 0,
+          byProfession: {},
+          lastUpdate: null
+        }
       }
 
       const items = await response.json()
-      
+
+      // Vérifier que items est un array
+      if (!Array.isArray(items)) {
+        console.warn('⚠️ Réponse stats invalide:', items)
+        return {
+          totalItems: 0,
+          byProfession: {},
+          lastUpdate: null
+        }
+      }
+
       const statsByProfession = {}
       for (const item of items) {
-        if (!statsByProfession[item.profession]) {
-          statsByProfession[item.profession] = 0
+        if (item && item.profession) {
+          if (!statsByProfession[item.profession]) {
+            statsByProfession[item.profession] = 0
+          }
+          statsByProfession[item.profession]++
         }
-        statsByProfession[item.profession]++
       }
 
       return {
         totalItems: items.length,
         byProfession: statsByProfession,
-        lastUpdate: items.length > 0 ? Math.max(...items.map(i => new Date(i.updated_at).getTime())) : null
+        lastUpdate: items.length > 0 && items[0].updated_at ?
+          Math.max(...items.filter(i => i.updated_at).map(i => new Date(i.updated_at).getTime())) :
+          null
       }
     } catch (error) {
       console.error('❌ Erreur récupération stats:', error)
-      return null
+      return {
+        totalItems: 0,
+        byProfession: {},
+        lastUpdate: null
+      }
     }
   }
 

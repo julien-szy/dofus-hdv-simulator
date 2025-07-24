@@ -42,13 +42,18 @@ const DataImporter = ({ isOpen, onClose }) => {
       console.log('🔧 Métiers chargés:', jobs)
 
       // Vérifier que jobs est un array et que chaque job a les bonnes propriétés
-      const validJobs = Array.isArray(jobs) ? jobs.filter(job =>
-        job &&
-        typeof job === 'object' &&
-        job.id &&
-        job.name &&
-        typeof job.name === 'string'
-      ) : []
+      const validJobs = Array.isArray(jobs) ? jobs.filter(job => {
+        const isValid = job &&
+          typeof job === 'object' &&
+          (job.id !== undefined && job.id !== null) &&
+          (job.name !== undefined && job.name !== null)
+
+        if (!isValid) {
+          console.warn('⚠️ Métier invalide:', job)
+        }
+
+        return isValid
+      }) : []
 
       setAvailableJobs(validJobs)
       console.log(`✅ ${validJobs.length} métiers valides chargés`)
