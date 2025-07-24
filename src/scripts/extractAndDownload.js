@@ -259,20 +259,104 @@ class DataExtractor {
     }
   }
 
-  // Exécuter le script complet
+  // Vérifier si on a besoin d'extraire les données
+  needsDataExtraction() {
+    // Si on force le téléchargement, on extrait aussi
+    if (this.forceDownload) {
+      console.log('🔄 Mode force: extraction des données nécessaire')
+      return true
+    }
+
+    // Vérifier si on a déjà des données récentes (moins de 24h)
+    const lastExtraction = localStorage?.getItem?.('last_data_extraction')
+    if (lastExtraction) {
+      const lastTime = parseInt(lastExtraction)
+      const now = Date.now()
+      const hoursSince = (now - lastTime) / (1000 * 60 * 60)
+
+      if (hoursSince < 24) {
+        console.log(`⏭️ Données extraites il y a ${hoursSince.toFixed(1)}h, skip extraction`)
+        return false
+      }
+    }
+
+    console.log('🔄 Extraction des données nécessaire')
+    return true
+  }
+
+  // Exécuter le script complet (optimisé)
   async run() {
     const startTime = Date.now()
-    
+
     try {
-      await this.extractAllData()
+      // Vérifier si l'extraction de données est nécessaire
+      if (this.needsDataExtraction()) {
+        await this.extractAllData()
+
+        // Marquer la date d'extraction
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('last_data_extraction', Date.now().toString())
+        }
+      } else {
+        console.log('⏭️ Skip extraction des données (récentes)')
+
+        // Simuler quelques données pour le téléchargement d'images
+        console.log('📸 Mode téléchargement d\'images uniquement')
+
+        // Récupérer les IDs depuis les images existantes si possible
+        await this.loadExistingImageIds()
+      }
+
       await this.downloadAllImages()
       await this.saveToDatabase()
-      
+
       const duration = (Date.now() - startTime) / 1000
       console.log(`\n🎉 EXTRACTION TERMINÉE EN ${duration.toFixed(1)}s`)
-      
+
     } catch (error) {
       console.error('❌ Erreur fatale:', error)
+    }
+  }
+
+  // Charger les IDs depuis les images existantes
+  async loadExistingImageIds() {
+    try {
+      const fs = await import('fs')
+      const path = await import('path')
+
+      const itemsDir = path.join(process.cwd(), 'public/images/items')
+      const resourcesDir = path.join(process.cwd(), 'public/images/resources')
+
+      let itemIds = []
+      let resourceIds = []
+
+      if (fs.existsSync(itemsDir)) {
+        itemIds = fs.readdirSync(itemsDir)
+          .filter(file => file.endsWith('.png'))
+          .map(file => parseInt(file.replace('.png', '')))
+          .filter(id => !isNaN(id))
+      }
+
+      if (fs.existsSync(resourcesDir)) {
+        resourceIds = fs.readdirSync(resourcesDir)
+          .filter(file => file.endsWith('.png'))
+          .map(file => parseInt(file.replace('.png', '')))
+          .filter(id => !isNaN(id))
+      }
+
+      console.log(`📂 Images existantes: ${itemIds.length} items, ${resourceIds.length} ressources`)
+
+      // Créer des objets factices pour le téléchargement
+      itemIds.forEach(id => {
+        this.extractedItems.set(id, { icon_id: id })
+      })
+
+      resourceIds.forEach(id => {
+        this.extractedResources.set(id, { icon_id: id })
+      })
+
+    } catch (error) {
+      console.warn('⚠️ Impossible de charger les IDs existants:', error.message)
     }
   }
 }

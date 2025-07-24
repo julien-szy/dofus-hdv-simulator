@@ -7,7 +7,7 @@ on:
       force_download:
         description: 'Forcer le re-téléchargement des images existantes'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       max_images:
         description: 'Nombre max d images à télécharger (0 = illimité)'
@@ -47,18 +47,55 @@ jobs:
     - name: 🔍 Vérification de l'espace disque
       run: df -h
       
-    - name: 🚀 Extraction et téléchargement complet
+    - name: 📊 Vérification des images existantes
       run: |
-        echo "🌟 Début de l'extraction complète..."
+        echo "🔍 Vérification des images existantes..."
+
+        ITEMS_EXISTING=$(find public/images/items -name "*.png" 2>/dev/null | wc -l || echo "0")
+        RESOURCES_EXISTING=$(find public/images/resources -name "*.png" 2>/dev/null | wc -l || echo "0")
+        TOTAL_EXISTING=$((ITEMS_EXISTING + RESOURCES_EXISTING))
+
+        echo "📦 Images items existantes: $ITEMS_EXISTING"
+        echo "🧱 Images ressources existantes: $RESOURCES_EXISTING"
+        echo "📊 Total images existantes: $TOTAL_EXISTING"
+
+        # Seuil minimum pour considérer qu'on a déjà des images
+        MIN_IMAGES=100
+
+        if [ "$TOTAL_EXISTING" -gt "$MIN_IMAGES" ] && [ "${{ github.event.inputs.force_download }}" != "true" ]; then
+          echo "✅ Images déjà présentes et force_download=false"
+          echo "⏭️ Skip téléchargement, utilisation des images existantes"
+          echo "SKIP_DOWNLOAD=true" >> $GITHUB_ENV
+        else
+          echo "🚀 Téléchargement nécessaire"
+          echo "SKIP_DOWNLOAD=false" >> $GITHUB_ENV
+        fi
+
+    - name: 🚀 Extraction et téléchargement (si nécessaire)
+      if: env.SKIP_DOWNLOAD == 'false'
+      run: |
+        echo "🌟 Début de l'extraction et téléchargement..."
         echo "Force download: ${{ github.event.inputs.force_download }}"
         echo "Max images: ${{ github.event.inputs.max_images }}"
-        
+
         # Exporter les variables d'environnement pour le script
         export FORCE_DOWNLOAD="${{ github.event.inputs.force_download }}"
         export MAX_IMAGES="${{ github.event.inputs.max_images }}"
-        
-        # Lancer le script d'extraction
-        node src/scripts/extractAndDownload.js
+
+        # Lancer le script optimisé pour les images
+        if [ "${{ github.event.inputs.max_images }}" = "0" ]; then
+          echo "🚀 Mode complet: extraction + téléchargement"
+          node src/scripts/extractAndDownload.js
+        else
+          echo "📸 Mode images seulement: téléchargement optimisé"
+          node src/scripts/downloadImagesOnly.js
+        fi
+
+    - name: ⏭️ Skip téléchargement (images existantes)
+      if: env.SKIP_DOWNLOAD == 'true'
+      run: |
+        echo "⏭️ Téléchargement ignoré car images déjà présentes"
+        echo "💡 Pour forcer le re-téléchargement, utilisez force_download=true"
         
     - name: 📊 Statistiques des images téléchargées
       run: |

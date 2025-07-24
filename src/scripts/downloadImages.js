@@ -87,30 +87,64 @@ class ImageDownloader {
     return result
   }
 
-  // Télécharger une liste d'images
+  // Vérifier quelles images manquent
+  getMissingImages(iconIds, type = 'items') {
+    const outputDir = type === 'items' ? this.itemsDir : this.resourcesDir
+
+    const missing = iconIds.filter(iconId => {
+      const filePath = path.join(outputDir, `${iconId}.png`)
+      return !fs.existsSync(filePath)
+    })
+
+    const existing = iconIds.length - missing.length
+    console.log(`📊 ${type}: ${existing} existantes, ${missing.length} manquantes`)
+
+    return missing
+  }
+
+  // Télécharger une liste d'images (optimisé)
   async downloadBatch(iconIds, type = 'items', batchSize = 10) {
-    console.log(`🚀 Téléchargement de ${iconIds.length} images (${type})`)
-    
-    const results = []
-    
-    for (let i = 0; i < iconIds.length; i += batchSize) {
-      const batch = iconIds.slice(i, i + batchSize)
-      console.log(`📦 Batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(iconIds.length / batchSize)}`)
-      
-      const batchPromises = batch.map(iconId => 
-        this.downloadWithDelay(iconId, type, 50) // 50ms entre chaque téléchargement
-      )
-      
-      const batchResults = await Promise.all(batchPromises)
-      results.push(...batchResults)
-      
-      // Pause entre les batches
-      if (i + batchSize < iconIds.length) {
-        console.log('⏸️ Pause 1s entre les batches...')
-        await new Promise(resolve => setTimeout(resolve, 1000))
+    console.log(`🔍 Vérification de ${iconIds.length} images (${type})`)
+
+    // Filtrer seulement les images manquantes (sauf en mode force)
+    let toDownload = iconIds
+    if (!this.forceDownload) {
+      toDownload = this.getMissingImages(iconIds, type)
+
+      if (toDownload.length === 0) {
+        console.log(`✅ Toutes les images ${type} sont déjà présentes`)
+        return []
       }
     }
-    
+
+    console.log(`🚀 Téléchargement de ${toDownload.length} images (${type})`)
+
+    const results = []
+
+    for (let i = 0; i < toDownload.length; i += batchSize) {
+      const batch = toDownload.slice(i, i + batchSize)
+      console.log(`📦 Batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(toDownload.length / batchSize)} (${batch.length} images)`)
+
+      const batchPromises = batch.map(iconId =>
+        this.downloadWithDelay(iconId, type, 100) // 100ms entre chaque téléchargement
+      )
+
+      const batchResults = await Promise.all(batchPromises)
+      results.push(...batchResults)
+
+      // Afficher le progrès
+      const downloaded = results.filter(r => r.success && !r.skipped).length
+      const errors = results.filter(r => !r.success).length
+      console.log(`📈 Progrès: ${downloaded} téléchargées, ${errors} erreurs`)
+
+      // Pause entre les batches (plus courte si peu d'images)
+      if (i + batchSize < toDownload.length) {
+        const pauseTime = toDownload.length > 100 ? 1000 : 500
+        console.log(`⏸️ Pause ${pauseTime}ms...`)
+        await new Promise(resolve => setTimeout(resolve, pauseTime))
+      }
+    }
+
     return results
   }
 

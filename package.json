@@ -13,6 +13,7 @@
     "deploy": "gh-pages -d dist",
     "extract-data": "node src/scripts/extractAndDownload.js",
     "download-images": "node src/scripts/downloadImages.js",
+    "download-images-only": "node src/scripts/downloadImagesOnly.js",
     "test-extraction": "node src/scripts/testExtraction.js"
   },
   "dependencies": {
