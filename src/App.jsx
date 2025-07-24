@@ -13,6 +13,7 @@ import RecipeDisplay from './components/RecipeDisplay.jsx'
 import ResultsSummary from './components/ResultsSummary.jsx'
 import UserProfile from './components/UserProfile.jsx'
 import PriceManager from './components/PriceManager.jsx'
+import PriceTrends from './components/PriceTrends.jsx'
 import CacheStats from './components/CacheStats.jsx'
 import UserAuth from './components/UserAuth.jsx'
 import './styles/App.css'
@@ -29,6 +30,7 @@ function App() {
   const [showUserProfile, setShowUserProfile] = useState(false)
   const [checkProfessionLevels, setCheckProfessionLevels] = useState(true)
   const [showPriceManager, setShowPriceManager] = useState(false)
+  const [showPriceTrends, setShowPriceTrends] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
 
   // Charger les données sauvegardées au démarrage
@@ -524,6 +526,9 @@ function App() {
     <div className="hdv-container">
       <Header
         setShowPriceManager={setShowPriceManager}
+        setShowPriceTrends={setShowPriceTrends}
+        checkProfessionLevels={checkProfessionLevels}
+        setCheckProfessionLevels={setCheckProfessionLevels}
       />
 
       <main className="main-content">
@@ -561,13 +566,16 @@ function App() {
         onClose={() => setShowUserProfile(false)}
         playerProfessions={playerProfessions}
         updateProfessionLevel={updateProfessionLevel}
-        checkProfessionLevels={checkProfessionLevels}
-        setCheckProfessionLevels={setCheckProfessionLevels}
       />
 
       <PriceManager
         isOpen={showPriceManager}
         onClose={() => setShowPriceManager(false)}
+      />
+
+      <PriceTrends
+        isOpen={showPriceTrends}
+        onClose={() => setShowPriceTrends(false)}
       />
 
       {/* Bouton Cache en position fixe */}

@@ -18,13 +18,11 @@ const AVATAR_OPTIONS = [
   '⚒️', '🛡️', '⚔️', '🏹', '🔮', '💎', '🌟', '🔥', '❄️', '⚡', '🌿', '🌙'
 ]
 
-const UserProfile = ({ 
-  isOpen, 
-  onClose, 
-  playerProfessions, 
-  updateProfessionLevel,
-  checkProfessionLevels,
-  setCheckProfessionLevels 
+const UserProfile = ({
+  isOpen,
+  onClose,
+  playerProfessions,
+  updateProfessionLevel
 }) => {
   const [user, setUser] = useState(null)
   const [avatar, setAvatar] = useState('⚒️')
@@ -90,17 +88,11 @@ const UserProfile = ({
           >
             👤 Personnage
           </button>
-          <button 
+          <button
             className={`profile-tab ${activeTab === 'professions' ? 'active' : ''}`}
             onClick={() => setActiveTab('professions')}
           >
             ⚒️ Métiers
-          </button>
-          <button 
-            className={`profile-tab ${activeTab === 'settings' ? 'active' : ''}`}
-            onClick={() => setActiveTab('settings')}
-          >
-            ⚙️ Paramètres
           </button>
         </div>
 
@@ -251,35 +243,7 @@ const UserProfile = ({
             </div>
           )}
 
-          {activeTab === 'settings' && (
-            <div className="settings-sheet">
-              <div className="settings-header">
-                <h3>⚙️ Paramètres</h3>
-                <p>Configurez le comportement de l'application</p>
-              </div>
 
-              <div className="settings-options">
-                <div className="setting-item">
-                  <div className="setting-info">
-                    <div className="setting-name">Vérification des métiers</div>
-                    <div className="setting-description">
-                      Vérifier automatiquement si vous avez le niveau requis pour crafter
-                    </div>
-                  </div>
-                  <div className="setting-control">
-                    <label className="toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={checkProfessionLevels}
-                        onChange={(e) => setCheckProfessionLevels(e.target.checked)}
-                      />
-                      <span className="toggle-slider"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer */}
