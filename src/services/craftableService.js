@@ -39,7 +39,25 @@ class CraftableService {
       console.warn('Erreur cache BDD:', error)
     }
 
-    // 3. Recherche dans les objets craftables (priorité)
+    // 3. Recherche interne dans la BDD (plus rapide que DofusDB)
+    try {
+      console.log(`🔍 Recherche interne pour: ${normalizedTerm}`)
+      const internalResults = await this.searchInternalItems(normalizedTerm)
+
+      if (internalResults.length > 0) {
+        console.log(`⚒️ ${internalResults.length} objets trouvés en interne pour: ${normalizedTerm}`)
+
+        // Sauvegarder dans le cache
+        await this.saveSearchCache(normalizedTerm, internalResults)
+        this.setLocalCache(normalizedTerm, internalResults)
+
+        return internalResults
+      }
+    } catch (error) {
+      console.warn('Erreur recherche interne:', error)
+    }
+
+    // 4. Fallback vers l'ancienne méthode craftables
     try {
       const craftableResults = await this.searchCraftableItems(normalizedTerm)
       if (craftableResults.length > 0) {
@@ -55,25 +73,44 @@ class CraftableService {
       console.warn('Erreur recherche craftables:', error)
     }
 
-    // 4. Fallback vers DofusDB (et filtrer les résultats)
+    // 5. Fallback vers DofusDB (et filtrer les résultats) - en dernier recours
     try {
       console.log(`🌐 Recherche DofusDB pour: ${normalizedTerm}`)
       const dofusResults = await searchDofusDB(normalizedTerm)
-      
+
       // Filtrer pour ne garder que les objets craftables
       const filteredResults = await this.filterCraftableOnly(dofusResults)
-      
+
       if (filteredResults.length > 0) {
         // Sauvegarder dans le cache
         await this.saveSearchCache(normalizedTerm, filteredResults)
         this.setLocalCache(normalizedTerm, filteredResults)
       }
-      
+
       console.log(`✅ ${filteredResults.length} objets craftables filtrés depuis DofusDB`)
       return filteredResults
-      
+
     } catch (error) {
       console.error('Erreur recherche DofusDB:', error)
+      return []
+    }
+  }
+
+  // Recherche interne dans la BDD (plus rapide)
+  async searchInternalItems(searchTerm) {
+    try {
+      const response = await fetch(`${this.baseUrl}?action=search_items&q=${encodeURIComponent(searchTerm)}&limit=20`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const items = await response.json()
+      console.log(`🔍 Recherche interne: ${items.length} résultats pour "${searchTerm}"`)
+
+      return items
+    } catch (error) {
+      console.error('Erreur recherche interne:', error)
       return []
     }
   }

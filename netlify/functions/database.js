@@ -171,6 +171,24 @@ exports.handler = async (event, context) => {
           };
         }
 
+      case 'get_import_stats':
+        // Récupérer les statistiques d'import
+        try {
+          const stats = await getImportStats(sql);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(stats)
+          };
+        } catch (error) {
+          console.error('Erreur get_import_stats:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur récupération statistiques', details: error.message })
+          };
+        }
+
       case 'get_items_by_profession':
         // Récupérer les items détaillés par métier pour l'admin
         try {
@@ -222,6 +240,78 @@ exports.handler = async (event, context) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({ error: 'Erreur nettoyage doublons', details: error.message })
+          };
+        }
+
+      case 'search_items':
+        // Recherche interne d'items craftables
+        try {
+          const { q, limit = 20 } = event.queryStringParameters || {};
+          if (!q || q.length < 2) {
+            return {
+              statusCode: 400,
+              headers,
+              body: JSON.stringify({ error: 'Paramètre de recherche requis (minimum 2 caractères)' })
+            };
+          }
+
+          const items = await searchCraftableItems(sql, q, parseInt(limit));
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(items)
+          };
+        } catch (error) {
+          console.error('Erreur search_items:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur recherche items', details: error.message })
+          };
+        }
+
+      case 'extract_resources':
+        // Extraire les ressources depuis les recettes
+        try {
+          const result = await extractAndSaveResources(sql);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(result)
+          };
+        } catch (error) {
+          console.error('Erreur extract_resources:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur extraction ressources', details: error.message })
+          };
+        }
+
+      case 'get_item_resources':
+        // Récupérer les ressources d'un item
+        try {
+          const { item_id } = event.queryStringParameters || {};
+          if (!item_id) {
+            return {
+              statusCode: 400,
+              headers,
+              body: JSON.stringify({ error: 'Paramètre item_id requis' })
+            };
+          }
+
+          const resources = await getItemResources(sql, parseInt(item_id));
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(resources)
+          };
+        } catch (error) {
+          console.error('Erreur get_item_resources:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur récupération ressources item', details: error.message })
           };
         }
 
@@ -399,6 +489,48 @@ async function initializeTables(sql) {
   `;
   await sql`
     CREATE INDEX IF NOT EXISTS idx_craftable_items_type ON craftable_items(item_type)
+  `;
+
+  // Créer la table des ressources (matériaux de craft)
+  await sql`
+    CREATE TABLE IF NOT EXISTS craft_resources (
+      id SERIAL PRIMARY KEY,
+      resource_id INTEGER UNIQUE NOT NULL,
+      resource_name VARCHAR(500) NOT NULL,
+      resource_type VARCHAR(200),
+      is_harvestable BOOLEAN DEFAULT false,
+      is_droppable BOOLEAN DEFAULT false,
+      is_craftable BOOLEAN DEFAULT false,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    )
+  `;
+
+  // Créer la table de liaison items-ressources
+  await sql`
+    CREATE TABLE IF NOT EXISTS item_resource_requirements (
+      id SERIAL PRIMARY KEY,
+      item_id INTEGER NOT NULL,
+      resource_id INTEGER NOT NULL,
+      quantity INTEGER NOT NULL DEFAULT 1,
+      created_at TIMESTAMP DEFAULT NOW(),
+      FOREIGN KEY (resource_id) REFERENCES craft_resources(resource_id),
+      UNIQUE(item_id, resource_id)
+    )
+  `;
+
+  // Index pour optimiser les recherches de ressources
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_craft_resources_name ON craft_resources(resource_name)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_craft_resources_type ON craft_resources(resource_type)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_item_resource_item ON item_resource_requirements(item_id)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_item_resource_resource ON item_resource_requirements(resource_id)
   `;
 
   // Créer la table du cache de recherche global
@@ -663,6 +795,109 @@ async function getCraftableItems(sql, profession = null, search = null) {
   }
 }
 
+// Récupérer les statistiques d'import
+async function getImportStats(sql) {
+  try {
+    console.log('📊 Récupération des statistiques d\'import...');
+
+    // Récupérer tous les items avec leur métier
+    const items = await sql`
+      SELECT profession, COUNT(*) as count, MAX(updated_at) as last_update
+      FROM craftable_items
+      GROUP BY profession
+      ORDER BY profession
+    `;
+
+    // Calculer le total
+    const totalItems = items.reduce((sum, item) => sum + parseInt(item.count), 0);
+
+    // Créer l'objet byProfession
+    const byProfession = {};
+    let lastUpdate = null;
+
+    for (const item of items) {
+      byProfession[item.profession] = parseInt(item.count);
+      if (item.last_update && (!lastUpdate || new Date(item.last_update) > new Date(lastUpdate))) {
+        lastUpdate = item.last_update;
+      }
+    }
+
+    console.log(`✅ Stats: ${totalItems} items total, ${Object.keys(byProfession).length} métiers`);
+
+    return {
+      totalItems,
+      byProfession,
+      lastUpdate: lastUpdate ? new Date(lastUpdate).getTime() : null
+    };
+  } catch (error) {
+    console.error('❌ Erreur récupération stats:', error);
+    return {
+      totalItems: 0,
+      byProfession: {},
+      lastUpdate: null
+    };
+  }
+}
+
+// Recherche interne d'items craftables (plus rapide que DofusDB)
+async function searchCraftableItems(sql, searchTerm, limit = 20) {
+  try {
+    console.log(`🔍 Recherche interne: "${searchTerm}" (limit: ${limit})`);
+
+    const items = await sql`
+      SELECT
+        item_id as ankama_id,
+        item_name as name,
+        item_type,
+        profession,
+        level_required as level,
+        item_data,
+        'true' as hasRecipe
+      FROM craftable_items
+      WHERE item_name ILIKE ${'%' + searchTerm + '%'}
+      ORDER BY
+        CASE
+          WHEN item_name ILIKE ${searchTerm + '%'} THEN 1
+          WHEN item_name ILIKE ${'%' + searchTerm + '%'} THEN 2
+          ELSE 3
+        END,
+        item_name
+      LIMIT ${limit}
+    `;
+
+    // Formater les résultats pour correspondre au format DofusDB
+    const formattedItems = items.map(item => {
+      let itemData = {};
+      try {
+        itemData = typeof item.item_data === 'string' ? JSON.parse(item.item_data) : item.item_data || {};
+      } catch (e) {
+        console.warn('Erreur parsing item_data:', e);
+      }
+
+      return {
+        ankama_id: item.ankama_id,
+        name: item.name,
+        level: item.level || 1,
+        type: {
+          name: item.item_type || 'Objet'
+        },
+        image_urls: itemData.image_urls || {
+          icon: `https://api.dofusdb.fr/img/items/${item.ankama_id}.png`
+        },
+        recipe: itemData.recipe || [],
+        hasRecipe: true,
+        profession: item.profession
+      };
+    });
+
+    console.log(`✅ ${formattedItems.length} items trouvés pour "${searchTerm}"`);
+    return formattedItems;
+  } catch (error) {
+    console.error('❌ Erreur recherche interne:', error);
+    return [];
+  }
+}
+
 // Récupérer les items détaillés par métier pour l'admin
 async function getItemsByProfession(sql, profession) {
   try {
@@ -719,6 +954,139 @@ async function cleanDuplicateItems(sql, profession) {
   } catch (error) {
     console.error(`❌ Erreur nettoyage doublons ${profession}:`, error);
     return 0;
+  }
+}
+
+// Extraire et sauvegarder les ressources depuis les recettes
+async function extractAndSaveResources(sql) {
+  try {
+    console.log('🔍 Extraction des ressources depuis les recettes...');
+
+    // Récupérer tous les items avec leurs recettes
+    const items = await sql`
+      SELECT item_id, item_name, item_data
+      FROM craftable_items
+      WHERE item_data IS NOT NULL
+    `;
+
+    const resourcesMap = new Map();
+    const itemResourceLinks = [];
+
+    for (const item of items) {
+      let itemData = {};
+      try {
+        itemData = typeof item.item_data === 'string' ? JSON.parse(item.item_data) : item.item_data || {};
+      } catch (e) {
+        continue;
+      }
+
+      const recipe = itemData.recipe || [];
+
+      for (const ingredient of recipe) {
+        if (ingredient.item_ankama_id && ingredient.name) {
+          // Ajouter la ressource à la map
+          if (!resourcesMap.has(ingredient.item_ankama_id)) {
+            resourcesMap.set(ingredient.item_ankama_id, {
+              resource_id: ingredient.item_ankama_id,
+              resource_name: ingredient.name,
+              resource_type: ingredient.type || 'Matériau',
+              is_harvestable: false, // À déterminer plus tard
+              is_droppable: false,   // À déterminer plus tard
+              is_craftable: false    // À déterminer plus tard
+            });
+          }
+
+          // Ajouter la liaison item-ressource
+          itemResourceLinks.push({
+            item_id: item.item_id,
+            resource_id: ingredient.item_ankama_id,
+            quantity: ingredient.quantity || 1
+          });
+        }
+      }
+    }
+
+    console.log(`📦 ${resourcesMap.size} ressources uniques trouvées`);
+    console.log(`🔗 ${itemResourceLinks.length} liaisons item-ressource créées`);
+
+    // Sauvegarder les ressources
+    let savedResources = 0;
+    for (const resource of resourcesMap.values()) {
+      try {
+        await sql`
+          INSERT INTO craft_resources
+          (resource_id, resource_name, resource_type, is_harvestable, is_droppable, is_craftable)
+          VALUES (${resource.resource_id}, ${resource.resource_name}, ${resource.resource_type},
+                  ${resource.is_harvestable}, ${resource.is_droppable}, ${resource.is_craftable})
+          ON CONFLICT (resource_id)
+          DO UPDATE SET
+            resource_name = EXCLUDED.resource_name,
+            resource_type = EXCLUDED.resource_type,
+            updated_at = NOW()
+        `;
+        savedResources++;
+      } catch (error) {
+        console.warn(`⚠️ Erreur sauvegarde ressource ${resource.resource_name}:`, error.message);
+      }
+    }
+
+    // Sauvegarder les liaisons item-ressource
+    let savedLinks = 0;
+    for (const link of itemResourceLinks) {
+      try {
+        await sql`
+          INSERT INTO item_resource_requirements
+          (item_id, resource_id, quantity)
+          VALUES (${link.item_id}, ${link.resource_id}, ${link.quantity})
+          ON CONFLICT (item_id, resource_id)
+          DO UPDATE SET
+            quantity = EXCLUDED.quantity
+        `;
+        savedLinks++;
+      } catch (error) {
+        console.warn(`⚠️ Erreur sauvegarde liaison ${link.item_id}-${link.resource_id}:`, error.message);
+      }
+    }
+
+    console.log(`✅ ${savedResources} ressources sauvegardées`);
+    console.log(`✅ ${savedLinks} liaisons sauvegardées`);
+
+    return {
+      success: true,
+      resourcesCount: savedResources,
+      linksCount: savedLinks
+    };
+  } catch (error) {
+    console.error('❌ Erreur extraction ressources:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+// Récupérer les ressources nécessaires pour un item
+async function getItemResources(sql, itemId) {
+  try {
+    const resources = await sql`
+      SELECT
+        cr.resource_id,
+        cr.resource_name,
+        cr.resource_type,
+        cr.is_harvestable,
+        cr.is_droppable,
+        cr.is_craftable,
+        irr.quantity
+      FROM item_resource_requirements irr
+      JOIN craft_resources cr ON irr.resource_id = cr.resource_id
+      WHERE irr.item_id = ${itemId}
+      ORDER BY cr.resource_name
+    `;
+
+    return resources;
+  } catch (error) {
+    console.error(`❌ Erreur récupération ressources item ${itemId}:`, error);
+    return [];
   }
 }
 

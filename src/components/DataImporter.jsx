@@ -241,6 +241,39 @@ const DataImporter = ({ isOpen, onClose }) => {
     }
   }
 
+  const extractResources = async () => {
+    try {
+      addLog('🔍 Extraction des ressources depuis les recettes...', 'info')
+
+      const baseUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      const response = await fetch(`${baseUrl}?action=extract_resources`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      if (result.success) {
+        addLog(`✅ ${result.resourcesCount} ressources extraites et sauvegardées`, 'success')
+        addLog(`✅ ${result.linksCount} liaisons item-ressource créées`, 'success')
+      } else {
+        addLog(`❌ Erreur extraction: ${result.error}`, 'error')
+      }
+    } catch (error) {
+      console.error('Erreur extraction ressources:', error)
+      addLog(`❌ Erreur extraction ressources: ${error.message}`, 'error')
+    }
+  }
+
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Jamais'
     return new Date(timestamp).toLocaleString()
@@ -389,6 +422,15 @@ const DataImporter = ({ isOpen, onClose }) => {
                 className="btn btn-warning btn-debug"
               >
                 🔍 Debug API
+              </button>
+
+              <button
+                onClick={extractResources}
+                disabled={importing || updating}
+                className="btn btn-info"
+                title="Extraire les ressources depuis les recettes"
+              >
+                🧪 Extraire Ressources
               </button>
             </div>
 
