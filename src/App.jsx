@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/storage.js'
 // import { searchItems, getItemDetails, getMaterialDetails } from './services/dofusApi.js'
 import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkItemHasRecipe } from './services/dofusDbApi.js'
+import craftableService from './services/craftableService.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
 import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices, migratePricesWithNames } from './services/priceStorage.js'
@@ -19,6 +20,7 @@ import CacheStats from './components/CacheStats.jsx'
 import UserAuth from './components/UserAuth.jsx'
 import ItemMessage from './components/ItemMessage.jsx'
 import ServerTutorial from './components/ServerTutorial.jsx'
+import DataImporter from './components/DataImporter.jsx'
 import './styles/App.css'
 
 function App() {
@@ -38,6 +40,7 @@ function App() {
   const [currentServer, setCurrentServer] = useState('')
   const [itemMessage, setItemMessage] = useState(null)
   const [showServerTutorial, setShowServerTutorial] = useState(false)
+  const [showDataImporter, setShowDataImporter] = useState(false)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -185,22 +188,27 @@ function App() {
     }))
   }
 
-  // Recherche d'objets via l'API DofusDude
+  // Recherche d'objets craftables avec cache intelligent
   const handleSearch = async (term) => {
-    if (!term || term.length < 3) {
+    if (!term || term.length < 2) {
       setSearchResults([])
       return
     }
 
     setLoading(true)
     try {
-      const items = await searchItems(term)
+      // Utiliser le service craftable avec cache intelligent
+      const items = await craftableService.searchItems(term)
       // Enrichir les objets avec les informations de métier manquantes
       const enrichedItems = items.map(item => enrichItemWithProfession(item))
       setSearchResults(enrichedItems)
+      console.log(`🔍 ${enrichedItems.length} objets craftables trouvés pour "${term}"`)
     } catch (error) {
       setSearchResults([])
-      alert(`Erreur de recherche: ${error.message}. Vérifiez la console pour plus de détails.`)
+      setItemMessage({
+        type: 'error',
+        message: `Erreur de recherche: ${error.message}`
+      })
     }
     setLoading(false)
   }
@@ -564,6 +572,7 @@ function App() {
       <Header
         setShowPriceManager={setShowPriceManager}
         setShowPriceTrends={setShowPriceTrends}
+        setShowDataImporter={setShowDataImporter}
         checkProfessionLevels={checkProfessionLevels}
         setCheckProfessionLevels={setCheckProfessionLevels}
       />
@@ -632,6 +641,12 @@ function App() {
         isOpen={showServerTutorial}
         onClose={() => setShowServerTutorial(false)}
         onOpenProfile={() => setShowUserProfile(true)}
+      />
+
+      {/* Importateur de données */}
+      <DataImporter
+        isOpen={showDataImporter}
+        onClose={() => setShowDataImporter(false)}
       />
     </div>
   )

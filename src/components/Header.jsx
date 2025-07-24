@@ -5,6 +5,7 @@ import CacheStats from './CacheStats.jsx'
 const Header = ({
   setShowPriceManager,
   setShowPriceTrends,
+  setShowDataImporter,
   checkProfessionLevels,
   setCheckProfessionLevels
 }) => {
@@ -64,6 +65,17 @@ const Header = ({
           >
             <span className="btn-icon">💰</span>
             <span className="btn-text">Prix</span>
+            <div className="btn-glow"></div>
+          </button>
+
+          {/* Bouton Admin (temporaire) */}
+          <button
+            className="btn-modern btn-admin"
+            onClick={() => setShowDataImporter(true)}
+            title="Administration - Importation des données"
+          >
+            <span className="btn-icon">🔧</span>
+            <span className="btn-text">Admin</span>
             <div className="btn-glow"></div>
           </button>
 

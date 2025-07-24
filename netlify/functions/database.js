@@ -143,6 +143,53 @@ exports.handler = async (event, context) => {
           body: JSON.stringify(professions)
         };
 
+      case 'save_craftable_items':
+        // Sauvegarder les objets craftables
+        const savedItems = await saveCraftableItems(sql, body);
+        return {
+          statusCode: 201,
+          headers,
+          body: JSON.stringify(savedItems)
+        };
+
+      case 'get_craftable_items':
+        // Récupérer les objets craftables
+        const { profession, search } = event.queryStringParameters;
+        const craftableItems = await getCraftableItems(sql, profession, search);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(craftableItems)
+        };
+
+      case 'save_search_cache':
+        // Sauvegarder une recherche dans le cache
+        const cachedSearch = await saveSearchCache(sql, body);
+        return {
+          statusCode: 201,
+          headers,
+          body: JSON.stringify(cachedSearch)
+        };
+
+      case 'get_search_cache':
+        // Récupérer une recherche du cache
+        const { term } = event.queryStringParameters;
+        const searchResult = await getSearchCache(sql, term);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(searchResult)
+        };
+
+      case 'update_craftable_data':
+        // Mettre à jour les données craftables depuis DofusDB
+        const updateResult = await updateCraftableData(sql);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(updateResult)
+        };
+
       default:
         return {
           statusCode: 400,
@@ -254,6 +301,53 @@ async function initializeTables(sql) {
       updated_at TIMESTAMP DEFAULT NOW(),
       UNIQUE(user_id, setting_key)
     )
+  `;
+
+  // Créer la table des objets craftables par métier
+  await sql`
+    CREATE TABLE IF NOT EXISTS craftable_items (
+      id SERIAL PRIMARY KEY,
+      item_id INTEGER UNIQUE NOT NULL,
+      item_name VARCHAR(255) NOT NULL,
+      item_type VARCHAR(100),
+      profession VARCHAR(100) NOT NULL,
+      level_required INTEGER DEFAULT 1,
+      item_data JSONB,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    )
+  `;
+
+  // Index pour optimiser les recherches
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_craftable_items_profession ON craftable_items(profession)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_craftable_items_name ON craftable_items(item_name)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_craftable_items_type ON craftable_items(item_type)
+  `;
+
+  // Créer la table du cache de recherche global
+  await sql`
+    CREATE TABLE IF NOT EXISTS search_cache (
+      id SERIAL PRIMARY KEY,
+      search_term VARCHAR(255) NOT NULL,
+      search_results JSONB NOT NULL,
+      search_count INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW(),
+      UNIQUE(search_term)
+    )
+  `;
+
+  // Index pour optimiser les recherches dans le cache
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_search_cache_term ON search_cache(search_term)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_search_cache_count ON search_cache(search_count DESC)
   `;
 
   console.log('✅ All tables initialized successfully');
@@ -395,4 +489,111 @@ async function getProfessions(sql, userId) {
     ORDER BY profession_name
   `;
   return professions;
+}
+
+// Fonctions pour les objets craftables
+async function saveCraftableItems(sql, itemsData) {
+  const { items } = itemsData;
+  const results = [];
+
+  for (const item of items) {
+    const craftableItem = await sql`
+      INSERT INTO craftable_items
+      (item_id, item_name, item_type, profession, level_required, item_data)
+      VALUES (${item.item_id}, ${item.item_name}, ${item.item_type}, ${item.profession}, ${item.level_required}, ${JSON.stringify(item.item_data)})
+      ON CONFLICT (item_id)
+      DO UPDATE SET
+        item_name = EXCLUDED.item_name,
+        item_type = EXCLUDED.item_type,
+        profession = EXCLUDED.profession,
+        level_required = EXCLUDED.level_required,
+        item_data = EXCLUDED.item_data,
+        updated_at = NOW()
+      RETURNING *
+    `;
+    results.push(craftableItem[0]);
+  }
+
+  return results;
+}
+
+async function getCraftableItems(sql, profession = null, search = null) {
+  let query = sql`SELECT * FROM craftable_items`;
+
+  if (profession && search) {
+    query = sql`
+      SELECT * FROM craftable_items
+      WHERE profession = ${profession}
+      AND (item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'})
+      ORDER BY item_name
+    `;
+  } else if (profession) {
+    query = sql`
+      SELECT * FROM craftable_items
+      WHERE profession = ${profession}
+      ORDER BY item_name
+    `;
+  } else if (search) {
+    query = sql`
+      SELECT * FROM craftable_items
+      WHERE item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'}
+      ORDER BY item_name
+    `;
+  } else {
+    query = sql`
+      SELECT * FROM craftable_items
+      ORDER BY profession, item_name
+    `;
+  }
+
+  const items = await query;
+  return items;
+}
+
+// Fonctions pour le cache de recherche
+async function saveSearchCache(sql, searchData) {
+  const { search_term, search_results } = searchData;
+
+  const cachedSearch = await sql`
+    INSERT INTO search_cache (search_term, search_results)
+    VALUES (${search_term}, ${JSON.stringify(search_results)})
+    ON CONFLICT (search_term)
+    DO UPDATE SET
+      search_results = EXCLUDED.search_results,
+      search_count = search_cache.search_count + 1,
+      updated_at = NOW()
+    RETURNING *
+  `;
+
+  return cachedSearch[0];
+}
+
+async function getSearchCache(sql, searchTerm) {
+  const cached = await sql`
+    SELECT * FROM search_cache
+    WHERE search_term = ${searchTerm}
+  `;
+
+  if (cached.length > 0) {
+    // Incrémenter le compteur d'utilisation
+    await sql`
+      UPDATE search_cache
+      SET search_count = search_count + 1
+      WHERE search_term = ${searchTerm}
+    `;
+
+    return cached[0];
+  }
+
+  return null;
+}
+
+// Fonction pour mettre à jour les données craftables (à appeler périodiquement)
+async function updateCraftableData(sql) {
+  // Cette fonction sera appelée pour mettre à jour les données depuis DofusDB
+  // Pour le moment, on retourne juste un message
+  return {
+    message: 'Update function ready - will be implemented with DofusDB integration',
+    timestamp: new Date().toISOString()
+  };
 }
