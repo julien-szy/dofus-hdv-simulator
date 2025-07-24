@@ -565,9 +565,11 @@ class DofusDataImporter {
 export const dofusDataImporter = new DofusDataImporter()
 
 // Fonction globale pour arrêter l'import (accessible depuis la console)
-window.stopDofusImport = () => {
-  console.log('🛑 Arrêt de tous les imports Dofus...')
-  dofusDataImporter.stopImport()
+if (typeof window !== 'undefined') {
+  window.stopDofusImport = () => {
+    console.log('🛑 Arrêt de tous les imports Dofus...')
+    dofusDataImporter.stopImport()
+  }
 }
 
 export default dofusDataImporter
