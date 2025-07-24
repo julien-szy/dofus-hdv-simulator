@@ -24,7 +24,9 @@
     "build-optimized": "node scripts-node/optimizedBuild.js",
     "build-simple": "node scripts-node/simpleBuild.js",
     "force-deploy": "node scripts-node/forceDeploy.js",
-    "quick-deploy": "node scripts-node/quickDeploy.js"
+    "quick-deploy": "node scripts-node/quickDeploy.js",
+    "ultra-fast-build": "node scripts-node/ultraFastBuild.js",
+    "ultra-fast-deploy": "node scripts-node/ultraFastDeploy.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

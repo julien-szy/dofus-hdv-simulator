@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "npm run build"
+  command = "node scripts-node/ultraFastBuild.js"
 
 [functions]
   directory = "netlify/functions"
@@ -9,6 +9,11 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_FLAGS = "--legacy-peer-deps"
+  # Désactiver les caches inutiles
+  NETLIFY_USE_YARN = "false"
+  NETLIFY_USE_NPM = "true"
+  # Forcer l'utilisation de npm
+  NPM_CONFIG_PRODUCTION = "false"
 
 # Configuration simple sans plugins externes
 
