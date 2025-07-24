@@ -144,7 +144,14 @@ const DataImporter = ({ isOpen, onClose }) => {
 
       if (result.success) {
         const icon = getJobIcon(jobName)
-        addLog(`${icon} ${jobName}: ${result.totalItems} objets importés depuis ${result.totalRecipes} recettes`, 'success')
+        if (result.totalItems > 0) {
+          addLog(`${icon} ${jobName}: ${result.totalItems} objets importés depuis ${result.totalRecipes} recettes`, 'success')
+          if (result.skippedItems > 0) {
+            addLog(`⚠️ ${jobName}: ${result.skippedItems} recettes ignorées (sans résultat valide)`, 'warning')
+          }
+        } else {
+          addLog(`${icon} ${jobName}: ${result.message || 'Aucun objet à importer'}`, 'info')
+        }
         await loadStats()
         loadAutoStatus()
       } else {
