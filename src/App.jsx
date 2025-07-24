@@ -50,10 +50,13 @@ function App() {
   }, [])
 
   const loadInitialData = async () => {
+    // Initialiser la base de données et l'utilisateur
+    await optimizedUserService.initializeDatabase()
+    
     // Vérifier si un utilisateur est connecté
     const user = optimizedUserService.getCurrentUser()
+    console.log('🔍 Utilisateur détecté:', user)
     setCurrentUser(user)
-
 
     if (user) {
       // Utilisateur connecté - charger toutes les données

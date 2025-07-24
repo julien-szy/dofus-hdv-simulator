@@ -21,10 +21,30 @@ class OptimizedUserService {
 
       const result = await response.json();
       console.log('✅ Base de données optimisée initialisée');
+      
+      // Initialiser l'utilisateur depuis localStorage
+      this.initializeUserFromStorage();
+      
       return result;
     } catch (error) {
       console.error('❌ Erreur initialisation BDD:', error);
+      
+      // Même en cas d'erreur, initialiser l'utilisateur
+      this.initializeUserFromStorage();
+      
       return { success: true, message: 'Mode local storage' };
+    }
+  }
+
+  initializeUserFromStorage() {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUser = JSON.parse(storedUser);
+        console.log('✅ Utilisateur restauré depuis localStorage:', this.currentUser.username);
+      }
+    } catch (error) {
+      console.error('❌ Erreur restauration utilisateur:', error);
     }
   }
 
@@ -67,7 +87,23 @@ class OptimizedUserService {
   }
 
   getCurrentUser() {
-    return this.currentUser;
+    // Vérifier d'abord la mémoire, puis le localStorage
+    if (this.currentUser) {
+      return this.currentUser;
+    }
+    
+    // Récupérer depuis localStorage
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUser = JSON.parse(storedUser);
+        return this.currentUser;
+      }
+    } catch (error) {
+      console.error('❌ Erreur lecture utilisateur localStorage:', error);
+    }
+    
+    return null;
   }
 
   // === FAVORIS ===
