@@ -16,9 +16,9 @@ class LocalDataService {
     try {
       // Charger les données depuis les fichiers JSON locaux
       const [dofusData, craftableItemsMapping, materialsMapping] = await Promise.all([
-        this.loadJsonFile('/src/data/local/dofus-data.json'),
-        this.loadJsonFile('/public/craftable-items-mapping.json'),
-        this.loadJsonFile('/public/materials-mapping.json')
+        this.loadJsonFile('/dofus-data.json'),
+        this.loadJsonFile('/craftable-items-mapping.json'),
+        this.loadJsonFile('/materials-mapping.json')
       ]);
 
       this.data = dofusData;

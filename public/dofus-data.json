@@ -1798,7 +1798,6 @@
     "totalItems": 50,
     "totalRecipes": 50,
     "totalJobs": 10,
-    "testMode": true,
-    "optimizedAt": "2025-07-24T22:33:11.670Z"
+    "testMode": true
   }
 }

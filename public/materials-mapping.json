@@ -1,1 +1,1102 @@
-{}
+{
+  "288": {
+    "id": 288,
+    "name": "Graine de Tournesol",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/58006.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "300": {
+    "id": 300,
+    "name": "Graine de Pavot",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/58011.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "303": {
+    "id": 303,
+    "name": "Bois de Frêne",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/38017.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "306": {
+    "id": 306,
+    "name": "Fleur de Pissenlit Diabolique",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35018.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "310": {
+    "id": 310,
+    "name": "Os de Chafer",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47015.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "312": {
+    "id": 312,
+    "name": "Fer",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/39024.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "315": {
+    "id": 315,
+    "name": "Diamant",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/50025.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "362": {
+    "id": 362,
+    "name": "Peau de Larve Bleue",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59032.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "363": {
+    "id": 363,
+    "name": "Peau de Larve Orange",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59033.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "364": {
+    "id": 364,
+    "name": "Peau de Larve Verte",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59034.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "365": {
+    "id": 365,
+    "name": "Patte d'Arakne",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/103035.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "366": {
+    "id": 366,
+    "name": "Bec du Tofu",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47037.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "371": {
+    "id": 371,
+    "name": "Sourcil de Moskito",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15044.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "377": {
+    "id": 377,
+    "name": "Épine du Champ Champ",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15049.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "378": {
+    "id": 378,
+    "name": "Sporme du Champ Champ",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15050.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "385": {
+    "id": 385,
+    "name": "Bave de Bouftou",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15057.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "387": {
+    "id": 387,
+    "name": "Défense du Sanglier",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47059.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "388": {
+    "id": 388,
+    "name": "Poils d'Arakne Malade",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/54060.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "394": {
+    "id": 394,
+    "name": "Noisette",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/58066.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "407": {
+    "id": 407,
+    "name": "Pic de Prespic",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47134.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "413": {
+    "id": 413,
+    "name": "Bec du Kwak de Vent",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47110.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "414": {
+    "id": 414,
+    "name": "Plume du Kwak de Glace",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53112.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "421": {
+    "id": 421,
+    "name": "Ortie",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/36642.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "450": {
+    "id": 450,
+    "name": "Pierre de Granit",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/51001.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "479": {
+    "id": 479,
+    "name": "Ivoire",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47088.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "480": {
+    "id": 480,
+    "name": "Minerai Étrange",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/39090.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "643": {
+    "id": 643,
+    "name": "Fil de Soie",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15486.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "648": {
+    "id": 648,
+    "name": "Aile de Bourdard",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/104750.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "650": {
+    "id": 650,
+    "name": "Duvet de Bourdard",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/54709.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "746": {
+    "id": 746,
+    "name": "Ébonite",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/40658.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "747": {
+    "id": 747,
+    "name": "Aluminite",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/40660.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "748": {
+    "id": 748,
+    "name": "Magnésite",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/40659.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "750": {
+    "id": 750,
+    "name": "Kouartz",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/40664.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "881": {
+    "id": 881,
+    "name": "Laine de Ramane Strubien",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/57208.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "885": {
+    "id": 885,
+    "name": "Laine de Boufton Noir",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/57210.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "1613": {
+    "id": 1613,
+    "name": "Écaille de Chef Crocodaille",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59547.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "1673": {
+    "id": 1673,
+    "name": "Patte d'Arakne Magique",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/103392.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "1674": {
+    "id": 1674,
+    "name": "Champignon Luidegît",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15390.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "1891": {
+    "id": 1891,
+    "name": "Peau de serpentin",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59361.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "1984": {
+    "id": 1984,
+    "name": "Cendres Éternelles",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/48671.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2273": {
+    "id": 2273,
+    "name": "Tissu Pourpre",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/55427.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2288": {
+    "id": 2288,
+    "name": "Patte de Wabbit",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/103440.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2320": {
+    "id": 2320,
+    "name": "Collier Cassé de Macien",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15462.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2436": {
+    "id": 2436,
+    "name": "Gelée Citron",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/110490.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2455": {
+    "id": 2455,
+    "name": "Sang de Bouftou",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15499.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2467": {
+    "id": 2467,
+    "name": "Rondelles de Milirat Strubien",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/63373.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2468": {
+    "id": 2468,
+    "name": "Estomac de Ouassingue",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15506.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2482": {
+    "id": 2482,
+    "name": "Charnière Cassée",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15942.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2491": {
+    "id": 2491,
+    "name": "Œil d'Arakmuté",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/109516.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2496": {
+    "id": 2496,
+    "name": "Queue de Rat d'Hyoactif",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/65521.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2539": {
+    "id": 2539,
+    "name": "Substrat de Buisson",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/26016.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2540": {
+    "id": 2540,
+    "name": "Substrat de Futaie",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/26017.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2543": {
+    "id": 2543,
+    "name": "Substrat de Fascine",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/26018.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2552": {
+    "id": 2552,
+    "name": "Œil de Kanigrou",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/109563.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2563": {
+    "id": 2563,
+    "name": "Peau de Larve Jaune",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/25138.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2566": {
+    "id": 2566,
+    "name": "Tranche Magique de Krambwork",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15576.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2571": {
+    "id": 2571,
+    "name": "Patte de Tofukaz",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/103577.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2617": {
+    "id": 2617,
+    "name": "Tranche de Nodkoko",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15605.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2620": {
+    "id": 2620,
+    "name": "Rhum de Qualité",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15177.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2645": {
+    "id": 2645,
+    "name": "Groin de Dragon Cochon",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15620.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2647": {
+    "id": 2647,
+    "name": "Oreille de Médibwork",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/106623.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2659": {
+    "id": 2659,
+    "name": "Pétale de Tournesol Sauvage",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35632.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2662": {
+    "id": 2662,
+    "name": "Bave de Rose Démoniaque",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15634.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "2805": {
+    "id": 2805,
+    "name": "Testicules Magiques de Muloubard",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15650.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6841": {
+    "id": 6841,
+    "name": "Œil de Pikdoa",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/25151.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6842": {
+    "id": 6842,
+    "name": "Pétale de Rose Obscure",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/25153.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6845": {
+    "id": 6845,
+    "name": "Casque de Martoa",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/25149.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6899": {
+    "id": 6899,
+    "name": "Plume de Piou Vert",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53116.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6900": {
+    "id": 6900,
+    "name": "Plume de Piou Rouge",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53117.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6902": {
+    "id": 6902,
+    "name": "Plume de Piou Jaune",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53118.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "6903": {
+    "id": 6903,
+    "name": "Plume de Piou Rose",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53119.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8384": {
+    "id": 8384,
+    "name": "Étoffe Magique de Moon",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/55722.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8385": {
+    "id": 8385,
+    "name": "Peau de Shin Larve",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59614.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8391": {
+    "id": 8391,
+    "name": "Peau de Don Dorgan",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59617.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8392": {
+    "id": 8392,
+    "name": "Peau de Don Duss Ang",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59618.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8397": {
+    "id": 8397,
+    "name": "Poil du Wa Wabbit",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/54667.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8483": {
+    "id": 8483,
+    "name": "Peau de Ramane d'Égoutant",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/59622.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8738": {
+    "id": 8738,
+    "name": "Sacrum magistral",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47011.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8747": {
+    "id": 8747,
+    "name": "Pétale Passaoh",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35004.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8748": {
+    "id": 8748,
+    "name": "Pétale Morito",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35006.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "8995": {
+    "id": 8995,
+    "name": "Étoffe de Gourlo le Terrible",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/55729.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "9385": {
+    "id": 9385,
+    "name": "Fleur de Blop Coco Royal",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35009.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "9386": {
+    "id": 9386,
+    "name": "Fleur de Blop Indigo Royal",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/35011.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "11696": {
+    "id": 11696,
+    "name": "Cagoule du Kanniboul Ebil",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15784.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "11814": {
+    "id": 11814,
+    "name": "Moustache de Boostache",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/54680.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "12737": {
+    "id": 12737,
+    "name": "Galet cramoisi",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15290.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "12745": {
+    "id": 12745,
+    "name": "Substrat de Bocage",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/12729.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13098": {
+    "id": 13098,
+    "name": "Casque du Chafer Primitif",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15798.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13140": {
+    "id": 13140,
+    "name": "Serrure du Coffre des Forgerons",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15799.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13339": {
+    "id": 13339,
+    "name": "Sceau Royal Contrefait",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15131.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13366": {
+    "id": 13366,
+    "name": "Galet Lunaire",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/152005.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13487": {
+    "id": 13487,
+    "name": "Serviette de Plage",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/55130.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "13726": {
+    "id": 13726,
+    "name": "Conque Marine",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15813.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14284": {
+    "id": 14284,
+    "name": "Flamme Spectrale",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15247.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14462": {
+    "id": 14462,
+    "name": "Os de Wabbit Squelette",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47827.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14463": {
+    "id": 14463,
+    "name": "Crâne de Wabbit Squelette",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/47828.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14512": {
+    "id": 14512,
+    "name": "Plume de Gobvious",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53658.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14517": {
+    "id": 14517,
+    "name": "Slip troué de Dramak",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164026.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "14921": {
+    "id": 14921,
+    "name": "Étoffe Mystérieuse",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/15848.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16181": {
+    "id": 16181,
+    "name": "Globule de Nyée",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164061.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16440": {
+    "id": 16440,
+    "name": "Ferrite",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/40712.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16487": {
+    "id": 16487,
+    "name": "Bois Vermoulu",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/38683.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16489": {
+    "id": 16489,
+    "name": "Planche Agglomérée",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/95093.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16512": {
+    "id": 16512,
+    "name": "Plume Chimérique",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/53661.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16515": {
+    "id": 16515,
+    "name": "Queue de Chapardam",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/65767.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16518": {
+    "id": 16518,
+    "name": "Feu Intérieur",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164067.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16522": {
+    "id": 16522,
+    "name": "Peau de Gloot",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164066.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16523": {
+    "id": 16523,
+    "name": "Volve d'Aminite",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/119014.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "16524": {
+    "id": 16524,
+    "name": "Relique d'Incarnam",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164068.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  },
+  "18385": {
+    "id": 18385,
+    "name": "Cœur du Mantiscore",
+    "level": 0,
+    "type": "Matériau",
+    "img": "https://api.dofusdb.fr/img/items/164118.png",
+    "harvestable": false,
+    "droppable": false,
+    "craftable": false
+  }
+}

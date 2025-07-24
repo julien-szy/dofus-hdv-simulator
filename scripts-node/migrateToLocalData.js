@@ -75,7 +75,7 @@ class DataMigrationService {
     
     try {
       // Charger les données existantes
-      const dofusDataPath = path.join(this.outputDir, 'dofus-data.json');
+      const dofusDataPath = path.join(this.publicDir, 'dofus-data.json');
       const dofusData = JSON.parse(await fs.readFile(dofusDataPath, 'utf8'));
       
       const materials = {};
@@ -127,7 +127,7 @@ class DataMigrationService {
     
     try {
       // Charger les données existantes
-      const dofusDataPath = path.join(this.outputDir, 'dofus-data.json');
+      const dofusDataPath = path.join(this.publicDir, 'dofus-data.json');
       const dofusData = JSON.parse(await fs.readFile(dofusDataPath, 'utf8'));
       
       // Créer une version optimisée avec seulement les données nécessaires

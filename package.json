@@ -28,7 +28,8 @@
     "ultra-fast-build": "node scripts-node/ultraFastBuild.js",
     "ultra-fast-deploy": "node scripts-node/ultraFastDeploy.js",
     "clear-cache": "node scripts-node/clearNetlifyCache.js",
-    "optimize-lfs": "node scripts-node/optimizeGitLFS.js"
+    "optimize-lfs": "node scripts-node/optimizeGitLFS.js",
+    "generate-materials": "node scripts-node/generateMaterialsMapping.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
