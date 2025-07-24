@@ -26,10 +26,10 @@ const CacheStats = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="cache-stats-toggle"
+        className="cache-stats-toggle-corner"
         title="Statistiques du cache"
       >
-        📊 Cache
+        💾
       </button>
     )
   }

@@ -24,23 +24,7 @@ const Header = ({
           </div>
         </div>
 
-        {/* Navigation principale */}
-        <nav className="header-nav">
-          <div className="nav-links">
-            <a href="#" className="nav-link active">
-              <span className="nav-icon">🏠</span>
-              <span>Accueil</span>
-            </a>
-            <a href="#" className="nav-link disabled" title="Bientôt disponible !">
-              <span className="nav-icon">📊</span>
-              <span>Statistiques</span>
-            </a>
-            <a href="#" className="nav-link disabled" title="Bientôt disponible !">
-              <span className="nav-icon">📈</span>
-              <span>Tendances</span>
-            </a>
-          </div>
-        </nav>
+
 
         {/* Contrôles utilisateur */}
         <div className="header-controls">
@@ -80,9 +64,6 @@ const Header = ({
             <span className="btn-text">Prix</span>
             <div className="btn-glow"></div>
           </button>
-
-          {/* Statistiques du cache */}
-          <CacheStats />
 
           {/* Authentification */}
           <div className="auth-container">

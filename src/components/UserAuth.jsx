@@ -115,23 +115,23 @@ export default function UserAuth() {
 
   if (user) {
     return (
-      <div className="user-profile-modern">
-        <div className="user-avatar-modern">
-          <div className="avatar-circle">
+      <div className="user-profile-header">
+        <div className="user-avatar-header">
+          <div className="avatar-circle-header">
             {user.username.charAt(0).toUpperCase()}
           </div>
-          <div className="user-status-dot"></div>
+          <div className="user-status-dot-header"></div>
         </div>
-        <div className="user-info">
-          <span className="user-name-modern">{user.username}</span>
-          <span className="user-status">En ligne</span>
+        <div className="user-info-header">
+          <span className="user-name-header">{user.username}</span>
+          <span className="user-status-header">En ligne</span>
         </div>
         <button
           onClick={handleLogout}
-          className="logout-btn-modern"
+          className="logout-btn-header"
           title="Déconnexion"
         >
-          <span className="logout-icon">⚡</span>
+          <span className="logout-icon-header">⏻</span>
         </button>
       </div>
     );

@@ -13,6 +13,8 @@ import RecipeDisplay from './components/RecipeDisplay.jsx'
 import ResultsSummary from './components/ResultsSummary.jsx'
 import ProfessionModal from './components/ProfessionModal.jsx'
 import PriceManager from './components/PriceManager.jsx'
+import CacheStats from './components/CacheStats.jsx'
+import UserAuth from './components/UserAuth.jsx'
 import './styles/App.css'
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
   const [showProfessionModal, setShowProfessionModal] = useState(false)
   const [checkProfessionLevels, setCheckProfessionLevels] = useState(true)
   const [showPriceManager, setShowPriceManager] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -34,21 +37,24 @@ function App() {
   }, [])
 
   const loadInitialData = async () => {
-    // Charger d'abord les données locales
-    setCraftCalculations(loadFromLocalStorage(STORAGE_KEYS.CALCULATIONS, []))
-    setPlayerProfessions(loadFromLocalStorage(STORAGE_KEYS.PROFESSIONS, {}))
-    setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
-
-    // Charger les prix stockés localement
-    const storedPrices = getAllStoredPrices()
-    console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
-
-    // Si un utilisateur est connecté, synchroniser avec la BDD
+    // Vérifier si un utilisateur est connecté
     const user = userService.getCurrentUser()
+    setCurrentUser(user)
+
     if (user) {
+      // Utilisateur connecté - charger toutes les données
+      setCraftCalculations(loadFromLocalStorage(STORAGE_KEYS.CALCULATIONS, []))
+      setPlayerProfessions(loadFromLocalStorage(STORAGE_KEYS.PROFESSIONS, {}))
+      setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
+
+      // Charger les prix stockés localement
+      const storedPrices = getAllStoredPrices()
+      console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
+
       console.log(`👤 Utilisateur connecté: ${user.username}, synchronisation...`)
       await syncUserData()
     }
+    // Si pas d'utilisateur connecté, on ne charge rien - l'app sera bloquée
   }
 
   const syncUserData = async () => {
@@ -114,9 +120,12 @@ function App() {
   useEffect(() => {
     const handleUserChange = () => {
       const user = userService.getCurrentUser()
+      setCurrentUser(user)
       if (user) {
         console.log(`👤 Nouvel utilisateur connecté: ${user.username}`)
         syncUserData()
+        // Recharger les données quand l'utilisateur se connecte
+        loadInitialData()
       }
     }
 
@@ -433,6 +442,51 @@ function App() {
     if (document.getElementById('quantity')) document.getElementById('quantity').value = '1'
   }
 
+  // Si pas d'utilisateur connecté, afficher seulement l'écran de connexion
+  if (!currentUser) {
+    return (
+      <div className="hdv-container">
+        <div className="auth-required-screen">
+          <div className="auth-required-content">
+            <div className="auth-required-logo">
+              <div className="logo-icon">⚒️</div>
+              <h1>Dofus HDV Calculator</h1>
+              <p>Calculateur de craft professionnel</p>
+            </div>
+
+            <div className="auth-required-message">
+              <h2>🔐 Connexion Requise</h2>
+              <p>Pour utiliser le calculateur et sauvegarder vos données, vous devez vous connecter ou créer un compte.</p>
+
+              <div className="auth-required-features">
+                <div className="feature-item">
+                  <span className="feature-icon">💾</span>
+                  <span>Sauvegarde automatique de vos calculs</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">📱</span>
+                  <span>Synchronisation multi-appareils</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">💰</span>
+                  <span>Historique des prix et métiers</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">🚀</span>
+                  <span>Accès à toutes les fonctionnalités</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="auth-required-actions">
+              <UserAuth />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="hdv-container">
       <Header
@@ -483,6 +537,9 @@ function App() {
         isOpen={showPriceManager}
         onClose={() => setShowPriceManager(false)}
       />
+
+      {/* Bouton Cache en position fixe */}
+      <CacheStats />
     </div>
   )
 }
