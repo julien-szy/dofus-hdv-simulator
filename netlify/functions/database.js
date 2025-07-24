@@ -199,6 +199,15 @@ exports.handler = async (event, context) => {
           body: JSON.stringify(updateResult)
         };
 
+      case 'delete_calculation':
+        // Supprimer un calcul
+        const deletedCalculation = await deleteCalculation(sql, body);
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(deletedCalculation)
+        };
+
       default:
         return {
           statusCode: 400,
@@ -646,4 +655,37 @@ async function updateCraftableData(sql) {
     message: 'Update function ready - will be implemented with DofusDB integration',
     timestamp: new Date().toISOString()
   };
+}
+
+// Supprimer un calcul
+async function deleteCalculation(sql, data) {
+  const { calculation_id } = data;
+
+  try {
+    console.log(`🗑️ Suppression du calcul ${calculation_id}`);
+
+    const deletedCalculation = await sql`
+      DELETE FROM calculations
+      WHERE id = ${calculation_id}
+      RETURNING *
+    `;
+
+    if (deletedCalculation.length === 0) {
+      console.log(`⚠️ Calcul ${calculation_id} non trouvé`);
+      return {
+        success: false,
+        message: 'Calcul non trouvé'
+      };
+    }
+
+    console.log(`✅ Calcul ${calculation_id} supprimé avec succès`);
+    return {
+      success: true,
+      deletedCalculation: deletedCalculation[0],
+      message: 'Calcul supprimé avec succès'
+    };
+  } catch (error) {
+    console.error(`❌ Erreur suppression calcul ${calculation_id}:`, error);
+    throw error;
+  }
 }

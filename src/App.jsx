@@ -116,9 +116,20 @@ function App() {
     saveToLocalStorage(STORAGE_KEYS.CALCULATIONS, craftCalculations)
 
     // Synchroniser avec la BDD si utilisateur connecté
+    // MAIS seulement pour les ajouts/modifications, pas les suppressions
     const user = userService.getCurrentUser()
     if (user && craftCalculations.length > 0) {
-      syncService.syncCalculations(craftCalculations).catch(console.error)
+      // Synchroniser seulement les calculs qui n'ont pas encore d'ID BDD
+      // ou qui ont été modifiés récemment
+      const calculationsToSync = craftCalculations.filter(calc => {
+        // Sync si pas d'ID BDD ou si modifié récemment (moins de 5 secondes)
+        return !calc.dbId || (Date.now() - calc.id < 5000)
+      })
+
+      if (calculationsToSync.length > 0) {
+        console.log(`🔄 Sync ${calculationsToSync.length} calculs vers BDD`)
+        syncService.syncCalculations(calculationsToSync).catch(console.error)
+      }
     }
   }, [craftCalculations])
 
@@ -513,8 +524,23 @@ function App() {
     document.getElementById('quantity').value = '1'
   }
 
-  const removeCraftCalculation = (id) => {
+  const removeCraftCalculation = async (id) => {
+    // 1. Supprimer localement immédiatement pour l'UX
     setCraftCalculations(prev => prev.filter(calc => calc.id !== id))
+
+    // 2. Supprimer de la BDD si utilisateur connecté
+    const user = userService.getCurrentUser()
+    if (user) {
+      try {
+        console.log(`🗑️ Suppression du calcul ${id} de la BDD...`)
+        await syncService.deleteCalculation(id)
+        console.log(`✅ Calcul ${id} supprimé de la BDD`)
+      } catch (error) {
+        console.error(`❌ Erreur suppression calcul ${id} de la BDD:`, error)
+        // Ne pas remettre le calcul en cas d'erreur BDD,
+        // l'utilisateur a déjà vu la suppression locale
+      }
+    }
   }
 
   // Annuler l'édition

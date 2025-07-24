@@ -267,6 +267,34 @@ class SyncService {
       return null;
     }
   }
+
+  // Supprimer un calcul de la BDD
+  async deleteCalculation(calculationId) {
+    try {
+      console.log(`🗑️ Suppression du calcul ${calculationId} de la BDD...`);
+
+      const response = await fetch(`${this.baseUrl}?action=delete_calculation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          calculation_id: calculationId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(`✅ Calcul ${calculationId} supprimé de la BDD`);
+      return result;
+    } catch (error) {
+      console.error(`❌ Erreur suppression calcul ${calculationId}:`, error);
+      throw error;
+    }
+  }
 }
 
 // Instance singleton
