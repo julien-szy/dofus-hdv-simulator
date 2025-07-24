@@ -1338,11 +1338,11 @@ body {
   align-items: center;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 16px 20px;
+  border-radius: 12px;
+  padding: 8px 12px;
   transition: all 0.3s ease;
   cursor: pointer;
-  max-width: 320px;
+  max-width: 240px;
 }
 
 .profession-verification-toggle:hover {
@@ -1358,37 +1358,37 @@ body {
 .verification-label {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   cursor: pointer;
   user-select: none;
   width: 100%;
 }
 
 .verification-switch {
-  width: 56px;
-  height: 32px;
+  width: 44px;
+  height: 24px;
   background: var(--darker-bg);
-  border: 2px solid var(--border-color);
-  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
 }
 
 .verification-slider {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   background: linear-gradient(135deg, var(--text-muted), #888);
   border-radius: 50%;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 1px;
+  left: 1px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .slider-icon {
@@ -1404,16 +1404,16 @@ body {
 
 .verification-title {
   color: var(--text-light);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .verification-subtitle {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 /* États activé */
@@ -1424,7 +1424,7 @@ body {
 }
 
 .verification-checkbox:checked + .verification-label .verification-slider {
-  transform: translateX(24px);
+  transform: translateX(20px);
   background: linear-gradient(135deg, var(--dark-bg), #1a1a1a);
 }
 

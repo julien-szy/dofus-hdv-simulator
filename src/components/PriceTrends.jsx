@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { searchItems } from '../services/dofusDbApi.js'
 import userService from '../services/userService.js'
+import trendsService from '../services/trendsService.js'
 
 const DOFUS_SERVERS = [
   'Dakal', 'Mikhal', 'Kourial', // Pionniers
@@ -15,6 +16,15 @@ const PriceTrends = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [priceHistory, setPriceHistory] = useState([])
   const [chartData, setChartData] = useState(null)
+  const [trendStats, setTrendStats] = useState(null)
+
+  // Charger le serveur de l'utilisateur au démarrage
+  useEffect(() => {
+    const userServer = trendsService.getCurrentUserServer()
+    if (userServer) {
+      setSelectedServer(userServer)
+    }
+  }, [isOpen])
 
   // Rechercher des items
   const handleSearch = async (term) => {
@@ -50,101 +60,62 @@ const PriceTrends = ({ isOpen, onClose }) => {
   const loadPriceHistory = async (itemId, server) => {
     setLoading(true)
     try {
-      // Simuler des données pour le moment (en attendant la vraie API)
-      const mockData = generateMockPriceHistory(itemId, server)
-      setPriceHistory(mockData)
-      setChartData(formatChartData(mockData))
+      // Charger les vraies données depuis le service
+      const historyData = await trendsService.getPriceHistory(itemId, server, 30)
+      setPriceHistory(historyData)
+      setChartData(formatChartData(historyData))
+
+      // Calculer les statistiques de tendance
+      const stats = trendsService.calculateTrendStats(historyData)
+      setTrendStats(stats)
+
+      console.log(`📊 Historique chargé: ${historyData.length} points, tendance: ${stats.trend}`)
     } catch (error) {
       console.error('Erreur chargement historique:', error)
       setPriceHistory([])
       setChartData(null)
+      setTrendStats(null)
     } finally {
       setLoading(false)
     }
   }
 
-  // Générer des données mock pour le développement
-  const generateMockPriceHistory = (itemId, server) => {
-    const data = []
-    const basePrice = Math.floor(Math.random() * 10000) + 1000
-    const now = new Date()
 
-    for (let i = 30; i >= 0; i--) {
-      const date = new Date(now)
-      date.setDate(date.getDate() - i)
-      
-      const variation = (Math.random() - 0.5) * 0.2 // ±20% variation
-      const price = Math.max(100, Math.floor(basePrice * (1 + variation)))
-      
-      data.push({
-        date: date.toISOString().split('T')[0],
-        price_x1: price,
-        price_x10: Math.floor(price * 0.95),
-        price_x100: Math.floor(price * 0.9),
-        server: server,
-        item_id: itemId
-      })
-    }
-    
-    return data
-  }
 
   // Formater les données pour le chart
   const formatChartData = (data) => {
+    const colors = trendsService.getChartColors()
+
     return {
       labels: data.map(d => new Date(d.date).toLocaleDateString()),
       datasets: [
         {
           label: 'Prix x1',
           data: data.map(d => d.price_x1),
-          borderColor: '#d4af37',
-          backgroundColor: 'rgba(212, 175, 55, 0.1)',
+          borderColor: colors.price_x1.border,
+          backgroundColor: colors.price_x1.background,
           tension: 0.4
         },
         {
           label: 'Prix x10',
           data: data.map(d => d.price_x10),
-          borderColor: '#b8860b',
-          backgroundColor: 'rgba(184, 134, 11, 0.1)',
+          borderColor: colors.price_x10.border,
+          backgroundColor: colors.price_x10.background,
           tension: 0.4
         },
         {
           label: 'Prix x100',
           data: data.map(d => d.price_x100),
-          borderColor: '#8b7355',
-          backgroundColor: 'rgba(139, 115, 85, 0.1)',
+          borderColor: colors.price_x100.border,
+          backgroundColor: colors.price_x100.background,
           tension: 0.4
         }
       ]
     }
   }
 
-  // Formater les prix
-  const formatPrice = (price) => {
-    if (!price) return '0 K'
-    if (price >= 1000000) return `${(price / 1000000).toFixed(1)}M K`
-    if (price >= 1000) return `${(price / 1000).toFixed(0)}K K`
-    return `${price} K`
-  }
-
-  // Calculer la tendance
-  const calculateTrend = (data) => {
-    if (data.length < 2) return { trend: 'stable', percentage: 0 }
-    
-    const recent = data.slice(-7) // 7 derniers jours
-    const older = data.slice(-14, -7) // 7 jours précédents
-    
-    const recentAvg = recent.reduce((sum, d) => sum + d.price_x1, 0) / recent.length
-    const olderAvg = older.reduce((sum, d) => sum + d.price_x1, 0) / older.length
-    
-    const percentage = ((recentAvg - olderAvg) / olderAvg * 100).toFixed(1)
-    
-    if (percentage > 5) return { trend: 'up', percentage }
-    if (percentage < -5) return { trend: 'down', percentage }
-    return { trend: 'stable', percentage }
-  }
-
-  const trend = priceHistory.length > 0 ? calculateTrend(priceHistory) : null
+  // Utiliser les fonctions du service
+  const formatPrice = trendsService.formatPrice
 
   if (!isOpen) return null
 
@@ -218,13 +189,16 @@ const PriceTrends = ({ isOpen, onClose }) => {
               <div className="selected-item-info">
                 <h3>{selectedItem.name}</h3>
                 <p>Serveur : <strong>{selectedServer}</strong></p>
-                {trend && (
-                  <div className={`trend-indicator trend-${trend.trend}`}>
-                    {trend.trend === 'up' && '📈 '}
-                    {trend.trend === 'down' && '📉 '}
-                    {trend.trend === 'stable' && '➡️ '}
-                    {trend.trend === 'up' ? 'Hausse' : trend.trend === 'down' ? 'Baisse' : 'Stable'}
-                    {trend.percentage !== 0 && ` (${trend.percentage > 0 ? '+' : ''}${trend.percentage}%)`}
+                {trendStats && (
+                  <div className={`trend-indicator trend-${trendStats.trend}`}>
+                    {trendStats.trend === 'up' && '📈 '}
+                    {trendStats.trend === 'down' && '📉 '}
+                    {trendStats.trend === 'stable' && '➡️ '}
+                    {trendStats.trend === 'up' ? 'Hausse' : trendStats.trend === 'down' ? 'Baisse' : 'Stable'}
+                    {trendStats.percentage !== 0 && ` (${trendStats.percentage > 0 ? '+' : ''}${trendStats.percentage}%)`}
+                    <span className={`confidence confidence-${trendStats.confidence}`}>
+                      • {trendStats.dataPoints} données • Confiance {trendStats.confidence === 'high' ? 'élevée' : trendStats.confidence === 'medium' ? 'moyenne' : 'faible'}
+                    </span>
                   </div>
                 )}
               </div>

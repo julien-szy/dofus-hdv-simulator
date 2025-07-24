@@ -7,6 +7,7 @@ import { calculateCraftCost } from './utils/craftCalculations.js'
 import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices, migratePricesWithNames } from './services/priceStorage.js'
 import syncService from './services/syncService.js'
 import userService from './services/userService.js'
+import trendsService from './services/trendsService.js'
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -32,6 +33,7 @@ function App() {
   const [showPriceManager, setShowPriceManager] = useState(false)
   const [showPriceTrends, setShowPriceTrends] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [currentServer, setCurrentServer] = useState('')
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -54,6 +56,11 @@ function App() {
       await migratePricesWithNames(getMaterialDetails)
       const storedPrices = getAllStoredPrices()
       console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
+
+      // Charger le serveur de l'utilisateur
+      const userServer = trendsService.getCurrentUserServer()
+      setCurrentServer(userServer || '')
+      console.log(`🌍 Serveur utilisateur: ${userServer || 'Non défini'}`)
 
       console.log(`👤 Utilisateur connecté: ${user.username}, synchronisation...`)
       await syncUserData()
@@ -151,11 +158,18 @@ function App() {
       setShowUserProfile(true)
     })
 
+    // Écouter les changements de serveur
+    window.addEventListener('serverChanged', (event) => {
+      setCurrentServer(event.detail || '')
+      console.log(`🌍 Serveur changé: ${event.detail || 'Non défini'}`)
+    })
+
     return () => {
       window.removeEventListener('storage', handleUserChange)
       window.removeEventListener('userLogin', handleUserChange)
       window.removeEventListener('userLogout', () => setCurrentUser(null))
       window.removeEventListener('openUserProfile', () => setShowUserProfile(true))
+      window.removeEventListener('serverChanged', () => {})
     }
   }, [])
 
@@ -285,8 +299,8 @@ function App() {
       console.warn('Impossible de récupérer le nom du matériau:', error)
     }
 
-    // 2. Sauvegarder en localStorage avec le nom
-    const updatedStoredPrices = savePrice(materialId, priceType, price, materialName)
+    // 2. Sauvegarder en localStorage avec le nom et serveur
+    const updatedStoredPrices = savePrice(materialId, priceType, price, materialName, currentServer)
 
     // 3. Mettre à jour l'état local
     setMaterialPrices(prev => ({
@@ -311,12 +325,22 @@ function App() {
             x100: materialData.price_100
           }
         )
+
+        // 5. Sauvegarder pour les tendances (anonymisé)
+        if (currentServer) {
+          await trendsService.savePriceTrend(
+            materialId,
+            materialData.name || materialName || 'Matériau inconnu',
+            currentServer,
+            materialData
+          )
+        }
       } catch (error) {
         console.error('❌ Erreur sync prix matériau:', error)
       }
     }
 
-    // 5. Mettre à jour tous les calculs existants
+    // 6. Mettre à jour tous les calculs existants
     setCraftCalculations(prevCalculations =>
       prevCalculations.map(calc => {
         // Vérifier si ce calcul utilise ce matériau

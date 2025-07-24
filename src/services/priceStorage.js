@@ -14,7 +14,7 @@ export const loadStoredPrices = () => {
 }
 
 // Sauvegarder un prix pour un matériau
-export const savePrice = (materialId, priceType, price, materialName = null) => {
+export const savePrice = (materialId, priceType, price, materialName = null, server = null) => {
   try {
     const storedPrices = loadStoredPrices()
 
@@ -23,19 +23,25 @@ export const savePrice = (materialId, priceType, price, materialName = null) => 
         price_1: 0,
         price_10: 0,
         price_100: 0,
-        name: materialName || `Matériau ${materialId}`
+        name: materialName || `Matériau ${materialId}`,
+        server: server || 'Inconnu',
+        updated_at: new Date().toISOString()
       }
     }
 
-    // Mettre à jour le nom si fourni
+    // Mettre à jour le nom et serveur si fournis
     if (materialName) {
       storedPrices[materialId].name = materialName
     }
+    if (server) {
+      storedPrices[materialId].server = server
+    }
 
     storedPrices[materialId][priceType] = parseFloat(price) || 0
+    storedPrices[materialId].updated_at = new Date().toISOString()
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedPrices))
-    console.log(`💾 Prix sauvegardé: ${materialName || materialId} - ${priceType} = ${price}`)
+    console.log(`💾 Prix sauvegardé: ${materialName || materialId} - ${priceType} = ${price} (${server || 'Serveur inconnu'})`)
 
     return storedPrices
   } catch (error) {

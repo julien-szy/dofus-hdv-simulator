@@ -45,7 +45,10 @@ const UserProfile = ({
   const saveProfile = async () => {
     const profileData = { avatar, server, budget }
     localStorage.setItem('userProfile', JSON.stringify(profileData))
-    
+
+    // Déclencher un événement pour notifier le changement de serveur
+    window.dispatchEvent(new CustomEvent('serverChanged', { detail: server }))
+
     // Sync avec la BDD si connecté
     if (user) {
       try {
