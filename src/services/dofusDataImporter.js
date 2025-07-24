@@ -2,9 +2,27 @@
 class DofusDataImporter {
   constructor() {
     this.baseApiUrl = 'https://api.dofusdb.fr'
-    this.dbUrl = import.meta.env.DEV 
+    this.dbUrl = import.meta.env.DEV
       ? 'http://localhost:8888/.netlify/functions/database'
       : '/.netlify/functions/database'
+    this.isImporting = false;
+    this.shouldStop = false;
+  }
+
+  // Méthode pour arrêter l'import en cours
+  stopImport() {
+    console.log('🛑 Arrêt de l\'import demandé');
+    this.shouldStop = true;
+  }
+
+  // Vérifier si on doit arrêter
+  checkShouldStop() {
+    if (this.shouldStop) {
+      console.log('🛑 Import arrêté par l\'utilisateur');
+      this.shouldStop = false;
+      this.isImporting = false;
+      throw new Error('Import arrêté par l\'utilisateur');
+    }
   }
 
   // Récupérer tous les métiers depuis DofusDB
@@ -90,6 +108,9 @@ class DofusDataImporter {
 
         // Pause entre les pages pour éviter de surcharger l'API
         await this.sleep(200)
+
+        // Vérifier si on doit arrêter l'import
+        this.checkShouldStop()
 
         // Sécurité : éviter les boucles infinies
         if (pageNumber > 50) {
@@ -187,6 +208,9 @@ class DofusDataImporter {
       for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i]
         try {
+          // Vérifier si on doit arrêter l'import
+          this.checkShouldStop()
+
           console.log(`\n🔄 [${i+1}/${jobs.length}] Traitement du métier: ${job.name} (${job.id})`)
           const recipes = await this.fetchJobRecipes(job.id, job.name)
 
@@ -539,4 +563,11 @@ class DofusDataImporter {
 
 // Instance singleton
 export const dofusDataImporter = new DofusDataImporter()
+
+// Fonction globale pour arrêter l'import (accessible depuis la console)
+window.stopDofusImport = () => {
+  console.log('🛑 Arrêt de tous les imports Dofus...')
+  dofusDataImporter.stopImport()
+}
+
 export default dofusDataImporter

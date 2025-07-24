@@ -10,6 +10,7 @@ import syncService from './services/syncService.js'
 import userService from './services/userService.js'
 import trendsService from './services/trendsService.js'
 import autoImportService from './services/autoImportService.js'
+import { dofusDataImporter } from './services/dofusDataImporter.js'
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -115,14 +116,12 @@ function App() {
   useEffect(() => {
     saveToLocalStorage(STORAGE_KEYS.CALCULATIONS, craftCalculations)
 
-    // Synchroniser avec la BDD si utilisateur connecté
-    // MAIS seulement pour les ajouts/modifications, pas les suppressions
+    // DÉSACTIVÉ TEMPORAIREMENT : Synchronisation automatique qui causait des boucles infinies
+    // TODO: Implémenter une synchronisation manuelle ou avec debounce
+    /*
     const user = userService.getCurrentUser()
     if (user && craftCalculations.length > 0) {
-      // Synchroniser seulement les calculs qui n'ont pas encore d'ID BDD
-      // ou qui ont été modifiés récemment
       const calculationsToSync = craftCalculations.filter(calc => {
-        // Sync si pas d'ID BDD ou si modifié récemment (moins de 5 secondes)
         return !calc.dbId || (Date.now() - calc.id < 5000)
       })
 
@@ -131,17 +130,20 @@ function App() {
         syncService.syncCalculations(calculationsToSync).catch(console.error)
       }
     }
+    */
   }, [craftCalculations])
 
   // Sauvegarder les métiers quand ils changent
   useEffect(() => {
     saveToLocalStorage(STORAGE_KEYS.PROFESSIONS, playerProfessions)
 
-    // Synchroniser avec la BDD si utilisateur connecté
+    // DÉSACTIVÉ TEMPORAIREMENT : Synchronisation automatique qui causait des boucles infinies
+    /*
     const user = userService.getCurrentUser()
     if (user && Object.keys(playerProfessions).length > 0) {
       syncService.syncProfessions(playerProfessions).catch(console.error)
     }
+    */
   }, [playerProfessions])
 
   // Sauvegarder l'option de vérification des niveaux
@@ -662,6 +664,32 @@ function App() {
 
       {/* Bouton Cache en position fixe */}
       <CacheStats />
+
+      {/* Bouton d'urgence pour arrêter les imports */}
+      <button
+        onClick={() => {
+          dofusDataImporter.stopImport()
+          alert('🛑 Arrêt des imports demandé !')
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          backgroundColor: '#dc3545',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          padding: '10px 15px',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          zIndex: 1000,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+        }}
+        title="Arrêter tous les imports en cours"
+      >
+        🛑 STOP IMPORT
+      </button>
 
       {/* Messages stylés */}
       {itemMessage && (
