@@ -10,7 +10,7 @@ import syncService from './services/syncService.js'
 import userService from './services/userService.js'
 import trendsService from './services/trendsService.js'
 import autoImportService from './services/autoImportService.js'
-import { dofusDataImporter } from './services/dofusDataImporter.js'
+
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -667,9 +667,15 @@ function App() {
 
       {/* Bouton d'urgence pour arrêter les imports */}
       <button
-        onClick={() => {
-          dofusDataImporter.stopImport()
-          alert('🛑 Arrêt des imports demandé !')
+        onClick={async () => {
+          try {
+            const { dofusDataImporter } = await import('./services/dofusDataImporter.js')
+            dofusDataImporter.stopImport()
+            alert('🛑 Arrêt des imports demandé !')
+          } catch (error) {
+            console.error('Erreur lors de l\'arrêt:', error)
+            alert('❌ Erreur lors de l\'arrêt des imports')
+          }
         }}
         style={{
           position: 'fixed',
