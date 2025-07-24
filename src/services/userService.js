@@ -29,29 +29,58 @@ class UserService {
     localStorage.removeItem('dofus_user');
   }
 
-  // Initialiser les tables de la base de données (local storage pour le moment)
+  // Initialiser les tables de la base de données
   async initializeDatabase() {
     try {
-      // Simuler une initialisation réussie
-      console.log('Database initialized (local storage mode)');
-      return { success: true, message: 'Local storage initialized' };
+      const response = await fetch(`${this.baseUrl}?action=init`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Database initialized:', result.message);
+      return result;
     } catch (error) {
-      console.error('Error initializing database:', error);
-      throw error;
+      console.error('❌ Error initializing database:', error);
+      // Fallback vers le mode local storage
+      console.log('🔄 Fallback to local storage mode');
+      return { success: true, message: 'Local storage fallback' };
     }
   }
 
-  // Connexion utilisateur (local storage pour le moment)
-  async loginUser(email, username = null) {
+  // Connexion utilisateur
+  async loginUser(email, username = null, password = null) {
     try {
-      // Simuler un délai de connexion
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // D'abord essayer de récupérer l'utilisateur de la BDD
+      let user = await this.getUser(email);
 
-      // Vérifier si l'utilisateur existe dans le localStorage
+      if (!user) {
+        // Créer un nouvel utilisateur
+        user = await this.createUser({
+          email,
+          username: username || email.split('@')[0]
+        });
+        console.log('✅ Nouvel utilisateur créé:', user.username);
+      } else {
+        console.log('✅ Utilisateur existant connecté:', user.username);
+      }
+
+      this.saveUserToStorage(user);
+      return user;
+    } catch (error) {
+      console.error('❌ Error logging in user:', error);
+
+      // Fallback vers le mode local storage
+      console.log('🔄 Fallback to local storage mode');
       let user = this.getLocalUser(email);
 
       if (!user) {
-        // Créer un nouvel utilisateur local
         user = this.createLocalUser({
           email,
           username: username || email.split('@')[0]
@@ -60,9 +89,6 @@ class UserService {
 
       this.saveUserToStorage(user);
       return user;
-    } catch (error) {
-      console.error('Error logging in user:', error);
-      throw error;
     }
   }
 
@@ -93,14 +119,46 @@ class UserService {
     this.clearUserFromStorage();
   }
 
-  // Récupérer un utilisateur par email (version locale)
+  // Récupérer un utilisateur par email
   async getUser(email) {
-    return this.getLocalUser(email);
+    try {
+      const response = await fetch(`${this.baseUrl}?action=get_user&email=${encodeURIComponent(email)}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      console.error('❌ Error getting user from database:', error);
+      // Fallback vers le localStorage
+      return this.getLocalUser(email);
+    }
   }
 
-  // Créer un nouvel utilisateur (version locale)
+  // Créer un nouvel utilisateur
   async createUser(userData) {
-    return this.createLocalUser(userData);
+    try {
+      const response = await fetch(`${this.baseUrl}?action=create_user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      console.error('❌ Error creating user in database:', error);
+      // Fallback vers le localStorage
+      return this.createLocalUser(userData);
+    }
   }
 
   // Récupérer les favoris de l'utilisateur actuel (local storage)

@@ -23,12 +23,7 @@ const PriceManager = ({ isOpen, onClose }) => {
     }
   }
 
-  const handleClearAll = () => {
-    if (confirm('Supprimer TOUS les prix stockés ? Cette action est irréversible.')) {
-      clearAllPrices()
-      loadPrices()
-    }
-  }
+
 
   const handleExport = () => {
     exportPrices()
@@ -101,9 +96,6 @@ const PriceManager = ({ isOpen, onClose }) => {
                   style={{ display: 'none' }}
                 />
               </label>
-              <button onClick={handleClearAll} className="btn btn-danger">
-                🗑️ Tout supprimer
-              </button>
             </div>
           </div>
 
@@ -146,6 +138,7 @@ const PriceManager = ({ isOpen, onClose }) => {
               <strong>💡 Info :</strong><br/>
               • Les prix sont automatiquement sauvegardés<br/>
               • Ils se mettent à jour dans tous les calculs<br/>
+              • Connectez-vous pour synchroniser vos données<br/>
               • Exportez régulièrement pour faire des sauvegardes
             </p>
           </div>

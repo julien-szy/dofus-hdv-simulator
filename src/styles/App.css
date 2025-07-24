@@ -2397,6 +2397,60 @@ body {
   font-size: 0.8rem;
 }
 
+/* ===== PROFIL UTILISATEUR ===== */
+.user-profile-content {
+  padding: 20px 0;
+}
+
+.user-info {
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.user-info h3 {
+  color: var(--primary-gold);
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+}
+
+.user-info p {
+  margin: 8px 0;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.user-info strong {
+  color: var(--text-muted);
+}
+
+.user-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #dc3545, #c82333) !important;
+  border-color: #dc3545 !important;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #c82333, #a71e2a) !important;
+  border-color: #c82333 !important;
+}
+
+.btn-profile {
+  background: linear-gradient(135deg, var(--primary-gold), #e6b800);
+  border-color: var(--primary-gold);
+}
+
+.btn-profile:hover {
+  background: linear-gradient(135deg, #e6b800, var(--primary-gold));
+  transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
   .cache-stats-grid {
     grid-template-columns: 1fr;

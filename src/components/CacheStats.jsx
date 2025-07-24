@@ -14,29 +14,7 @@ const CacheStats = () => {
     }
   }
 
-  const clearCache = async () => {
-    if (confirm('Êtes-vous sûr de vouloir vider tout le cache ?')) {
-      try {
-        await dataCache.clearAllCache()
-        await loadStats()
-        alert('Cache vidé avec succès !')
-      } catch (error) {
-        console.error('Erreur lors du vidage du cache:', error)
-        alert('Erreur lors du vidage du cache')
-      }
-    }
-  }
 
-  const cleanExpired = async () => {
-    try {
-      await dataCache.cleanExpiredCache()
-      await loadStats()
-      alert('Cache nettoyé avec succès !')
-    } catch (error) {
-      console.error('Erreur lors du nettoyage:', error)
-      alert('Erreur lors du nettoyage du cache')
-    }
-  }
 
   useEffect(() => {
     if (isOpen) {
@@ -106,20 +84,6 @@ const CacheStats = () => {
               >
                 🔄 Actualiser
               </button>
-              
-              <button
-                onClick={cleanExpired}
-                className="cache-btn cache-btn-clean"
-              >
-                🧹 Nettoyer
-              </button>
-              
-              <button
-                onClick={clearCache}
-                className="cache-btn cache-btn-clear"
-              >
-                🗑️ Vider
-              </button>
             </div>
 
             <div className="cache-stats-info">
@@ -127,7 +91,8 @@ const CacheStats = () => {
                 <strong>🚀 Avantages du cache :</strong><br/>
                 • Recherches instantanées<br/>
                 • Moins d'appels API<br/>
-                • Fonctionne hors ligne
+                • Fonctionne hors ligne<br/>
+                • Données sauvegardées automatiquement
               </p>
             </div>
           </div>

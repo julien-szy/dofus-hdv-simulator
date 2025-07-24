@@ -139,16 +139,29 @@ export default function UserAuth() {
 
   return (
     <>
-      <button
-        onClick={() => setShowModal(true)}
-        className="btn-modern btn-login disabled"
-        title="Bientôt disponible !"
-        disabled
-      >
-        <span className="btn-icon">🔑</span>
-        <span className="btn-text">Se connecter</span>
-        <div className="btn-glow"></div>
-      </button>
+      {user ? (
+        <div className="user-profile">
+          <button
+            onClick={() => setShowModal(true)}
+            className="btn-modern btn-profile"
+            title={`Connecté en tant que ${user.username}`}
+          >
+            <span className="btn-icon">👤</span>
+            <span className="btn-text">{user.username}</span>
+            <div className="btn-glow"></div>
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setShowModal(true)}
+          className="btn-modern btn-login"
+          title="Se connecter pour sauvegarder vos données"
+        >
+          <span className="btn-icon">🔑</span>
+          <span className="btn-text">Se connecter</span>
+          <div className="btn-glow"></div>
+        </button>
+      )}
 
       {showModal && (
         <div
@@ -170,8 +183,33 @@ export default function UserAuth() {
             </div>
 
             <div className="auth-content">
-              {/* Formulaire avec mode connexion/inscription */}
-              <form onSubmit={handleSubmit} className="auth-form-clean">
+              {user ? (
+                /* Profil utilisateur connecté */
+                <div className="user-profile-content">
+                  <div className="user-info">
+                    <h3>👤 Profil Utilisateur</h3>
+                    <p><strong>Pseudo :</strong> {user.username}</p>
+                    <p><strong>Email :</strong> {user.email}</p>
+                    <p><strong>Membre depuis :</strong> {new Date(user.created_at).toLocaleDateString()}</p>
+                  </div>
+
+                  <div className="user-actions">
+                    <button
+                      onClick={() => {
+                        userService.logout()
+                        setUser(null)
+                        setShowModal(false)
+                      }}
+                      className="auth-submit-clean logout-btn"
+                    >
+                      <span className="submit-icon">🚪</span>
+                      <span>Se déconnecter</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Formulaire avec mode connexion/inscription */
+                <form onSubmit={handleSubmit} className="auth-form-clean">
                 <div className="form-group">
                   <label>👤 {isLogin ? 'Pseudo' : 'Pseudo'}</label>
                   <input
@@ -260,12 +298,13 @@ export default function UserAuth() {
                 >
                   {!isLogin ? 'Connexion' : 'Inscription'}
                 </button>
+                </form>
+              )}
+            </div>
 
-                {/* Footer simple */}
-                <div className="auth-footer">
-                  <p>En vous connectant, vous acceptez nos conditions d'utilisation</p>
-                </div>
-              </form>
+            {/* Footer simple */}
+            <div className="auth-footer">
+              <p>En vous connectant, vous acceptez nos conditions d'utilisation</p>
             </div>
           </div>
         </div>

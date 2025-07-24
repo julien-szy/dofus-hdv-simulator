@@ -5,6 +5,8 @@ import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkIt
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
 import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices } from './services/priceStorage.js'
+import syncService from './services/syncService.js'
+import userService from './services/userService.js'
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -28,29 +30,103 @@ function App() {
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
+    loadInitialData()
+  }, [])
+
+  const loadInitialData = async () => {
+    // Charger d'abord les données locales
     setCraftCalculations(loadFromLocalStorage(STORAGE_KEYS.CALCULATIONS, []))
     setPlayerProfessions(loadFromLocalStorage(STORAGE_KEYS.PROFESSIONS, {}))
     setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
 
-    // Charger les prix stockés
+    // Charger les prix stockés localement
     const storedPrices = getAllStoredPrices()
     console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
-  }, [])
+
+    // Si un utilisateur est connecté, synchroniser avec la BDD
+    const user = userService.getCurrentUser()
+    if (user) {
+      console.log(`👤 Utilisateur connecté: ${user.username}, synchronisation...`)
+      await syncUserData()
+    }
+  }
+
+  const syncUserData = async () => {
+    try {
+      const syncedData = await syncService.fullSync()
+      if (syncedData) {
+        // Fusionner les données de la BDD avec les données locales
+        if (syncedData.calculations.length > 0) {
+          setCraftCalculations(prev => {
+            const merged = [...prev, ...syncedData.calculations]
+            // Supprimer les doublons par ID
+            const unique = merged.filter((calc, index, self) =>
+              index === self.findIndex(c => c.id === calc.id)
+            )
+            saveToLocalStorage(STORAGE_KEYS.CALCULATIONS, unique)
+            return unique
+          })
+        }
+
+        if (Object.keys(syncedData.professions).length > 0) {
+          setPlayerProfessions(prev => {
+            const merged = { ...prev, ...syncedData.professions }
+            saveToLocalStorage(STORAGE_KEYS.PROFESSIONS, merged)
+            return merged
+          })
+        }
+
+        console.log('✅ Données utilisateur synchronisées')
+      }
+    } catch (error) {
+      console.error('❌ Erreur synchronisation:', error)
+    }
+  }
 
   // Sauvegarder les calculs quand ils changent
   useEffect(() => {
     saveToLocalStorage(STORAGE_KEYS.CALCULATIONS, craftCalculations)
+
+    // Synchroniser avec la BDD si utilisateur connecté
+    const user = userService.getCurrentUser()
+    if (user && craftCalculations.length > 0) {
+      syncService.syncCalculations(craftCalculations).catch(console.error)
+    }
   }, [craftCalculations])
 
   // Sauvegarder les métiers quand ils changent
   useEffect(() => {
     saveToLocalStorage(STORAGE_KEYS.PROFESSIONS, playerProfessions)
+
+    // Synchroniser avec la BDD si utilisateur connecté
+    const user = userService.getCurrentUser()
+    if (user && Object.keys(playerProfessions).length > 0) {
+      syncService.syncProfessions(playerProfessions).catch(console.error)
+    }
   }, [playerProfessions])
 
   // Sauvegarder l'option de vérification des niveaux
   useEffect(() => {
     saveToLocalStorage(STORAGE_KEYS.CHECK_LEVELS, checkProfessionLevels)
   }, [checkProfessionLevels])
+
+  // Écouter les changements d'utilisateur connecté
+  useEffect(() => {
+    const handleUserChange = () => {
+      const user = userService.getCurrentUser()
+      if (user) {
+        console.log(`👤 Nouvel utilisateur connecté: ${user.username}`)
+        syncUserData()
+      }
+    }
+
+    // Écouter les changements dans le localStorage pour détecter les connexions
+    window.addEventListener('storage', handleUserChange)
+
+    return () => {
+      window.removeEventListener('storage', handleUserChange)
+    }
+  }, [])
 
   // Mettre à jour le niveau d'un métier
   const updateProfessionLevel = (profession, level) => {
@@ -166,7 +242,7 @@ function App() {
   }
 
   // Mettre à jour le prix d'un matériau avec stockage persistant
-  const updateMaterialPrice = (materialId, price, quantityType = 1) => {
+  const updateMaterialPrice = async (materialId, price, quantityType = 1) => {
     const priceType = `price_${quantityType}`
 
     // 1. Sauvegarder en localStorage
@@ -180,6 +256,25 @@ function App() {
         [priceType]: parseFloat(price) || 0
       }
     }))
+
+    // 3. Synchroniser avec la BDD si utilisateur connecté
+    const user = userService.getCurrentUser()
+    if (user) {
+      try {
+        const materialData = updatedStoredPrices[materialId]
+        await syncService.syncMaterialPrice(
+          materialId,
+          materialData.name || 'Matériau inconnu',
+          {
+            x1: materialData.price_1,
+            x10: materialData.price_10,
+            x100: materialData.price_100
+          }
+        )
+      } catch (error) {
+        console.error('❌ Erreur sync prix matériau:', error)
+      }
+    }
 
     // 3. Mettre à jour tous les calculs existants
     setCraftCalculations(prevCalculations =>
