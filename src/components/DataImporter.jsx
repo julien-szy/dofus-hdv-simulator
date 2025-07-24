@@ -600,7 +600,7 @@ const DataImporter = ({ isOpen, onClose }) => {
                 <strong>🔍 Debug API :</strong> Teste les endpoints DofusDB et affiche les informations de debug détaillées.
               </div>
               <div className="action-desc">
-                <strong>🗑️ Vider BDD :</strong> <span style="color: #dc3545;">SUPPRIME TOUTES</span> les données. Utilisez avant un import complet si problème.
+                <strong>🗑️ Vider BDD :</strong> <span style={{color: '#dc3545'}}>SUPPRIME TOUTES</span> les données. Utilisez avant un import complet si problème.
               </div>
               <div className="action-desc">
                 <strong>🧪 Extraire Ressources :</strong> Analyse les recettes pour extraire toutes les ressources nécessaires.
