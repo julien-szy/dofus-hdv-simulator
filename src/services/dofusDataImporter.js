@@ -398,8 +398,8 @@ class DofusDataImporter {
   // Obtenir les statistiques d'importation
   async getImportStats() {
     try {
-      console.log(`🔍 Récupération stats depuis: ${this.dbUrl}?action=get_craftable_items`)
-      const response = await fetch(`${this.dbUrl}?action=get_craftable_items`)
+      console.log(`🔍 Récupération stats depuis: ${this.dbUrl}?action=get_import_stats`)
+      const response = await fetch(`${this.dbUrl}?action=get_import_stats`)
 
       console.log(`📡 Réponse stats: ${response.status} ${response.statusText}`)
 
@@ -412,37 +412,11 @@ class DofusDataImporter {
         }
       }
 
-      const items = await response.json()
-      console.log(`📊 Items reçus:`, items)
-      console.log(`📊 Type de réponse:`, typeof items, Array.isArray(items))
+      const stats = await response.json()
+      console.log('📊 Stats reçues:', stats)
+      console.log(`📊 Type de réponse:`, typeof stats, Array.isArray(stats))
 
-      // Vérifier que items est un array
-      if (!Array.isArray(items)) {
-        console.warn('⚠️ Réponse stats invalide:', items)
-        return {
-          totalItems: 0,
-          byProfession: {},
-          lastUpdate: null
-        }
-      }
-
-      const statsByProfession = {}
-      for (const item of items) {
-        if (item && item.profession) {
-          if (!statsByProfession[item.profession]) {
-            statsByProfession[item.profession] = 0
-          }
-          statsByProfession[item.profession]++
-        }
-      }
-
-      return {
-        totalItems: items.length,
-        byProfession: statsByProfession,
-        lastUpdate: items.length > 0 && items[0].updated_at ?
-          Math.max(...items.filter(i => i.updated_at).map(i => new Date(i.updated_at).getTime())) :
-          null
-      }
+      return stats
     } catch (error) {
       console.error('❌ Erreur récupération stats:', error)
       return {

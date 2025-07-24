@@ -10,7 +10,7 @@ import syncService from './services/syncService.js'
 import userService from './services/userService.js'
 import trendsService from './services/trendsService.js'
 import autoImportService from './services/autoImportService.js'
-import { dofusDataImporter } from './services/dofusDataImporter.js'
+
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -665,31 +665,7 @@ function App() {
       {/* Bouton Cache en position fixe */}
       <CacheStats />
 
-      {/* Bouton d'urgence pour arrêter les imports */}
-      <button
-        onClick={() => {
-          dofusDataImporter.stopImport()
-          alert('🛑 Arrêt des imports demandé !')
-        }}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '20px',
-          backgroundColor: '#dc3545',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '10px 15px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 'bold',
-          zIndex: 1000,
-          boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
-        }}
-        title="Arrêter tous les imports en cours"
-      >
-        🛑 STOP IMPORT
-      </button>
+
 
       {/* Messages stylés */}
       {itemMessage && (

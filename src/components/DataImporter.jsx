@@ -12,6 +12,8 @@ const DataImporter = ({ isOpen, onClose }) => {
   const [autoStatus, setAutoStatus] = useState(null)
   const [availableJobs, setAvailableJobs] = useState([])
   const [jobImporting, setJobImporting] = useState({})
+  const [selectedJobItems, setSelectedJobItems] = useState({})
+  const [loadingItems, setLoadingItems] = useState({})
 
   // Charger les statistiques au démarrage
   useEffect(() => {
@@ -60,6 +62,17 @@ const DataImporter = ({ isOpen, onClose }) => {
         }
 
         return isValid
+      }).map(job => {
+        // Normaliser le nom du métier (extraire le français si c'est un objet multilingue)
+        let jobName = job.name
+        if (typeof jobName === 'object' && jobName !== null) {
+          jobName = jobName.fr || jobName.en || jobName.de || jobName.es || jobName.pt || `Métier ${job.id}`
+        }
+
+        return {
+          ...job,
+          name: jobName
+        }
       }) : []
 
       setAvailableJobs(validJobs)
@@ -86,7 +99,7 @@ const DataImporter = ({ isOpen, onClose }) => {
 
       addLog(`📡 URL testée: ${dbUrl}`, 'info')
 
-      const response = await fetch(`${dbUrl}?action=get_craftable_items`)
+      const response = await fetch(`${dbUrl}?action=get_import_stats`)
       addLog(`📡 Réponse: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error')
 
       if (response.ok) {
@@ -188,6 +201,11 @@ const DataImporter = ({ isOpen, onClose }) => {
         }
         await loadStats()
         loadAutoStatus()
+
+        // Recharger les items du métier si ils sont affichés
+        if (selectedJobItems[jobName]) {
+          await loadJobItems(jobName)
+        }
       } else {
         addLog(`❌ Erreur ${jobName}: ${result.error}`, 'error')
       }
@@ -195,6 +213,98 @@ const DataImporter = ({ isOpen, onClose }) => {
       addLog(`❌ Erreur import ${jobName}: ${error.message}`, 'error')
     } finally {
       setJobImporting(prev => ({ ...prev, [jobId]: false }))
+    }
+  }
+
+  const loadJobItems = async (jobName) => {
+    if (loadingItems[jobName]) return
+
+    setLoadingItems(prev => ({ ...prev, [jobName]: true }))
+
+    try {
+      const baseUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      const response = await fetch(`${baseUrl}?action=get_items_by_profession&profession=${encodeURIComponent(jobName)}`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const items = await response.json()
+      setSelectedJobItems(prev => ({ ...prev, [jobName]: items }))
+      addLog(`📋 ${items.length} objets chargés pour ${jobName}`, 'info')
+    } catch (error) {
+      console.error(`Erreur chargement items ${jobName}:`, error)
+      addLog(`❌ Erreur chargement items ${jobName}: ${error.message}`, 'error')
+    } finally {
+      setLoadingItems(prev => ({ ...prev, [jobName]: false }))
+    }
+  }
+
+  const cleanJobDuplicates = async (jobName) => {
+    try {
+      const baseUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      const response = await fetch(`${baseUrl}?action=clean_duplicates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ profession: jobName })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      addLog(`🧹 ${result.deletedCount} doublons supprimés pour ${jobName}`, 'success')
+
+      // Recharger les stats et items
+      await loadStats()
+      if (selectedJobItems[jobName]) {
+        await loadJobItems(jobName)
+      }
+    } catch (error) {
+      console.error(`Erreur nettoyage ${jobName}:`, error)
+      addLog(`❌ Erreur nettoyage ${jobName}: ${error.message}`, 'error')
+    }
+  }
+
+  const extractResources = async () => {
+    try {
+      addLog('🔍 Extraction des ressources depuis les recettes...', 'info')
+
+      const baseUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      const response = await fetch(`${baseUrl}?action=extract_resources`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      if (result.success) {
+        addLog(`✅ ${result.resourcesCount} ressources extraites et sauvegardées`, 'success')
+        addLog(`✅ ${result.linksCount} liaisons item-ressource créées`, 'success')
+      } else {
+        addLog(`❌ Erreur extraction: ${result.error}`, 'error')
+      }
+    } catch (error) {
+      console.error('Erreur extraction ressources:', error)
+      addLog(`❌ Erreur extraction ressources: ${error.message}`, 'error')
     }
   }
 
@@ -353,6 +463,15 @@ const DataImporter = ({ isOpen, onClose }) => {
               >
                 🔍 Debug API
               </button>
+
+              <button
+                onClick={extractResources}
+                disabled={importing || updating}
+                className="btn btn-info"
+                title="Extraire les ressources depuis les recettes"
+              >
+                🧪 Extraire Ressources
+              </button>
             </div>
 
             <div className="action-descriptions">
@@ -387,17 +506,18 @@ const DataImporter = ({ isOpen, onClose }) => {
 
                   return (
                     <div key={job.id} className="job-item">
-                      <div className="job-info">
-                        <div className="job-header">
-                          <span className="job-icon">{jobIcon}</span>
-                          <div className="job-name">{job.name || `Métier ${job.id}`}</div>
+                      <div className="job-item-header">
+                        <div className="job-info">
+                          <div className="job-header">
+                            <span className="job-icon">{jobIcon}</span>
+                            <div className="job-name">{job.name || `Métier ${job.id}`}</div>
+                          </div>
+                          <div className="job-stats">
+                            <span className="job-count">{jobStats} objets</span>
+                            <span className="job-id">ID: {job.id}</span>
+                          </div>
                         </div>
-                        <div className="job-stats">
-                          <span className="job-count">{jobStats} objets</span>
-                          <span className="job-id">ID: {job.id}</span>
-                        </div>
-                      </div>
-                      <div className="job-actions">
+                        <div className="job-actions">
                         <button
                           onClick={() => handleJobImport(job.id, job.name)}
                           disabled={jobImporting[job.id] || importing || updating}
@@ -407,7 +527,55 @@ const DataImporter = ({ isOpen, onClose }) => {
                           {jobImporting[job.id] ? '🔄' : jobStats > 0 ? '🔄' : '📥'}
                           {jobImporting[job.id] ? 'Import...' : jobStats > 0 ? 'Maj' : 'Import'}
                         </button>
+
+                        <button
+                          onClick={() => selectedJobItems[job.name] ?
+                            setSelectedJobItems(prev => ({ ...prev, [job.name]: null })) :
+                            loadJobItems(job.name)
+                          }
+                          disabled={loadingItems[job.name]}
+                          className="btn btn-sm btn-secondary"
+                          title="Voir les objets de ce métier"
+                        >
+                          {loadingItems[job.name] ? '⏳' : selectedJobItems[job.name] ? '👁️' : '📋'}
+                          {selectedJobItems[job.name] ? 'Masquer' : 'Voir items'}
+                        </button>
+
+                        {jobStats > 0 && (
+                          <button
+                            onClick={() => cleanJobDuplicates(job.name)}
+                            disabled={importing || updating}
+                            className="btn btn-sm btn-warning"
+                            title="Nettoyer les doublons"
+                          >
+                            🧹 Clean
+                          </button>
+                        )}
+                        </div>
                       </div>
+
+                      {/* Affichage des items du métier */}
+                      {selectedJobItems[job.name] && (
+                        <div className="job-items">
+                          <div className="job-items-header">
+                            <h4>📋 Items {job.name} ({selectedJobItems[job.name].length})</h4>
+                          </div>
+                          <div className="job-items-list">
+                            {selectedJobItems[job.name].slice(0, 20).map((item, index) => (
+                              <div key={item.item_id || index} className="job-item-row">
+                                <span className="item-name">{item.item_name}</span>
+                                <span className="item-level">Niv. {item.level_required || 1}</span>
+                                <span className="item-type">{item.item_type || 'Inconnu'}</span>
+                              </div>
+                            ))}
+                            {selectedJobItems[job.name].length > 20 && (
+                              <div className="job-items-more">
+                                ... et {selectedJobItems[job.name].length - 20} autres items
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })}
