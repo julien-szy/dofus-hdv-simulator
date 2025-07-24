@@ -53,7 +53,7 @@ function App() {
     // Vérifier si un utilisateur est connecté
     const user = userService.getCurrentUser()
     setCurrentUser(user)
-    console.log('🔍 Vérification utilisateur au démarrage:', user ? `Connecté: ${user.username}` : 'Non connecté')
+
 
     if (user) {
       // Utilisateur connecté - charger toutes les données
@@ -63,18 +63,14 @@ function App() {
 
       // Charger les prix stockés localement et migrer les noms manquants
       await migratePricesWithNames(getMaterialDetails)
-      const storedPrices = getAllStoredPrices()
-      console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
+      getAllStoredPrices()
+
 
       // Charger le serveur de l'utilisateur
       const userServer = trendsService.getCurrentUserServer()
       setCurrentServer(userServer || '')
-      console.log(`🌍 Serveur utilisateur: ${userServer || 'Non défini'}`)
-
       // Démarrer l'auto-importation en arrière-plan
       autoImportService.startAutoImport()
-
-      console.log(`👤 Utilisateur connecté: ${user.username}, synchronisation...`)
       await syncUserData()
     }
     // Si pas d'utilisateur connecté, on ne charge rien - l'app sera bloquée
@@ -105,7 +101,7 @@ function App() {
           })
         }
 
-        console.log('✅ Données utilisateur synchronisées')
+
       }
     } catch (error) {
       console.error('❌ Erreur synchronisation:', error)
@@ -126,7 +122,7 @@ function App() {
       })
 
       if (calculationsToSync.length > 0) {
-        console.log(`🔄 Sync ${calculationsToSync.length} calculs vers BDD`)
+
         syncService.syncCalculations(calculationsToSync).catch(console.error)
       }
     }
@@ -157,7 +153,7 @@ function App() {
       const user = userService.getCurrentUser()
       setCurrentUser(user)
       if (user) {
-        console.log(`👤 Nouvel utilisateur connecté: ${user.username}`)
+
         syncUserData()
         // Recharger les données quand l'utilisateur se connecte
         loadInitialData()
@@ -185,7 +181,7 @@ function App() {
     // Écouter les changements de serveur
     window.addEventListener('serverChanged', (event) => {
       setCurrentServer(event.detail || '')
-      console.log(`🌍 Serveur changé: ${event.detail || 'Non défini'}`)
+
     })
 
     // Écouter les notifications d'auto-import
@@ -225,7 +221,7 @@ function App() {
       // Enrichir les objets avec les informations de métier manquantes
       const enrichedItems = items.map(item => enrichItemWithProfession(item))
       setSearchResults(enrichedItems)
-      console.log(`🔍 ${enrichedItems.length} objets craftables trouvés pour "${term}"`)
+
     } catch (error) {
       setSearchResults([])
       setItemMessage({
@@ -250,7 +246,6 @@ function App() {
     setLoading(true)
     try {
       // 1. Vérifier d'abord si l'item a une recette
-      console.log(`🔍 Vérification recette pour: ${item.name} (ID: ${item.ankama_id})`)
       const hasRecipe = await checkItemHasRecipe(item.ankama_id)
 
       if (!hasRecipe) {
@@ -261,8 +256,6 @@ function App() {
         setLoading(false)
         return
       }
-
-      console.log(`✅ Recette confirmée pour: ${item.name}`)
 
       // 2. Récupérer les détails complets de l'objet avec sa recette
       const detailedItem = await getItemDetails(item.ankama_id)
@@ -316,7 +309,7 @@ function App() {
         }
       })
       setMaterialPrices(initialPrices)
-      console.log(`💰 Prix initialisés avec ${Object.keys(storedPrices).length} prix stockés`)
+
     } catch (error) {
       console.error('Erreur lors de la sélection de l\'objet:', error)
       alert('Erreur lors du chargement de l\'objet. Veuillez réessayer.')
@@ -380,7 +373,7 @@ function App() {
           )
         }
       } catch (error) {
-        console.error('❌ Erreur sync prix matériau:', error)
+
       }
     }
 
@@ -405,7 +398,7 @@ function App() {
           const newProfit = (netSellPrice - newCraftCost) * calc.quantity
           const newProfitPercentage = newCraftCost > 0 ? ((netSellPrice - newCraftCost) / newCraftCost * 100) : 0
 
-          console.log(`🔄 Calcul mis à jour pour ${calc.item.name}: ${calc.craftCost} → ${newCraftCost}`)
+
 
           return {
             ...calc,
@@ -534,9 +527,7 @@ function App() {
     const user = userService.getCurrentUser()
     if (user) {
       try {
-        console.log(`🗑️ Suppression du calcul ${id} de la BDD...`)
         await syncService.deleteCalculation(id)
-        console.log(`✅ Calcul ${id} supprimé de la BDD`)
       } catch (error) {
         console.error(`❌ Erreur suppression calcul ${id} de la BDD:`, error)
         // Ne pas remettre le calcul en cas d'erreur BDD,
@@ -556,12 +547,10 @@ function App() {
     if (document.getElementById('quantity')) document.getElementById('quantity').value = '1'
   }
 
-  // Debug: afficher l'état de connexion
-  console.log('🔍 État currentUser dans App:', currentUser)
+
 
   // Si pas d'utilisateur connecté, afficher seulement l'écran de connexion
   if (!currentUser) {
-    console.log('🚫 Pas d\'utilisateur connecté - Affichage écran de connexion')
     return (
       <div className="hdv-container">
         <div className="auth-required-screen">

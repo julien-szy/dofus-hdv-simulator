@@ -14,6 +14,9 @@
     "extract-data": "node scripts-node/extractAndDownload.js",
     "download-images": "node scripts-node/downloadImages.js",
     "download-images-only": "node scripts-node/downloadImagesOnly.js",
+    "download-all-images": "node scripts-node/downloadAllImages.js",
+    "download-sample-images": "node scripts-node/downloadSampleImages.js",
+    "clean-debug": "node scripts-node/cleanDebugLogs.js",
     "test-extraction": "node scripts-node/testExtraction.js"
   },
   "dependencies": {

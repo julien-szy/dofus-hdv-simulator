@@ -15,29 +15,26 @@ const DataImporter = ({ isOpen, onClose }) => {
   const [selectedJobItems, setSelectedJobItems] = useState({})
   const [loadingItems, setLoadingItems] = useState({})
 
-  // Charger les statistiques au démarrage - TOUT DÉSACTIVÉ POUR DEBUG
+  // Charger les statistiques au démarrage
   useEffect(() => {
     if (isOpen) {
       try {
-        console.log('🔄 DataImporter ouvert - chargement désactivé pour debug')
-        // Tout désactivé temporairement pour isoler l'erreur React #62
-        // loadStats()
-        // loadAutoStatus()
-        // loadAvailableJobs()
+        // Chargement initial des données
+        loadStats()
+        loadAutoStatus()
+        loadAvailableJobs()
       } catch (error) {
-        console.error('❌ Erreur lors du chargement initial:', error)
+        console.error('Erreur lors du chargement initial:', error)
       }
     }
   }, [isOpen])
 
   const loadStats = async () => {
     try {
-      console.log('🔄 Chargement des statistiques...')
       const importStats = await dofusDataImporter.getImportStats()
-      console.log('📊 Stats reçues:', importStats)
       setStats(importStats)
     } catch (error) {
-      console.error('❌ Erreur chargement stats:', error)
+      console.error('Erreur chargement stats:', error)
       setStats({
         totalItems: 0,
         byProfession: {},
@@ -53,9 +50,7 @@ const DataImporter = ({ isOpen, onClose }) => {
 
   const loadAvailableJobs = async () => {
     try {
-      console.log('🔄 Chargement des métiers disponibles...')
       const jobs = await dofusDataImporter.fetchAllJobs()
-      console.log('🔧 Métiers chargés:', jobs)
 
       // Vérifier que jobs est un array et que chaque job a les bonnes propriétés
       const validJobs = Array.isArray(jobs) ? jobs.filter(job => {
@@ -65,7 +60,7 @@ const DataImporter = ({ isOpen, onClose }) => {
           (job.name !== undefined && job.name !== null)
 
         if (!isValid) {
-          console.warn('⚠️ Métier invalide:', job)
+          console.warn('Métier invalide:', job)
         }
 
         return isValid
@@ -83,7 +78,7 @@ const DataImporter = ({ isOpen, onClose }) => {
       }) : []
 
       setAvailableJobs(validJobs)
-      console.log(`✅ ${validJobs.length} métiers valides chargés`)
+
     } catch (error) {
       console.error('Erreur chargement métiers:', error)
       setAvailableJobs([])
@@ -623,7 +618,7 @@ const DataImporter = ({ isOpen, onClose }) => {
                 {availableJobs.map((job) => {
                   // Protection contre les objets invalides
                   if (!job || typeof job !== 'object' || !job.id || !job.name) {
-                    console.warn('⚠️ Métier invalide ignoré:', job)
+                    console.warn('Métier invalide ignoré:', job)
                     return null
                   }
 

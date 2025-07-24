@@ -12,7 +12,7 @@ class AutoImportService {
 
   // Démarrer le service d'auto-importation
   async startAutoImport() {
-    console.log('🤖 Service d\'auto-importation démarré')
+
     
     // Vérifier immédiatement au démarrage
     await this.checkAndImportIfNeeded()
@@ -35,7 +35,6 @@ class AutoImportService {
 
       // Vérifier si assez de temps s'est écoulé
       if (!force && (now - lastCheck) < this.forceCheckInterval) {
-        console.log('⏰ Vérification trop récente, attendre...')
         return { skipped: true, reason: 'Vérification récente' }
       }
 
@@ -44,20 +43,16 @@ class AutoImportService {
 
       // Vérifier les statistiques actuelles
       const stats = await dofusDataImporter.getImportStats()
-      
+
       if (!stats || stats.totalItems === 0) {
         // Aucune donnée : import complet nécessaire
-        console.log('📥 Aucune donnée trouvée, import complet nécessaire')
         return await this.performFullImport()
       }
 
       // Vérifier si un import incrémental est nécessaire
       if (force || (now - lastImport) > this.checkInterval) {
-        console.log('🔄 Vérification des mises à jour nécessaire')
         return await this.performIncrementalUpdate()
       }
-
-      console.log('✅ Données à jour, aucun import nécessaire')
       return { skipped: true, reason: 'Données à jour' }
 
     } catch (error) {
@@ -71,17 +66,13 @@ class AutoImportService {
     if (this.importInProgress) return { skipped: true, reason: 'Import en cours' }
 
     this.importInProgress = true
-    console.log('🚀 Début de l\'import complet automatique...')
-
     try {
       const result = await dofusDataImporter.importAllCraftableData()
-      
+
       if (result.success) {
         const now = Date.now()
         localStorage.setItem(this.lastImportKey, now.toString())
         localStorage.setItem(this.lastCheckKey, now.toString())
-        
-        console.log(`✅ Import complet terminé : ${result.totalItems} objets depuis ${result.totalJobs} métiers`)
         
         // Notifier l'utilisateur discrètement
         this.showDiscreteNotification('success', `${result.totalItems} objets craftables importés`)
@@ -96,7 +87,7 @@ class AutoImportService {
         throw new Error('Import complet échoué')
       }
     } catch (error) {
-      console.error('❌ Erreur import complet:', error)
+
       this.showDiscreteNotification('error', 'Erreur lors de l\'import des données')
       return { error: error.message }
     } finally {
@@ -109,21 +100,16 @@ class AutoImportService {
     if (this.importInProgress) return { skipped: true, reason: 'Import en cours' }
 
     this.importInProgress = true
-    console.log('🔄 Début de la mise à jour incrémentale...')
-
     try {
       const result = await dofusDataImporter.updateCraftableData()
-      
+
       if (result.success) {
         const now = Date.now()
         localStorage.setItem(this.lastImportKey, now.toString())
         localStorage.setItem(this.lastCheckKey, now.toString())
-        
+
         if (result.newItems > 0) {
-          console.log(`✅ Mise à jour terminée : ${result.newItems} nouveaux objets ajoutés`)
           this.showDiscreteNotification('info', `${result.newItems} nouveaux objets craftables`)
-        } else {
-          console.log('✅ Aucun nouvel objet à ajouter')
         }
         
         return {
@@ -135,7 +121,7 @@ class AutoImportService {
         throw new Error('Mise à jour incrémentale échouée')
       }
     } catch (error) {
-      console.error('❌ Erreur mise à jour incrémentale:', error)
+
       return { error: error.message }
     } finally {
       this.importInProgress = false
@@ -149,7 +135,7 @@ class AutoImportService {
       this.checkAndImportIfNeeded()
     }, 60 * 60 * 1000) // 1 heure
 
-    console.log('⏰ Vérifications périodiques programmées (toutes les heures)')
+
   }
 
   // Afficher une notification discrète
@@ -163,13 +149,13 @@ class AutoImportService {
 
   // Forcer un import (pour les admins)
   async forceFullImport() {
-    console.log('🔧 Import forcé par admin')
+
     return await this.performFullImport()
   }
 
   // Forcer une mise à jour (pour les admins)
   async forceUpdate() {
-    console.log('🔧 Mise à jour forcée par admin')
+
     return await this.performIncrementalUpdate()
   }
 
@@ -207,7 +193,7 @@ class AutoImportService {
   resetImportData() {
     localStorage.removeItem(this.lastCheckKey)
     localStorage.removeItem(this.lastImportKey)
-    console.log('🧹 Données d\'import réinitialisées')
+
   }
 
   // Arrêter le service
