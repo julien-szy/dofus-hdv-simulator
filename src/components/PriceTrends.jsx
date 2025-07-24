@@ -210,46 +210,46 @@ const PriceTrends = ({ isOpen, onClose }) => {
                     <div className="loading-spinner"></div>
                     <p>Chargement des données...</p>
                   </div>
-                ) : chartData ? (
-                  <div className="chart-placeholder">
+                ) : priceHistory && priceHistory.length > 0 ? (
+                  <div className="chart-content">
                     <h4>📊 Évolution des Prix (30 derniers jours)</h4>
-                    <div className="chart-mock">
-                      <div className="chart-legend">
-                        <div className="legend-item">
-                          <span className="legend-color legend-x1"></span>
-                          <span>Prix x1</span>
-                        </div>
-                        <div className="legend-item">
-                          <span className="legend-color legend-x10"></span>
-                          <span>Prix x10</span>
-                        </div>
-                        <div className="legend-item">
-                          <span className="legend-color legend-x100"></span>
-                          <span>Prix x100</span>
-                        </div>
+
+                    {/* Résumé des prix actuels */}
+                    <div className="current-prices">
+                      <div className="price-card">
+                        <div className="price-label">Prix unitaire</div>
+                        <div className="price-value">{formatPrice(priceHistory[priceHistory.length - 1]?.price_x1)}</div>
                       </div>
-                      <div className="chart-area">
-                        <p>📊 Chart sera intégré ici avec Chart.js</p>
-                        <div className="price-summary">
-                          <div className="price-stat">
-                            <span>Prix actuel x1:</span>
-                            <strong>{formatPrice(priceHistory[priceHistory.length - 1]?.price_x1)}</strong>
-                          </div>
-                          <div className="price-stat">
-                            <span>Prix actuel x10:</span>
-                            <strong>{formatPrice(priceHistory[priceHistory.length - 1]?.price_x10)}</strong>
-                          </div>
-                          <div className="price-stat">
-                            <span>Prix actuel x100:</span>
-                            <strong>{formatPrice(priceHistory[priceHistory.length - 1]?.price_x100)}</strong>
-                          </div>
+                      <div className="price-card">
+                        <div className="price-label">Prix x10</div>
+                        <div className="price-value">{formatPrice(priceHistory[priceHistory.length - 1]?.price_x10)}</div>
+                      </div>
+                      <div className="price-card">
+                        <div className="price-label">Prix x100</div>
+                        <div className="price-value">{formatPrice(priceHistory[priceHistory.length - 1]?.price_x100)}</div>
+                      </div>
+                    </div>
+
+                    {/* Zone graphique future */}
+                    <div className="chart-future">
+                      <div className="chart-placeholder-clean">
+                        <div className="placeholder-icon">📈</div>
+                        <h5>Graphique d'évolution</h5>
+                        <p>Les graphiques détaillés seront disponibles prochainement</p>
+                        <div className="data-info">
+                          <span>📊 {priceHistory.length} points de données disponibles</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="no-data">
-                    <p>Aucune donnée disponible pour cet item sur ce serveur</p>
+                    <div className="no-data-icon">📊</div>
+                    <h4>Aucune donnée disponible</h4>
+                    <p>Cet item n'a pas encore de données de prix sur ce serveur.</p>
+                    <div className="no-data-help">
+                      <p>💡 Les données apparaîtront quand des utilisateurs saisiront des prix pour cet item</p>
+                    </div>
                   </div>
                 )}
               </div>

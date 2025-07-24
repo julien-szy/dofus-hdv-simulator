@@ -64,52 +64,12 @@ class TrendsService {
       return history
     } catch (error) {
       console.error('❌ Erreur chargement historique:', error)
-      // Retourner des données mock en cas d'erreur
-      return this.generateMockPriceHistory(itemId, server, days)
+      // Retourner un tableau vide en cas d'erreur
+      return []
     }
   }
 
-  // Générer des données mock pour le développement
-  generateMockPriceHistory(itemId, server, days = 30) {
-    const data = []
-    const basePrice = Math.floor(Math.random() * 10000) + 1000
-    const now = new Date()
 
-    for (let i = days; i >= 0; i--) {
-      const date = new Date(now)
-      date.setDate(date.getDate() - i)
-      
-      // Simulation de variation de prix réaliste
-      const dayOfWeek = date.getDay()
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
-      
-      // Les prix sont généralement plus élevés le weekend
-      const weekendMultiplier = isWeekend ? 1.1 : 1.0
-      
-      // Variation aléatoire ±15%
-      const randomVariation = (Math.random() - 0.5) * 0.3
-      
-      // Tendance générale (légère hausse ou baisse)
-      const trendFactor = 1 + (Math.sin(i / days * Math.PI) * 0.1)
-      
-      const finalPrice = Math.max(
-        100, 
-        Math.floor(basePrice * weekendMultiplier * (1 + randomVariation) * trendFactor)
-      )
-      
-      data.push({
-        date: date.toISOString().split('T')[0],
-        price_x1: finalPrice,
-        price_x10: Math.floor(finalPrice * 0.95),
-        price_x100: Math.floor(finalPrice * 0.9),
-        server: server,
-        item_id: itemId,
-        data_points: Math.floor(Math.random() * 20) + 5 // Nombre d'utilisateurs ayant contribué
-      })
-    }
-    
-    return data
-  }
 
   // Calculer les statistiques de tendance
   calculateTrendStats(priceHistory) {
