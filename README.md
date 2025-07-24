@@ -81,6 +81,6 @@ MIT License - Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## 🙏 Remerciements
 
-- **DofusDude** pour l'API officielle Dofus
+- **DofusDB** pour l'API officielle Dofus
 - **Ankama** pour le jeu Dofus
 - **La communauté React** pour les outils fantastiques
