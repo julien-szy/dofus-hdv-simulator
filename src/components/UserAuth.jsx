@@ -35,7 +35,7 @@ export default function UserAuth() {
 
       // Connecter ou créer l'utilisateur selon le mode
       const loggedUser = await userService.loginUser(
-        isLogin ? username + '@dofus.com' : email, // Email fictif pour connexion
+        isLogin ? username + '@hdv-simulator.local' : email, // Email local pour connexion
         username,
         password
       );

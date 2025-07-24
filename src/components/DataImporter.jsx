@@ -39,7 +39,19 @@ const DataImporter = ({ isOpen, onClose }) => {
   const loadAvailableJobs = async () => {
     try {
       const jobs = await dofusDataImporter.fetchAllJobs()
-      setAvailableJobs(jobs || [])
+      console.log('🔧 Métiers chargés:', jobs)
+
+      // Vérifier que jobs est un array et que chaque job a les bonnes propriétés
+      const validJobs = Array.isArray(jobs) ? jobs.filter(job =>
+        job &&
+        typeof job === 'object' &&
+        job.id &&
+        job.name &&
+        typeof job.name === 'string'
+      ) : []
+
+      setAvailableJobs(validJobs)
+      console.log(`✅ ${validJobs.length} métiers valides chargés`)
     } catch (error) {
       console.error('Erreur chargement métiers:', error)
       setAvailableJobs([])
@@ -278,21 +290,29 @@ const DataImporter = ({ isOpen, onClose }) => {
 
             {availableJobs.length > 0 ? (
               <div className="jobs-grid">
-                {availableJobs.map((job) => (
-                  <div key={job.id} className="job-item">
-                    <div className="job-info">
-                      <div className="job-name">{job.name}</div>
-                      <div className="job-id">ID: {job.id}</div>
+                {availableJobs.map((job) => {
+                  // Protection contre les objets invalides
+                  if (!job || typeof job !== 'object' || !job.id || !job.name) {
+                    console.warn('⚠️ Métier invalide ignoré:', job)
+                    return null
+                  }
+
+                  return (
+                    <div key={job.id} className="job-item">
+                      <div className="job-info">
+                        <div className="job-name">{String(job.name)}</div>
+                        <div className="job-id">ID: {String(job.id)}</div>
+                      </div>
+                      <button
+                        onClick={() => handleJobImport(job.id, String(job.name))}
+                        disabled={jobImporting[job.id] || importing || updating}
+                        className="btn btn-sm btn-job-import"
+                      >
+                        {jobImporting[job.id] ? '🔄' : '📥'} Import
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleJobImport(job.id, job.name)}
-                      disabled={jobImporting[job.id] || importing || updating}
-                      className="btn btn-sm btn-job-import"
-                    >
-                      {jobImporting[job.id] ? '🔄' : '📥'} Import
-                    </button>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             ) : (
               <div className="loading">Chargement des métiers...</div>
