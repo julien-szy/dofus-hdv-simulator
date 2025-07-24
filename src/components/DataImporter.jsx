@@ -53,6 +53,17 @@ const DataImporter = ({ isOpen, onClose }) => {
         }
 
         return isValid
+      }).map(job => {
+        // Normaliser le nom du métier (extraire le français si c'est un objet multilingue)
+        let jobName = job.name
+        if (typeof jobName === 'object' && jobName !== null) {
+          jobName = jobName.fr || jobName.en || jobName.de || jobName.es || jobName.pt || `Métier ${job.id}`
+        }
+
+        return {
+          ...job,
+          name: jobName
+        }
       }) : []
 
       setAvailableJobs(validJobs)
