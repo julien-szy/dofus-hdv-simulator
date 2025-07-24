@@ -4,7 +4,7 @@ Une application web moderne pour calculer la rentabilité des crafts dans Dofus,
 
 ## ✨ Fonctionnalités
 
-- 🔍 **Recherche d'objets** avec l'API DofusDude officielle
+- 🔍 **Recherche d'objets** avec l'API DofusDB.fr
 - 💰 **Calcul de prix optimaux** (achat par 1, 10 ou 100 unités)
 - 🧮 **Algorithme intelligent** qui choisit la meilleure stratégie d'achat selon la quantité
 - ⚒️ **Gestion des métiers** avec vérification des niveaux requis
@@ -12,6 +12,7 @@ Une application web moderne pour calculer la rentabilité des crafts dans Dofus,
 - 📊 **Résumé détaillé** avec ROI, taxes HDV, et bénéfices
 - ✏️ **Édition des calculs** existants
 - 📱 **Interface responsive** pour mobile et desktop
+- 🖼️ **Images locales** pour un chargement rapide
 
 ## 🚀 Démo en ligne
 
@@ -22,7 +23,8 @@ Une application web moderne pour calculer la rentabilité des crafts dans Dofus,
 - **React 18** - Framework frontend moderne
 - **Vite** - Build tool ultra-rapide
 - **CSS3** - Styles modernes avec Grid/Flexbox
-- **DofusDude API** - Données officielles Dofus
+- **DofusDB.fr API** - Données officielles Dofus
+- **Git LFS** - Gestion des images
 - **GitHub Pages** - Hébergement gratuit
 
 ## 📦 Installation locale
@@ -34,6 +36,10 @@ cd dofus-hdv-simulator
 
 # Installer les dépendances
 npm install
+
+# Extraire les images (optionnel)
+npm run extract-all
+npm run optimize-images
 
 # Lancer en mode développement
 npm run dev
@@ -59,6 +65,34 @@ L'application utilise un algorithme avancé qui :
 - **Compare tous les prix** pour les petites quantités
 - **Affiche la stratégie recommandée** pour chaque matériau
 
+## 📁 Structure du Projet
+
+```
+├── src/
+│   ├── components/          # Composants React
+│   ├── services/           # Services (API, stockage)
+│   └── data/local/         # Données locales
+├── public/images/
+│   ├── craftable-items/    # Images des items craftables
+│   ├── materials/          # Images des matériaux
+│   └── defaults/           # Images par défaut
+├── scripts-node/           # Scripts d'extraction
+└── docs/                   # Documentation
+```
+
+## 🔧 Scripts Disponibles
+
+- `npm run dev` - Mode développement
+- `npm run build` - Build de production
+- `npm run extract-all` - Extraire toutes les images
+- `npm run optimize-images` - Optimiser les images
+- `npm run deploy` - Déployer sur GitHub Pages
+
+## 📖 Documentation
+
+- [Guide d'extraction des images](EXTRACTION-IMAGES.md)
+- [Plan de migration API](docs/api-migration-plan.md)
+
 ## 📊 Fonctionnalités avancées
 
 - **Calcul des taxes HDV** (2% automatique)
@@ -66,6 +100,7 @@ L'application utilise un algorithme avancé qui :
 - **Résumé global** de tous vos calculs
 - **Modification des calculs** existants
 - **Sauvegarde locale** persistante
+- **Images optimisées** pour un chargement rapide
 
 ## 🤝 Contribution
 
@@ -81,6 +116,6 @@ MIT License - Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## 🙏 Remerciements
 
-- **DofusDB** pour l'API officielle Dofus
+- **DofusDB.fr** pour l'API officielle Dofus
 - **Ankama** pour le jeu Dofus
 - **La communauté React** pour les outils fantastiques

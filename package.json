@@ -11,11 +11,11 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "extract-data": "node scripts-node/extractAndDownload.js",
-    "download-images": "node scripts-node/downloadImages.js",
-    "download-images-only": "node scripts-node/downloadImagesOnly.js",
-
-    "test-extraction": "node scripts-node/testExtraction.js"
+    
+    "extract-craftable-items": "node scripts-node/extractCraftableItems.js",
+    "extract-materials": "node scripts-node/extractMaterialsOnly.js",
+    "extract-all": "npm run extract-craftable-items & npm run extract-materials",
+    "optimize-images": "node scripts-node/optimizeImages.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
