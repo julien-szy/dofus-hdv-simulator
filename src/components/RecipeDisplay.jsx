@@ -126,7 +126,7 @@ const RecipeDisplay = ({
                 <span style={{ color: '#f4e4bc', fontSize: '0.9em' }}>K</span>
                 {materialPrices[material.item_ankama_id]?.price_10 && (
                   <span style={{ color: '#ccc', fontSize: '0.8em' }}>
-                    ({(materialPrices[material.item_ankama_id].price_10 / 10).toFixed(1)}K/u)
+                    ({((materialPrices[material.item_ankama_id].price_10 || 0) / 10).toFixed(1)}K/u)
                   </span>
                 )}
               </div>
@@ -144,7 +144,7 @@ const RecipeDisplay = ({
                 <span style={{ color: '#f4e4bc', fontSize: '0.9em' }}>K</span>
                 {materialPrices[material.item_ankama_id]?.price_100 && (
                   <span style={{ color: '#ccc', fontSize: '0.8em' }}>
-                    ({(materialPrices[material.item_ankama_id].price_100 / 100).toFixed(1)}K/u)
+                    ({((materialPrices[material.item_ankama_id].price_100 || 0) / 100).toFixed(1)}K/u)
                   </span>
                 )}
               </div>
@@ -155,7 +155,7 @@ const RecipeDisplay = ({
                 if (optimal.unitPrice > 0) {
                   return (
                     <div className="optimal-price">
-                      <div>✓ Optimal: {optimal.unitPrice.toFixed(1)}K/u (par {optimal.buyType}) = {optimal.totalCost.toFixed(0)}K total</div>
+                      <div>✓ Optimal: {(optimal.unitPrice || 0).toFixed(1)}K/u (par {optimal.buyType}) = {(optimal.totalCost || 0).toFixed(0)}K total</div>
                       <div style={{ fontSize: '0.9em', color: '#81c784', marginTop: '2px' }}>
                         💡 {optimal.strategy}
                       </div>
@@ -182,7 +182,7 @@ const RecipeDisplay = ({
             <div className="cost-breakdown">
               {calculateCraftCost(selectedItem, materialPrices).breakdown.map((item, index) => (
                 <div key={index} style={{ marginBottom: '2px' }}>
-                  {item.name}: {item.quantity} × {item.unitPrice.toFixed(1)}K = {item.totalCost.toFixed(0)}K 
+                  {item.name}: {item.quantity} × {(item.unitPrice || 0).toFixed(1)}K = {(item.totalCost || 0).toFixed(0)}K
                   {item.buyType > 1 && (
                     <span style={{ color: '#4caf50' }}> (par {item.buyType})</span>
                   )}

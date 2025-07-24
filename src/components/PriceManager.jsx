@@ -53,6 +53,7 @@ const PriceManager = ({ isOpen, onClose }) => {
   })
 
   const formatPrice = (price) => {
+    if (!price || isNaN(price) || !isFinite(price)) return '-'
     return price > 0 ? price.toLocaleString() + ' K' : '-'
   }
 

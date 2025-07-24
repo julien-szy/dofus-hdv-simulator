@@ -13,6 +13,7 @@ const ResultsSummary = ({
   const totalRevenue = craftCalculations.reduce((sum, calc) => sum + (calc.netSellPrice * calc.quantity), 0)
   const totalTax = craftCalculations.reduce((sum, calc) => sum + (calc.tax * calc.quantity), 0)
   const averageROI = totalInvestment > 0 ? (totalProfit / totalInvestment * 100) : 0
+  const safeAverageROI = isNaN(averageROI) || !isFinite(averageROI) ? 0 : averageROI
 
   return (
     <>
@@ -47,8 +48,8 @@ const ResultsSummary = ({
 
         <div className="result-card">
           <div className="result-title">ROI Moyen</div>
-          <div className={`result-value ${averageROI >= 0 ? 'positive' : 'negative'}`}>
-            {averageROI.toFixed(1)}%
+          <div className={`result-value ${safeAverageROI >= 0 ? 'positive' : 'negative'}`}>
+            {safeAverageROI.toFixed(1)}%
           </div>
         </div>
       </div>
@@ -75,7 +76,7 @@ const ResultsSummary = ({
                   Vente: {formatKamas(calc.sellPrice)} |
                   Net: {formatKamas(calc.netSellPrice)} |
                   Taxe: {formatKamas(calc.tax)} |
-                  ROI: {calc.profitPercentage.toFixed(1)}%
+                  ROI: {(isNaN(calc.profitPercentage) || !isFinite(calc.profitPercentage) ? 0 : calc.profitPercentage).toFixed(1)}%
                 </div>
               </div>
               <div className={`item-profit ${calc.profit >= 0 ? 'positive' : 'negative'}`}>
