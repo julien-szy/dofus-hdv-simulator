@@ -1,0 +1,148 @@
+name: 📸 Télécharger toutes les images DofusDB
+
+on:
+  # Déclenchement manuel depuis GitHub
+  workflow_dispatch:
+    inputs:
+      force_download:
+        description: 'Forcer le re-téléchargement des images existantes'
+        required: false
+        default: 'false'
+        type: boolean
+      max_images:
+        description: 'Nombre max d\'images à télécharger (0 = illimité)'
+        required: false
+        default: '0'
+        type: string
+
+  # Déclenchement automatique sur push (optionnel)
+  # push:
+  #   branches: [ main ]
+  #   paths: [ 'src/scripts/**' ]
+
+jobs:
+  download-images:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout du code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 🔧 Installation des dépendances
+      run: npm ci
+      
+    - name: 📁 Création des dossiers d'images
+      run: |
+        mkdir -p public/images/items
+        mkdir -p public/images/resources
+        
+    - name: 🔍 Vérification de l'espace disque
+      run: df -h
+      
+    - name: 🚀 Extraction et téléchargement complet
+      run: |
+        echo "🌟 Début de l'extraction complète..."
+        echo "Force download: ${{ github.event.inputs.force_download }}"
+        echo "Max images: ${{ github.event.inputs.max_images }}"
+        
+        # Exporter les variables d'environnement pour le script
+        export FORCE_DOWNLOAD="${{ github.event.inputs.force_download }}"
+        export MAX_IMAGES="${{ github.event.inputs.max_images }}"
+        
+        # Lancer le script d'extraction
+        node src/scripts/extractAndDownload.js
+        
+    - name: 📊 Statistiques des images téléchargées
+      run: |
+        echo "📦 Images d'items:"
+        ls -la public/images/items/ | wc -l
+        du -sh public/images/items/
+        
+        echo "🧱 Images de ressources:"
+        ls -la public/images/resources/ | wc -l  
+        du -sh public/images/resources/
+        
+        echo "💾 Taille totale:"
+        du -sh public/images/
+        
+    - name: 🔍 Vérification des changements
+      id: verify-changes
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "✅ Nouvelles images détectées"
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "ℹ️ Aucune nouvelle image"
+        fi
+        
+    - name: 📝 Commit des nouvelles images
+      if: steps.verify-changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Ajouter seulement les images
+        git add public/images/
+        
+        # Compter les nouvelles images
+        ITEMS_COUNT=$(ls -1 public/images/items/*.png 2>/dev/null | wc -l)
+        RESOURCES_COUNT=$(ls -1 public/images/resources/*.png 2>/dev/null | wc -l)
+        TOTAL_SIZE=$(du -sh public/images/ | cut -f1)
+        
+        # Commit avec message détaillé
+        git commit -m "📸 Mise à jour banque d'images DofusDB
+
+        ✨ Images téléchargées:
+        • 📦 Items: ${ITEMS_COUNT} images
+        • 🧱 Ressources: ${RESOURCES_COUNT} images
+        • 💾 Taille totale: ${TOTAL_SIZE}
+        
+        🤖 Téléchargement automatique via GitHub Actions
+        🌐 Banque d'images permanente pour tous les utilisateurs
+        ⚡ Chargement instantané (pas d'appels DofusDB)"
+        
+    - name: 🚀 Push vers le repository
+      if: steps.verify-changes.outputs.changes == 'true'
+      run: |
+        git push
+        echo "✅ Images poussées vers le repository"
+        echo "🌐 Netlify va redéployer automatiquement"
+        
+    - name: 📋 Résumé final
+      run: |
+        echo "🎉 EXTRACTION TERMINÉE"
+        echo "====================="
+        
+        if [ "${{ steps.verify-changes.outputs.changes }}" == "true" ]; then
+          echo "✅ Nouvelles images ajoutées et commitées"
+          echo "🌐 Netlify va redéployer avec les nouvelles images"
+          echo "⚡ Les utilisateurs verront les images instantanément"
+        else
+          echo "ℹ️ Aucune nouvelle image à ajouter"
+          echo "✅ La banque d'images est à jour"
+        fi
+        
+        echo ""
+        echo "📊 Statistiques finales:"
+        echo "• Items: $(ls -1 public/images/items/*.png 2>/dev/null | wc -l) images"
+        echo "• Ressources: $(ls -1 public/images/resources/*.png 2>/dev/null | wc -l) images"
+        echo "• Taille: $(du -sh public/images/ 2>/dev/null | cut -f1 || echo '0')"
+        
+    - name: 🚨 Notification en cas d'erreur
+      if: failure()
+      run: |
+        echo "❌ ERREUR lors du téléchargement"
+        echo "Vérifiez les logs ci-dessus pour plus de détails"
+        echo "Possible causes:"
+        echo "• API DofusDB indisponible"
+        echo "• Problème de réseau"
+        echo "• Espace disque insuffisant"

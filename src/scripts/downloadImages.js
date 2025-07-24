@@ -15,6 +15,7 @@ class ImageDownloader {
     this.downloadedCount = 0
     this.errorCount = 0
     this.skippedCount = 0
+    this.forceDownload = process.env.FORCE_DOWNLOAD === 'true'
   }
 
   // Créer les dossiers nécessaires
@@ -42,8 +43,8 @@ class ImageDownloader {
     const outputDir = type === 'items' ? this.itemsDir : this.resourcesDir
     const filePath = path.join(outputDir, `${iconId}.png`)
     
-    // Vérifier si le fichier existe déjà
-    if (fs.existsSync(filePath)) {
+    // Vérifier si le fichier existe déjà (sauf en mode force)
+    if (fs.existsSync(filePath) && !this.forceDownload) {
       this.skippedCount++
       return { success: true, skipped: true, path: filePath }
     }

@@ -8,10 +8,18 @@ class DataExtractor {
       ? 'http://localhost:8888/.netlify/functions/database'
       : '/.netlify/functions/database'
     this.imageDownloader = new ImageDownloader()
-    
+
     this.extractedItems = new Map()
     this.extractedResources = new Map()
     this.recipes = []
+
+    // Configuration depuis les variables d'environnement (GitHub Actions)
+    this.forceDownload = process.env.FORCE_DOWNLOAD === 'true'
+    this.maxImages = parseInt(process.env.MAX_IMAGES) || 0
+
+    console.log(`🔧 Configuration:`)
+    console.log(`   Force download: ${this.forceDownload}`)
+    console.log(`   Max images: ${this.maxImages || 'illimité'}`)
   }
 
   // Récupérer tous les métiers
@@ -185,29 +193,42 @@ class DataExtractor {
   async downloadAllImages() {
     console.log('\n🖼️ TÉLÉCHARGEMENT DES IMAGES')
     console.log('=============================')
-    
+
     // Récupérer tous les icon_ids
-    const itemIconIds = Array.from(this.extractedItems.values())
+    let itemIconIds = Array.from(this.extractedItems.values())
       .map(item => item.icon_id)
       .filter(id => id)
-    
-    const resourceIconIds = Array.from(this.extractedResources.values())
+
+    let resourceIconIds = Array.from(this.extractedResources.values())
       .map(resource => resource.icon_id)
       .filter(id => id)
-    
+
+    // Appliquer la limite si définie
+    if (this.maxImages > 0) {
+      const halfLimit = Math.floor(this.maxImages / 2)
+      itemIconIds = itemIconIds.slice(0, halfLimit)
+      resourceIconIds = resourceIconIds.slice(0, halfLimit)
+      console.log(`⚠️ Limite appliquée: ${this.maxImages} images max`)
+    }
+
     console.log(`📦 ${itemIconIds.length} images d'items à télécharger`)
     console.log(`🧱 ${resourceIconIds.length} images de ressources à télécharger`)
-    
+
+    // Configurer le téléchargeur
+    if (this.forceDownload) {
+      console.log(`🔄 Mode force: re-téléchargement des images existantes`)
+    }
+
     // Télécharger les images des items
     if (itemIconIds.length > 0) {
-      await this.imageDownloader.downloadBatch(itemIconIds, 'items', 5)
+      await this.imageDownloader.downloadBatch(itemIconIds, 'items', 3)
     }
-    
+
     // Télécharger les images des ressources
     if (resourceIconIds.length > 0) {
-      await this.imageDownloader.downloadBatch(resourceIconIds, 'resources', 5)
+      await this.imageDownloader.downloadBatch(resourceIconIds, 'resources', 3)
     }
-    
+
     // Afficher le résumé
     this.imageDownloader.printSummary()
     this.imageDownloader.calculateTotalSize()
