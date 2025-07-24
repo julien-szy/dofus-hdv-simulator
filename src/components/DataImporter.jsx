@@ -18,9 +18,13 @@ const DataImporter = ({ isOpen, onClose }) => {
   // Charger les statistiques au démarrage
   useEffect(() => {
     if (isOpen) {
-      loadStats()
-      loadAutoStatus()
-      loadAvailableJobs()
+      try {
+        loadStats()
+        loadAutoStatus()
+        loadAvailableJobs()
+      } catch (error) {
+        console.error('❌ Erreur lors du chargement initial:', error)
+      }
     }
   }, [isOpen])
 
@@ -47,6 +51,7 @@ const DataImporter = ({ isOpen, onClose }) => {
 
   const loadAvailableJobs = async () => {
     try {
+      console.log('🔄 Chargement des métiers disponibles...')
       const jobs = await dofusDataImporter.fetchAllJobs()
       console.log('🔧 Métiers chargés:', jobs)
 
@@ -668,7 +673,7 @@ const DataImporter = ({ isOpen, onClose }) => {
                           </div>
                           <div className="job-items-list">
                             {selectedJobItems[job.name].slice(0, 20).map((item, index) => (
-                              <div key={item.item_id || index} className="job-item-row">
+                              <div key={`${job.name}-item-${item.item_id || index}`} className="job-item-row">
                                 <span className="item-name">{item.item_name}</span>
                                 <span className="item-level">Niv. {item.level_required || 1}</span>
                                 <span className="item-type">{item.item_type || 'Inconnu'}</span>
