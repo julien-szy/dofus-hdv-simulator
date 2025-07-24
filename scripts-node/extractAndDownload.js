@@ -1,5 +1,19 @@
 // Script principal pour extraire les données et télécharger toutes les images
-import ImageDownloader from './downloadImages.js'
+
+// Import conditionnel selon l'environnement
+
+// Fonction pour initialiser le téléchargeur selon l'environnement
+async function initializeImageDownloader() {
+  if (typeof window !== 'undefined') {
+    // Environnement browser : utiliser la version browser-safe
+    const { default: BrowserImageDownloader } = await import('../src/scripts/downloadImagesBrowser.js')
+    return new BrowserImageDownloader()
+  } else {
+    // Environnement Node.js : utiliser la version complète
+    const { default: NodeImageDownloader } = await import('./downloadImages.js')
+    return new NodeImageDownloader()
+  }
+}
 
 class DataExtractor {
   constructor() {
@@ -7,7 +21,7 @@ class DataExtractor {
     this.dbUrl = import.meta.env?.DEV
       ? 'http://localhost:8888/.netlify/functions/database'
       : '/.netlify/functions/database'
-    this.imageDownloader = new ImageDownloader()
+    this.imageDownloader = null // Sera initialisé plus tard
 
     this.extractedItems = new Map()
     this.extractedResources = new Map()
@@ -160,7 +174,12 @@ class DataExtractor {
   async extractAllData() {
     console.log('🚀 DÉBUT DE L\'EXTRACTION COMPLÈTE')
     console.log('===================================')
-    
+
+    // Initialiser le téléchargeur d'images
+    if (!this.imageDownloader) {
+      this.imageDownloader = await initializeImageDownloader()
+    }
+
     // Créer les dossiers pour les images
     this.imageDownloader.createDirectories()
     
@@ -193,6 +212,11 @@ class DataExtractor {
   async downloadAllImages() {
     console.log('\n🖼️ TÉLÉCHARGEMENT DES IMAGES')
     console.log('=============================')
+
+    // Initialiser le téléchargeur d'images si pas déjà fait
+    if (!this.imageDownloader) {
+      this.imageDownloader = await initializeImageDownloader()
+    }
 
     // Récupérer tous les icon_ids
     let itemIconIds = Array.from(this.extractedItems.values())

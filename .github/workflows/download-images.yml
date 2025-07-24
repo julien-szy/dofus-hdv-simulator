@@ -85,10 +85,10 @@ jobs:
         # Lancer le script optimisé pour les images
         if [ "${{ github.event.inputs.max_images }}" = "0" ]; then
           echo "🚀 Mode complet: extraction + téléchargement"
-          node src/scripts/extractAndDownload.js
+          node scripts-node/extractAndDownload.js
         else
           echo "📸 Mode images seulement: téléchargement optimisé"
-          node src/scripts/downloadImagesOnly.js
+          node scripts-node/downloadImagesOnly.js
         fi
 
     - name: ⏭️ Skip téléchargement (images existantes)
