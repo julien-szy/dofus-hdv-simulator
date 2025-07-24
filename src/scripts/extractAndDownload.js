@@ -275,15 +275,17 @@ class DataExtractor {
 
     // Vérifier si on a déjà des données récentes (moins de 24h) - seulement côté client
     try {
-      const lastExtraction = localStorage?.getItem?.('last_data_extraction')
-      if (lastExtraction) {
-        const lastTime = parseInt(lastExtraction)
-        const now = Date.now()
-        const hoursSince = (now - lastTime) / (1000 * 60 * 60)
+      if (typeof localStorage !== 'undefined') {
+        const lastExtraction = localStorage.getItem('last_data_extraction')
+        if (lastExtraction) {
+          const lastTime = parseInt(lastExtraction)
+          const now = Date.now()
+          const hoursSince = (now - lastTime) / (1000 * 60 * 60)
 
-        if (hoursSince < 24) {
-          console.log(`⏭️ Données extraites il y a ${hoursSince.toFixed(1)}h, skip extraction`)
-          return false
+          if (hoursSince < 24) {
+            console.log(`⏭️ Données extraites il y a ${hoursSince.toFixed(1)}h, skip extraction`)
+            return false
+          }
         }
       }
     } catch (error) {
@@ -304,12 +306,12 @@ class DataExtractor {
         await this.extractAllData()
 
         // Marquer la date d'extraction (seulement côté client)
-        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-          try {
+        try {
+          if (typeof localStorage !== 'undefined') {
             localStorage.setItem('last_data_extraction', Date.now().toString())
-          } catch (error) {
-            console.log('⚠️ Impossible de sauvegarder dans localStorage')
           }
+        } catch (error) {
+          console.log('⚠️ Impossible de sauvegarder dans localStorage')
         }
       } else {
         console.log('⏭️ Skip extraction des données (récentes)')
