@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import userService from '../services/userService';
+import optimizedUserService from '../services/optimizedUserService';
 import UserProfile from './UserProfile.jsx';
 import '../styles/UserAuth.css';
 
@@ -15,12 +15,12 @@ export default function UserAuth() {
 
   useEffect(() => {
     // Charger l'utilisateur au démarrage
-    const currentUser = userService.getCurrentUser();
+    const currentUser = optimizedUserService.getCurrentUser();
     setUser(currentUser);
 
     // Initialiser la base de données si nécessaire
     if (currentUser) {
-      userService.initializeDatabase().catch(console.error);
+      optimizedUserService.initializeDatabase().catch(console.error);
     }
   }, []);
 
@@ -31,10 +31,10 @@ export default function UserAuth() {
 
     try {
       // Initialiser la base de données d'abord
-      await userService.initializeDatabase();
+      await optimizedUserService.initializeDatabase();
 
       // Connecter ou créer l'utilisateur selon le mode
-      const loggedUser = await userService.loginUser(
+      const loggedUser = await optimizedUserService.loginUser(
         isLogin ? username + '@hdv-simulator.local' : email, // Email local pour connexion
         username,
         password
@@ -97,7 +97,7 @@ export default function UserAuth() {
   };
 
   const handleLogout = () => {
-    userService.logout();
+    optimizedUserService.logoutUser();
     setUser(null);
 
     // Déclencher un événement pour notifier App.jsx

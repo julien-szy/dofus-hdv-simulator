@@ -15,7 +15,12 @@
     "extract-craftable-items": "node scripts-node/extractCraftableItems.js",
     "extract-materials": "node scripts-node/extractMaterialsOnly.js",
     "extract-all": "npm run extract-craftable-items & npm run extract-materials",
-    "optimize-images": "node scripts-node/optimizeImages.js"
+    "optimize-images": "node scripts-node/optimizeImages.js",
+    "migrate-to-local": "node scripts-node/migrateToLocalData.js",
+    "deploy": "node scripts-node/deployToNetlify.js",
+    "deploy-images": "node scripts-node/deployImagesOnly.js",
+    "deploy-app": "npm run build && npm run deploy",
+    "push": "node scripts-node/smartPush.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

@@ -1,0 +1,20 @@
+# Exclure les images du déploiement automatique
+# Elles seront gérées séparément via Git LFS
+public/images/
+
+# Exclure les fichiers de développement
+node_modules/
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Exclure les fichiers de cache
+.cache/
+dist/
+build/
+
+# Exclure les fichiers temporaires
+*.tmp
+*.temp 

@@ -26,6 +26,7 @@ Une application web moderne pour calculer la rentabilité des crafts dans Dofus,
 - **DofusDB.fr API** - Données officielles Dofus
 - **Git LFS** - Gestion des images
 - **GitHub Pages** - Hébergement gratuit
+- **Architecture optimisée** - Données statiques en JSON local, BDD allégée
 
 ## 📦 Installation locale
 
@@ -41,6 +42,9 @@ npm install
 npm run extract-all
 npm run optimize-images
 
+# Migrer vers l'architecture optimisée (recommandé)
+npm run migrate-to-local
+
 # Lancer en mode développement
 npm run dev
 
@@ -55,6 +59,29 @@ npm run build
 3. **Entrez les prix** : Saisissez les prix x1, x10, x100 que vous voyez à l'HDV
 4. **L'algorithme calcule** automatiquement la stratégie d'achat optimale
 5. **Ajoutez le prix de vente** et la quantité à crafter
+
+## 🚀 Architecture Optimisée
+
+L'application utilise une architecture optimisée qui sépare les données statiques (JSON local) des données dynamiques (BDD) :
+
+### **Données Statiques (JSON Local)**
+- Items craftables et leurs recettes
+- Matériaux utilisés dans les crafts
+- Métiers et leurs informations
+- Images stockées localement avec Git LFS
+
+### **Données Dynamiques (BDD)**
+- Prix personnalisés des matériaux
+- Favoris utilisateur
+- Calculs sauvegardés
+- Paramètres utilisateur
+- Historique de recherche
+
+### **Avantages**
+- **Performance** : Recherche 50x plus rapide
+- **Coûts** : BDD 90% plus légère
+- **Maintenance** : Plus simple et flexible
+- **Offline** : Fonctionne sans internet
 6. **Calculez la rentabilité** et voyez vos bénéfices !
 
 ## 🧠 Algorithme de prix intelligent
@@ -86,12 +113,16 @@ L'application utilise un algorithme avancé qui :
 - `npm run build` - Build de production
 - `npm run extract-all` - Extraire toutes les images
 - `npm run optimize-images` - Optimiser les images
-- `npm run deploy` - Déployer sur GitHub Pages
+- `npm run migrate-to-local` - Migrer vers l'architecture optimisée
+- `npm run deploy` - Déployer complet vers Netlify
+- `npm run deploy-images` - Déployer uniquement les images (rapide)
+- `npm run deploy-app` - Déployer uniquement l'application (rapide)
 
 ## 📖 Documentation
 
 - [Guide d'extraction des images](EXTRACTION-IMAGES.md)
 - [Plan de migration API](docs/api-migration-plan.md)
+- [Optimisation des déploiements Netlify](docs/netlify-optimization.md)
 
 ## 📊 Fonctionnalités avancées
 

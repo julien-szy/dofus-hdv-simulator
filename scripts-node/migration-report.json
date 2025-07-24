@@ -1,0 +1,33 @@
+{
+  "migrationDate": "2025-07-24T20:38:08.776Z",
+  "filesCreated": [
+    {
+      "name": "craftable-items-mapping.json",
+      "size": "35.80 KB",
+      "records": 50
+    },
+    {
+      "name": "materials-mapping.json",
+      "size": "0.00 KB",
+      "records": 0
+    },
+    {
+      "name": "dofus-data-optimized.json",
+      "size": "43.65 KB",
+      "records": 4
+    }
+  ],
+  "statistics": {
+    "originalItems": 50,
+    "optimizedItems": 50,
+    "originalSize": "25.44 KB",
+    "optimizedSize": "25.48 KB",
+    "sizeReduction": "-0.16%"
+  },
+  "recommendations": [
+    "Remplacer les imports de dofus-data.json par dofus-data-optimized.json",
+    "Utiliser LocalDataService pour accéder aux données statiques",
+    "Supprimer les tables craftable_items, craft_resources, etc. de la BDD",
+    "Garder uniquement les tables utilisateur en BDD"
+  ]
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { searchItems } from '../services/dofusDbApi.js'
-import userService from '../services/userService.js'
+import localDataService from '../services/localDataService.js'
+import optimizedUserService from '../services/optimizedUserService.js'
 import trendsService from '../services/trendsService.js'
 
 const DOFUS_SERVERS = [
@@ -35,7 +35,7 @@ const PriceTrends = ({ isOpen, onClose }) => {
 
     setLoading(true)
     try {
-      const results = await searchItems(term)
+      const results = await localDataService.searchItems(term, 10)
       setSearchResults(results.slice(0, 10)) // Limiter à 10 résultats
     } catch (error) {
       console.error('Erreur recherche:', error)

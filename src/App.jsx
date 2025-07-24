@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/storage.js'
-// import { searchItems, getItemDetails, getMaterialDetails } from './services/dofusApi.js'
-import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkItemHasRecipe } from './services/dofusDbApi.js'
-import craftableService from './services/craftableService.js'
+import localDataService from './services/localDataService.js'
+import optimizedUserService from './services/optimizedUserService.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
 import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices, migratePricesWithNames } from './services/priceStorage.js'
 import syncService from './services/syncService.js'
-import userService from './services/userService.js'
 import trendsService from './services/trendsService.js'
 import autoImportService from './services/autoImportService.js'
 
@@ -23,6 +21,7 @@ import UserAuth from './components/UserAuth.jsx'
 import ItemMessage from './components/ItemMessage.jsx'
 import ServerTutorial from './components/ServerTutorial.jsx'
 import DataImporter from './components/DataImporter.jsx'
+import ArchitectureTest from './components/ArchitectureTest.jsx'
 import './styles/App.css'
 
 function App() {
@@ -43,6 +42,7 @@ function App() {
   const [itemMessage, setItemMessage] = useState(null)
   const [showServerTutorial, setShowServerTutorial] = useState(false)
   const [showDataImporter, setShowDataImporter] = useState(false)
+  const [showArchitectureTest, setShowArchitectureTest] = useState(false)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -51,7 +51,7 @@ function App() {
 
   const loadInitialData = async () => {
     // Vérifier si un utilisateur est connecté
-    const user = userService.getCurrentUser()
+    const user = optimizedUserService.getCurrentUser()
     setCurrentUser(user)
 
 
@@ -62,7 +62,7 @@ function App() {
       setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
 
       // Charger les prix stockés localement et migrer les noms manquants
-      await migratePricesWithNames(getMaterialDetails)
+      await migratePricesWithNames(localDataService.getMaterialDetails.bind(localDataService))
       getAllStoredPrices()
 
 
@@ -216,8 +216,8 @@ function App() {
 
     setLoading(true)
     try {
-      // Utiliser le service craftable avec cache intelligent
-      const items = await craftableService.searchItems(term)
+      // Utiliser le service local optimisé
+      const items = await localDataService.searchItems(term, 10)
       // Enrichir les objets avec les informations de métier manquantes
       const enrichedItems = items.map(item => enrichItemWithProfession(item))
       setSearchResults(enrichedItems)
@@ -246,7 +246,7 @@ function App() {
     setLoading(true)
     try {
       // 1. Vérifier d'abord si l'item a une recette
-      const hasRecipe = await checkItemHasRecipe(item.ankama_id)
+      const hasRecipe = await localDataService.checkItemHasRecipe(item.id)
 
       if (!hasRecipe) {
         setItemMessage({
@@ -258,7 +258,7 @@ function App() {
       }
 
       // 2. Récupérer les détails complets de l'objet avec sa recette
-      const detailedItem = await getItemDetails(item.ankama_id)
+      const detailedItem = await localDataService.getItemDetails(item.id)
 
       if (!detailedItem.recipe || detailedItem.recipe.length === 0) {
         alert('Erreur lors du chargement de la recette. Veuillez réessayer.')
@@ -268,20 +268,22 @@ function App() {
 
       // Récupérer les détails des matériaux
       const materialsWithDetails = await Promise.all(
-        detailedItem.recipe.map(async (recipeItem) => {
+        detailedItem.recipe.ingredients.map(async (ingredient) => {
           try {
-            const materialData = await getMaterialDetails(recipeItem.item_ankama_id, recipeItem.item_subtype)
+            const materialData = await localDataService.getMaterialDetails(ingredient.id)
             return {
-              ...recipeItem,
-              name: materialData.name,
-              image_urls: materialData.image_urls,
-              level: materialData.level
+              item_ankama_id: ingredient.id,
+              quantity: ingredient.quantity,
+              name: materialData?.name || ingredient.name,
+              image_urls: materialData?.img ? { icon: materialData.img } : null,
+              level: materialData?.level || 1
             }
           } catch (error) {
             console.error('Erreur lors du chargement du matériau:', error)
             return {
-              ...recipeItem,
-              name: `Matériau ${recipeItem.item_ankama_id}`,
+              item_ankama_id: ingredient.id,
+              quantity: ingredient.quantity,
+              name: ingredient.name,
               image_urls: null,
               level: 1
             }
@@ -677,6 +679,9 @@ function App() {
         isOpen={showDataImporter}
         onClose={() => setShowDataImporter(false)}
       />
+
+      {/* Test de l'architecture optimisée */}
+      <ArchitectureTest />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { DOFUS_PROFESSIONS } from '../data/professions.js'
-import userService from '../services/userService.js'
+import optimizedUserService from '../services/optimizedUserService.js'
 import syncService from '../services/syncService.js'
 
 const DOFUS_SERVERS = {
@@ -32,7 +32,7 @@ const UserProfile = ({
   const [activeTab, setActiveTab] = useState('character')
 
   useEffect(() => {
-    const currentUser = userService.getCurrentUser()
+    const currentUser = optimizedUserService.getCurrentUser()
     setUser(currentUser)
     
     // Charger les données du profil depuis localStorage

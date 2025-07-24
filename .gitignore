@@ -24,6 +24,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Exclure les images du commit automatique
+# Elles seront gérées séparément via Git LFS
+public/images/
+
 # Environment variables
 .env
 .env.local

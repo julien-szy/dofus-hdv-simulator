@@ -1,0 +1,1804 @@
+{
+  "items": {
+    "44": {
+      "id": 44,
+      "name": "Épée de Boisaille",
+      "level": 7,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6007.png",
+      "hasRecipe": true
+    },
+    "49": {
+      "id": 49,
+      "name": "Épée de Fouraille",
+      "level": 15,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6002.png",
+      "hasRecipe": true
+    },
+    "55": {
+      "id": 55,
+      "name": "Épée d'Alle",
+      "level": 26,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6001.png",
+      "hasRecipe": true
+    },
+    "58": {
+      "id": 58,
+      "name": "La Triste Lame",
+      "level": 21,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6005.png",
+      "hasRecipe": true
+    },
+    "62": {
+      "id": 62,
+      "name": "Épée d'Ha",
+      "level": 17,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6006.png",
+      "hasRecipe": true
+    },
+    "65": {
+      "id": 65,
+      "name": "Goultard",
+      "level": 40,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6017.png",
+      "hasRecipe": true
+    },
+    "66": {
+      "id": 66,
+      "name": "La crinière de Badoul",
+      "level": 33,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6011.png",
+      "hasRecipe": true
+    },
+    "67": {
+      "id": 67,
+      "name": "Le Tranchant Infernal",
+      "level": 22,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6013.png",
+      "hasRecipe": true
+    },
+    "70": {
+      "id": 70,
+      "name": "Amulette du Hibou",
+      "level": 8,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1001.png",
+      "hasRecipe": true
+    },
+    "77": {
+      "id": 77,
+      "name": "Amulette de l'Ours",
+      "level": 8,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1005.png",
+      "hasRecipe": true
+    },
+    "84": {
+      "id": 84,
+      "name": "Amulette du Mulou",
+      "level": 8,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1006.png",
+      "hasRecipe": true
+    },
+    "91": {
+      "id": 91,
+      "name": "Arc de Boisaille",
+      "level": 7,
+      "type": "Arc",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/2001.png",
+      "hasRecipe": true
+    },
+    "97": {
+      "id": 97,
+      "name": "Dagues de Boisaille",
+      "level": 7,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5010.png",
+      "hasRecipe": true
+    },
+    "103": {
+      "id": 103,
+      "name": "Anneau de Sagesse",
+      "level": 9,
+      "type": "Anneau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/9007.png",
+      "hasRecipe": true
+    },
+    "112": {
+      "id": 112,
+      "name": "Anneau de Chance",
+      "level": 9,
+      "type": "Anneau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/9009.png",
+      "hasRecipe": true
+    },
+    "121": {
+      "id": 121,
+      "name": "Anneau d'Agilité",
+      "level": 9,
+      "type": "Anneau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/9001.png",
+      "hasRecipe": true
+    },
+    "127": {
+      "id": 127,
+      "name": "Bottes de Bowisse",
+      "level": 50,
+      "type": "Bottes",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/11002.png",
+      "hasRecipe": true
+    },
+    "130": {
+      "id": 130,
+      "name": "L'Ecrabouilleur de Iop",
+      "level": 27,
+      "type": "Bottes",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/11007.png",
+      "hasRecipe": true
+    },
+    "134": {
+      "id": 134,
+      "name": "Baguette de Boisaille",
+      "level": 3,
+      "type": "Baguette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/3008.png",
+      "hasRecipe": true
+    },
+    "140": {
+      "id": 140,
+      "name": "Bâton de Boisaille",
+      "level": 9,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4001.png",
+      "hasRecipe": true
+    },
+    "147": {
+      "id": 147,
+      "name": "Marteau de Boisaille",
+      "level": 6,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7001.png",
+      "hasRecipe": true
+    },
+    "153": {
+      "id": 153,
+      "name": "Pelle de Boisaille",
+      "level": 6,
+      "type": "Pelle",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/8001.png",
+      "hasRecipe": true
+    },
+    "156": {
+      "id": 156,
+      "name": "Ceinture de Puissance",
+      "level": 31,
+      "type": "Ceinture",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/10019.png",
+      "hasRecipe": true
+    },
+    "157": {
+      "id": 157,
+      "name": "La Gougnole",
+      "level": 17,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1007.png",
+      "hasRecipe": true
+    },
+    "158": {
+      "id": 158,
+      "name": "La Destinée Dorée",
+      "level": 12,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1009.png",
+      "hasRecipe": true
+    },
+    "159": {
+      "id": 159,
+      "name": "La Broche Céleste",
+      "level": 40,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1008.png",
+      "hasRecipe": true
+    },
+    "160": {
+      "id": 160,
+      "name": "Le Flan des Étoiles",
+      "level": 61,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1010.png",
+      "hasRecipe": true
+    },
+    "161": {
+      "id": 161,
+      "name": "La Célébrité",
+      "level": 27,
+      "type": "Amulette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/1009.png",
+      "hasRecipe": true
+    },
+    "165": {
+      "id": 165,
+      "name": "Baguette de Glace",
+      "level": 11,
+      "type": "Baguette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/3002.png",
+      "hasRecipe": true
+    },
+    "180": {
+      "id": 180,
+      "name": "La Baguette des Limbes",
+      "level": 105,
+      "type": "Baguette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/3007.png",
+      "hasRecipe": true
+    },
+    "181": {
+      "id": 181,
+      "name": "Baguette des Cieux",
+      "level": 51,
+      "type": "Baguette",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/3006.png",
+      "hasRecipe": true
+    },
+    "183": {
+      "id": 183,
+      "name": "Bâton Feuillu",
+      "level": 12,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4002.png",
+      "hasRecipe": true
+    },
+    "188": {
+      "id": 188,
+      "name": "Bâton Kouyu",
+      "level": 8,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4003.png",
+      "hasRecipe": true
+    },
+    "194": {
+      "id": 194,
+      "name": "Bâton Spirituel",
+      "level": 16,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4008.png",
+      "hasRecipe": true
+    },
+    "200": {
+      "id": 200,
+      "name": "God Rod",
+      "level": 67,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4007.png",
+      "hasRecipe": true
+    },
+    "201": {
+      "id": 201,
+      "name": "Hook",
+      "level": 55,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4004.png",
+      "hasRecipe": true
+    },
+    "202": {
+      "id": 202,
+      "name": "Razielle",
+      "level": 52,
+      "type": "Épée",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/6016.png",
+      "hasRecipe": true
+    },
+    "203": {
+      "id": 203,
+      "name": "Ceinture du Tot",
+      "level": 33,
+      "type": "Ceinture",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/10010.png",
+      "hasRecipe": true
+    },
+    "204": {
+      "id": 204,
+      "name": "Kryst O'Boul",
+      "level": 68,
+      "type": "Bâton",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/4063.png",
+      "hasRecipe": true
+    },
+    "208": {
+      "id": 208,
+      "name": "Dagues de Fouraille",
+      "level": 13,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5003.png",
+      "hasRecipe": true
+    },
+    "214": {
+      "id": 214,
+      "name": "Dagues de Croclage",
+      "level": 17,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5004.png",
+      "hasRecipe": true
+    },
+    "218": {
+      "id": 218,
+      "name": "Bashers",
+      "level": 29,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5005.png",
+      "hasRecipe": true
+    },
+    "219": {
+      "id": 219,
+      "name": "Blessdags",
+      "level": 64,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5055.png",
+      "hasRecipe": true
+    },
+    "220": {
+      "id": 220,
+      "name": "Chakra Style",
+      "level": 73,
+      "type": "Dague",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/5008.png",
+      "hasRecipe": true
+    },
+    "224": {
+      "id": 224,
+      "name": "Marteau de Raclage",
+      "level": 15,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7002.png",
+      "hasRecipe": true
+    },
+    "230": {
+      "id": 230,
+      "name": "Marteau d'Ivoire",
+      "level": 19,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7003.png",
+      "hasRecipe": true
+    },
+    "233": {
+      "id": 233,
+      "name": "Kaiser",
+      "level": 104,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7010.png",
+      "hasRecipe": true
+    },
+    "234": {
+      "id": 234,
+      "name": "Ragnarok",
+      "level": 66,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7055.png",
+      "hasRecipe": true
+    },
+    "235": {
+      "id": 235,
+      "name": "Cerberus",
+      "level": 16,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7007.png",
+      "hasRecipe": true
+    },
+    "236": {
+      "id": 236,
+      "name": "Barabas",
+      "level": 23,
+      "type": "Marteau",
+      "job": null,
+      "img": "https://api.dofusdb.fr/img/items/7011.png",
+      "hasRecipe": true
+    }
+  },
+  "recipes": {
+    "44": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 16512,
+            "name": "Plume Chimérique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53661.png"
+          },
+          {
+            "id": 303,
+            "name": "Bois de Frêne",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/38017.png"
+          }
+        ]
+      }
+    ],
+    "49": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 1673,
+            "name": "Patte d'Arakne Magique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103392.png"
+          },
+          {
+            "id": 377,
+            "name": "Épine du Champ Champ",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15049.png"
+          }
+        ]
+      }
+    ],
+    "55": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 364,
+            "name": "Peau de Larve Verte",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59034.png"
+          },
+          {
+            "id": 300,
+            "name": "Graine de Pavot",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/58011.png"
+          },
+          {
+            "id": 2659,
+            "name": "Pétale de Tournesol Sauvage",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35632.png"
+          }
+        ]
+      }
+    ],
+    "58": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 747,
+            "name": "Aluminite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40660.png"
+          },
+          {
+            "id": 1673,
+            "name": "Patte d'Arakne Magique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103392.png"
+          },
+          {
+            "id": 306,
+            "name": "Fleur de Pissenlit Diabolique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35018.png"
+          }
+        ]
+      }
+    ],
+    "62": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 1673,
+            "name": "Patte d'Arakne Magique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103392.png"
+          },
+          {
+            "id": 366,
+            "name": "Bec du Tofu",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47037.png"
+          }
+        ]
+      }
+    ],
+    "65": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 407,
+            "name": "Pic de Prespic",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47134.png"
+          },
+          {
+            "id": 881,
+            "name": "Laine de Ramane Strubien",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/57208.png"
+          },
+          {
+            "id": 6841,
+            "name": "Œil de Pikdoa",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/25151.png"
+          }
+        ]
+      }
+    ],
+    "66": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 387,
+            "name": "Défense du Sanglier",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47059.png"
+          },
+          {
+            "id": 2468,
+            "name": "Estomac de Ouassingue",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15506.png"
+          },
+          {
+            "id": 885,
+            "name": "Laine de Boufton Noir",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/57210.png"
+          }
+        ]
+      }
+    ],
+    "67": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 13487,
+            "name": "Serviette de Plage",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/55130.png"
+          },
+          {
+            "id": 2455,
+            "name": "Sang de Bouftou",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15499.png"
+          },
+          {
+            "id": 6899,
+            "name": "Plume de Piou Vert",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53116.png"
+          }
+        ]
+      }
+    ],
+    "70": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16524,
+            "name": "Relique d'Incarnam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164068.png"
+          },
+          {
+            "id": 385,
+            "name": "Bave de Bouftou",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15057.png"
+          }
+        ]
+      }
+    ],
+    "77": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16524,
+            "name": "Relique d'Incarnam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164068.png"
+          },
+          {
+            "id": 1984,
+            "name": "Cendres Éternelles",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/48671.png"
+          }
+        ]
+      }
+    ],
+    "84": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16524,
+            "name": "Relique d'Incarnam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164068.png"
+          },
+          {
+            "id": 303,
+            "name": "Bois de Frêne",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/38017.png"
+          }
+        ]
+      }
+    ],
+    "91": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 16522,
+            "name": "Peau de Gloot",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164066.png"
+          },
+          {
+            "id": 421,
+            "name": "Ortie",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/36642.png"
+          }
+        ]
+      }
+    ],
+    "97": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 16524,
+            "name": "Relique d'Incarnam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164068.png"
+          },
+          {
+            "id": 16515,
+            "name": "Queue de Chapardam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/65767.png"
+          }
+        ]
+      }
+    ],
+    "103": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 310,
+            "name": "Os de Chafer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47015.png"
+          },
+          {
+            "id": 16522,
+            "name": "Peau de Gloot",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164066.png"
+          }
+        ]
+      }
+    ],
+    "112": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16523,
+            "name": "Volve d'Aminite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/119014.png"
+          },
+          {
+            "id": 303,
+            "name": "Bois de Frêne",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/38017.png"
+          }
+        ]
+      }
+    ],
+    "121": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16524,
+            "name": "Relique d'Incarnam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164068.png"
+          },
+          {
+            "id": 312,
+            "name": "Fer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/39024.png"
+          }
+        ]
+      }
+    ],
+    "127": [
+      {
+        "jobId": 15,
+        "jobName": "Cordonnier",
+        "ingredients": [
+          {
+            "id": 12737,
+            "name": "Galet cramoisi",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15290.png"
+          },
+          {
+            "id": 2571,
+            "name": "Patte de Tofukaz",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103577.png"
+          },
+          {
+            "id": 11814,
+            "name": "Moustache de Boostache",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/54680.png"
+          },
+          {
+            "id": 13098,
+            "name": "Casque du Chafer Primitif",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15798.png"
+          }
+        ]
+      }
+    ],
+    "130": [
+      {
+        "jobId": 15,
+        "jobName": "Cordonnier",
+        "ingredients": [
+          {
+            "id": 13726,
+            "name": "Conque Marine",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15813.png"
+          },
+          {
+            "id": 2491,
+            "name": "Œil d'Arakmuté",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/109516.png"
+          },
+          {
+            "id": 2563,
+            "name": "Peau de Larve Jaune",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/25138.png"
+          }
+        ]
+      }
+    ],
+    "134": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 16515,
+            "name": "Queue de Chapardam",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/65767.png"
+          },
+          {
+            "id": 312,
+            "name": "Fer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/39024.png"
+          }
+        ]
+      }
+    ],
+    "140": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 16518,
+            "name": "Feu Intérieur",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164067.png"
+          },
+          {
+            "id": 310,
+            "name": "Os de Chafer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47015.png"
+          }
+        ]
+      }
+    ],
+    "147": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 310,
+            "name": "Os de Chafer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47015.png"
+          },
+          {
+            "id": 312,
+            "name": "Fer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/39024.png"
+          }
+        ]
+      }
+    ],
+    "153": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 16522,
+            "name": "Peau de Gloot",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164066.png"
+          },
+          {
+            "id": 303,
+            "name": "Bois de Frêne",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/38017.png"
+          }
+        ]
+      }
+    ],
+    "156": [
+      {
+        "jobId": 15,
+        "jobName": "Cordonnier",
+        "ingredients": [
+          {
+            "id": 2468,
+            "name": "Estomac de Ouassingue",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15506.png"
+          },
+          {
+            "id": 387,
+            "name": "Défense du Sanglier",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47059.png"
+          },
+          {
+            "id": 746,
+            "name": "Ébonite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40658.png"
+          }
+        ]
+      }
+    ],
+    "157": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 13726,
+            "name": "Conque Marine",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15813.png"
+          },
+          {
+            "id": 363,
+            "name": "Peau de Larve Orange",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59033.png"
+          }
+        ]
+      }
+    ],
+    "158": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 16440,
+            "name": "Ferrite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40712.png"
+          },
+          {
+            "id": 377,
+            "name": "Épine du Champ Champ",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15049.png"
+          }
+        ]
+      }
+    ],
+    "159": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 2467,
+            "name": "Rondelles de Milirat Strubien",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/63373.png"
+          },
+          {
+            "id": 12745,
+            "name": "Substrat de Bocage",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/12729.png"
+          },
+          {
+            "id": 6845,
+            "name": "Casque de Martoa",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/25149.png"
+          }
+        ]
+      }
+    ],
+    "160": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 648,
+            "name": "Aile de Bourdard",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/104750.png"
+          },
+          {
+            "id": 2482,
+            "name": "Charnière Cassée",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15942.png"
+          },
+          {
+            "id": 650,
+            "name": "Duvet de Bourdard",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/54709.png"
+          },
+          {
+            "id": 11696,
+            "name": "Cagoule du Kanniboul Ebil",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15784.png"
+          },
+          {
+            "id": 748,
+            "name": "Magnésite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40659.png"
+          }
+        ]
+      }
+    ],
+    "161": [
+      {
+        "jobId": 16,
+        "jobName": "Bijoutier",
+        "ingredients": [
+          {
+            "id": 747,
+            "name": "Aluminite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40660.png"
+          },
+          {
+            "id": 1674,
+            "name": "Champignon Luidegît",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15390.png"
+          },
+          {
+            "id": 2491,
+            "name": "Œil d'Arakmuté",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/109516.png"
+          }
+        ]
+      }
+    ],
+    "165": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 2491,
+            "name": "Œil d'Arakmuté",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/109516.png"
+          },
+          {
+            "id": 2563,
+            "name": "Peau de Larve Jaune",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/25138.png"
+          }
+        ]
+      }
+    ],
+    "180": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 14921,
+            "name": "Étoffe Mystérieuse",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15848.png"
+          },
+          {
+            "id": 315,
+            "name": "Diamant",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/50025.png"
+          },
+          {
+            "id": 8384,
+            "name": "Étoffe Magique de Moon",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/55722.png"
+          },
+          {
+            "id": 14512,
+            "name": "Plume de Gobvious",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53658.png"
+          },
+          {
+            "id": 2805,
+            "name": "Testicules Magiques de Muloubard",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15650.png"
+          },
+          {
+            "id": 2620,
+            "name": "Rhum de Qualité",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15177.png"
+          },
+          {
+            "id": 14517,
+            "name": "Slip troué de Dramak",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164026.png"
+          }
+        ]
+      }
+    ],
+    "181": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 2288,
+            "name": "Patte de Wabbit",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103440.png"
+          },
+          {
+            "id": 8747,
+            "name": "Pétale Passaoh",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35004.png"
+          },
+          {
+            "id": 8738,
+            "name": "Sacrum magistral",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47011.png"
+          },
+          {
+            "id": 748,
+            "name": "Magnésite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40659.png"
+          }
+        ]
+      }
+    ],
+    "183": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 16487,
+            "name": "Bois Vermoulu",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/38683.png"
+          },
+          {
+            "id": 388,
+            "name": "Poils d'Arakne Malade",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/54060.png"
+          }
+        ]
+      }
+    ],
+    "188": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 1984,
+            "name": "Cendres Éternelles",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/48671.png"
+          },
+          {
+            "id": 312,
+            "name": "Fer",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/39024.png"
+          }
+        ]
+      }
+    ],
+    "194": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 365,
+            "name": "Patte d'Arakne",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/103035.png"
+          },
+          {
+            "id": 6902,
+            "name": "Plume de Piou Jaune",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53118.png"
+          }
+        ]
+      }
+    ],
+    "200": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 1891,
+            "name": "Peau de serpentin",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59361.png"
+          },
+          {
+            "id": 14463,
+            "name": "Crâne de Wabbit Squelette",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47828.png"
+          },
+          {
+            "id": 9386,
+            "name": "Fleur de Blop Indigo Royal",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35011.png"
+          },
+          {
+            "id": 748,
+            "name": "Magnésite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40659.png"
+          },
+          {
+            "id": 2496,
+            "name": "Queue de Rat d'Hyoactif",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/65521.png"
+          }
+        ]
+      }
+    ],
+    "201": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 414,
+            "name": "Plume du Kwak de Glace",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53112.png"
+          },
+          {
+            "id": 2617,
+            "name": "Tranche de Nodkoko",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15605.png"
+          },
+          {
+            "id": 8748,
+            "name": "Pétale Morito",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35006.png"
+          },
+          {
+            "id": 13140,
+            "name": "Serrure du Coffre des Forgerons",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15799.png"
+          }
+        ]
+      }
+    ],
+    "202": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 13339,
+            "name": "Sceau Royal Contrefait",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15131.png"
+          },
+          {
+            "id": 413,
+            "name": "Bec du Kwak de Vent",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47110.png"
+          },
+          {
+            "id": 2540,
+            "name": "Substrat de Futaie",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/26017.png"
+          },
+          {
+            "id": 8385,
+            "name": "Peau de Shin Larve",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59614.png"
+          }
+        ]
+      }
+    ],
+    "203": [
+      {
+        "jobId": 15,
+        "jobName": "Cordonnier",
+        "ingredients": [
+          {
+            "id": 6842,
+            "name": "Pétale de Rose Obscure",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/25153.png"
+          },
+          {
+            "id": 394,
+            "name": "Noisette",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/58066.png"
+          },
+          {
+            "id": 450,
+            "name": "Pierre de Granit",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/51001.png"
+          }
+        ]
+      }
+    ],
+    "204": [
+      {
+        "jobId": 13,
+        "jobName": "Sculpteur",
+        "ingredients": [
+          {
+            "id": 2273,
+            "name": "Tissu Pourpre",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/55427.png"
+          },
+          {
+            "id": 2566,
+            "name": "Tranche Magique de Krambwork",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15576.png"
+          },
+          {
+            "id": 2647,
+            "name": "Oreille de Médibwork",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/106623.png"
+          },
+          {
+            "id": 18385,
+            "name": "Cœur du Mantiscore",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164118.png"
+          },
+          {
+            "id": 2540,
+            "name": "Substrat de Futaie",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/26017.png"
+          }
+        ]
+      }
+    ],
+    "208": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 16489,
+            "name": "Planche Agglomérée",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/95093.png"
+          },
+          {
+            "id": 362,
+            "name": "Peau de Larve Bleue",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59032.png"
+          }
+        ]
+      }
+    ],
+    "214": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 13726,
+            "name": "Conque Marine",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15813.png"
+          },
+          {
+            "id": 747,
+            "name": "Aluminite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40660.png"
+          }
+        ]
+      }
+    ],
+    "218": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 2539,
+            "name": "Substrat de Buisson",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/26016.png"
+          },
+          {
+            "id": 378,
+            "name": "Sporme du Champ Champ",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15050.png"
+          },
+          {
+            "id": 288,
+            "name": "Graine de Tournesol",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/58006.png"
+          }
+        ]
+      }
+    ],
+    "219": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 14462,
+            "name": "Os de Wabbit Squelette",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47827.png"
+          },
+          {
+            "id": 648,
+            "name": "Aile de Bourdard",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/104750.png"
+          },
+          {
+            "id": 2320,
+            "name": "Collier Cassé de Macien",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15462.png"
+          },
+          {
+            "id": 9385,
+            "name": "Fleur de Blop Coco Royal",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35009.png"
+          },
+          {
+            "id": 2540,
+            "name": "Substrat de Futaie",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/26017.png"
+          }
+        ]
+      }
+    ],
+    "220": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 14284,
+            "name": "Flamme Spectrale",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15247.png"
+          },
+          {
+            "id": 1613,
+            "name": "Écaille de Chef Crocodaille",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59547.png"
+          },
+          {
+            "id": 2552,
+            "name": "Œil de Kanigrou",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/109563.png"
+          },
+          {
+            "id": 8995,
+            "name": "Étoffe de Gourlo le Terrible",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/55729.png"
+          },
+          {
+            "id": 2543,
+            "name": "Substrat de Fascine",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/26018.png"
+          }
+        ]
+      }
+    ],
+    "224": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 371,
+            "name": "Sourcil de Moskito",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15044.png"
+          },
+          {
+            "id": 6899,
+            "name": "Plume de Piou Vert",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53116.png"
+          }
+        ]
+      }
+    ],
+    "230": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 2662,
+            "name": "Bave de Rose Démoniaque",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15634.png"
+          },
+          {
+            "id": 6900,
+            "name": "Plume de Piou Rouge",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53117.png"
+          }
+        ]
+      }
+    ],
+    "233": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 2645,
+            "name": "Groin de Dragon Cochon",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15620.png"
+          },
+          {
+            "id": 8392,
+            "name": "Peau de Don Duss Ang",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59618.png"
+          },
+          {
+            "id": 8391,
+            "name": "Peau de Don Dorgan",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59617.png"
+          },
+          {
+            "id": 750,
+            "name": "Kouartz",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40664.png"
+          },
+          {
+            "id": 13366,
+            "name": "Galet Lunaire",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/152005.png"
+          },
+          {
+            "id": 16181,
+            "name": "Globule de Nyée",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/164061.png"
+          },
+          {
+            "id": 479,
+            "name": "Ivoire",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/47088.png"
+          }
+        ]
+      }
+    ],
+    "234": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 480,
+            "name": "Minerai Étrange",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/39090.png"
+          },
+          {
+            "id": 748,
+            "name": "Magnésite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40659.png"
+          },
+          {
+            "id": 2436,
+            "name": "Gelée Citron",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/110490.png"
+          },
+          {
+            "id": 8483,
+            "name": "Peau de Ramane d'Égoutant",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/59622.png"
+          },
+          {
+            "id": 8397,
+            "name": "Poil du Wa Wabbit",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/54667.png"
+          }
+        ]
+      }
+    ],
+    "235": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 306,
+            "name": "Fleur de Pissenlit Diabolique",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/35018.png"
+          },
+          {
+            "id": 6903,
+            "name": "Plume de Piou Rose",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/53119.png"
+          }
+        ]
+      }
+    ],
+    "236": [
+      {
+        "jobId": 11,
+        "jobName": "Forgeron",
+        "ingredients": [
+          {
+            "id": 747,
+            "name": "Aluminite",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/40660.png"
+          },
+          {
+            "id": 643,
+            "name": "Fil de Soie",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/15486.png"
+          },
+          {
+            "id": 300,
+            "name": "Graine de Pavot",
+            "quantity": 1,
+            "img": "https://api.dofusdb.fr/img/items/58011.png"
+          }
+        ]
+      }
+    ]
+  },
+  "jobs": {
+    "1": {
+      "id": 1,
+      "name": "Base",
+      "iconId": -1
+    },
+    "2": {
+      "id": 2,
+      "name": "Bûcheron",
+      "iconId": 1
+    },
+    "11": {
+      "id": 11,
+      "name": "Forgeron",
+      "iconId": 10
+    },
+    "13": {
+      "id": 13,
+      "name": "Sculpteur",
+      "iconId": 6
+    },
+    "15": {
+      "id": 15,
+      "name": "Cordonnier",
+      "iconId": 5
+    },
+    "16": {
+      "id": 16,
+      "name": "Bijoutier",
+      "iconId": 15
+    },
+    "24": {
+      "id": 24,
+      "name": "Mineur",
+      "iconId": 13
+    },
+    "26": {
+      "id": 26,
+      "name": "Alchimiste",
+      "iconId": 14
+    },
+    "27": {
+      "id": 27,
+      "name": "Tailleur",
+      "iconId": 20
+    },
+    "28": {
+      "id": 28,
+      "name": "Paysan",
+      "iconId": 18
+    }
+  },
+  "metadata": {
+    "extractedAt": "2025-07-24T19:58:40.238Z",
+    "totalItems": 50,
+    "totalRecipes": 50,
+    "totalJobs": 10,
+    "testMode": true,
+    "optimizedAt": "2025-07-24T20:38:08.771Z"
+  }
+}

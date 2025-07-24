@@ -5,6 +5,30 @@
 [functions]
   directory = "netlify/functions"
 
+# Optimisations pour éviter de re-déployer les images
+[build.environment]
+  NODE_VERSION = "18"
+
+# Cache des dépendances pour accélérer les builds
+[[plugins]]
+  package = "@netlify/plugin-cache-core"
+
+# Optimisation des images
+[[plugins]]
+  package = "@netlify/plugin-image-optim"
+
+# Headers pour le cache des images
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/dofus-proxy?path=/:splat"
@@ -17,8 +41,3 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"

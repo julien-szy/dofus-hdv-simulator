@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import UserAuth from './UserAuth.jsx'
 import CacheStats from './CacheStats.jsx'
-import userService from '../services/userService.js'
+import optimizedUserService from '../services/optimizedUserService.js'
 
 const Header = ({
   setShowPriceManager,
@@ -14,7 +14,7 @@ const Header = ({
 
   // Vérifier si l'utilisateur est admin
   const isAdmin = () => {
-    const user = userService.getCurrentUser()
+    const user = optimizedUserService.getCurrentUser()
     if (!user) return false
 
     // Liste des admins autorisés
