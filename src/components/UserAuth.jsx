@@ -41,6 +41,9 @@ export default function UserAuth() {
       setUser(loggedUser);
       setShowModal(false);
       resetForm();
+
+      // Déclencher un événement pour notifier App.jsx
+      window.dispatchEvent(new CustomEvent('userLogin', { detail: loggedUser }));
     } catch (err) {
       setError(`Erreur lors de ${isLogin ? 'la connexion' : 'l\'inscription'}: ` + err.message);
     } finally {
@@ -75,6 +78,9 @@ export default function UserAuth() {
       setUser(socialUser);
       setShowModal(false);
       resetForm();
+
+      // Déclencher un événement pour notifier App.jsx
+      window.dispatchEvent(new CustomEvent('userLogin', { detail: socialUser }));
     } catch (err) {
       setError(`Erreur lors de la connexion avec ${provider}: ` + err.message);
     } finally {
@@ -92,6 +98,9 @@ export default function UserAuth() {
   const handleLogout = () => {
     userService.logout();
     setUser(null);
+
+    // Déclencher un événement pour notifier App.jsx
+    window.dispatchEvent(new CustomEvent('userLogout'));
   };
 
   const closeModal = () => {
@@ -199,6 +208,8 @@ export default function UserAuth() {
                         userService.logout()
                         setUser(null)
                         setShowModal(false)
+                        // Déclencher un événement pour notifier App.jsx
+                        window.dispatchEvent(new CustomEvent('userLogout'))
                       }}
                       className="auth-submit-clean logout-btn"
                     >

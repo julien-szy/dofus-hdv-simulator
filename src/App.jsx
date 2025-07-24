@@ -40,6 +40,7 @@ function App() {
     // Vérifier si un utilisateur est connecté
     const user = userService.getCurrentUser()
     setCurrentUser(user)
+    console.log('🔍 Vérification utilisateur au démarrage:', user ? `Connecté: ${user.username}` : 'Non connecté')
 
     if (user) {
       // Utilisateur connecté - charger toutes les données
@@ -133,8 +134,20 @@ function App() {
     // Écouter les changements dans le localStorage pour détecter les connexions
     window.addEventListener('storage', handleUserChange)
 
+    // Écouter les événements personnalisés pour les changements d'utilisateur
+    window.addEventListener('userLogin', handleUserChange)
+    window.addEventListener('userLogout', () => {
+      setCurrentUser(null)
+      // Nettoyer les données quand l'utilisateur se déconnecte
+      setCraftCalculations([])
+      setPlayerProfessions({})
+      setMaterialPrices({})
+    })
+
     return () => {
       window.removeEventListener('storage', handleUserChange)
+      window.removeEventListener('userLogin', handleUserChange)
+      window.removeEventListener('userLogout', () => setCurrentUser(null))
     }
   }, [])
 
@@ -452,8 +465,12 @@ function App() {
     if (document.getElementById('quantity')) document.getElementById('quantity').value = '1'
   }
 
+  // Debug: afficher l'état de connexion
+  console.log('🔍 État currentUser dans App:', currentUser)
+
   // Si pas d'utilisateur connecté, afficher seulement l'écran de connexion
   if (!currentUser) {
+    console.log('🚫 Pas d\'utilisateur connecté - Affichage écran de connexion')
     return (
       <div className="hdv-container">
         <div className="auth-required-screen">
@@ -465,8 +482,8 @@ function App() {
             </div>
 
             <div className="auth-required-message">
-              <h2>🔐 Connexion Requise</h2>
-              <p>Pour utiliser le calculateur et sauvegarder vos données, vous devez vous connecter ou créer un compte.</p>
+              <h2>🔐 Connexion Obligatoire</h2>
+              <p>Cette application nécessite une connexion pour fonctionner. Connectez-vous ou créez un compte gratuit pour commencer.</p>
 
               <div className="auth-required-features">
                 <div className="feature-item">
