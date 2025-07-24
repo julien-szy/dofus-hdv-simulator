@@ -1332,62 +1332,109 @@ body {
   flex-shrink: 0;
 }
 
-/* Toggle métiers moderne */
-.profession-toggle-modern {
+/* Toggle vérification métiers stylé */
+.profession-verification-toggle {
   display: flex;
   align-items: center;
-  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  max-width: 320px;
 }
 
-.toggle-checkbox {
+.profession-verification-toggle:hover {
+  background: var(--card-hover);
+  border-color: var(--border-gold);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.1);
+}
+
+.verification-checkbox {
   display: none;
 }
 
-.toggle-label {
+.verification-label {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   cursor: pointer;
   user-select: none;
+  width: 100%;
 }
 
-.toggle-text {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.toggle-switch {
-  width: 48px;
-  height: 24px;
-  background: var(--border-color);
-  border-radius: 12px;
+.verification-switch {
+  width: 56px;
+  height: 32px;
+  background: var(--darker-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
 }
 
-.toggle-slider {
-  width: 20px;
-  height: 20px;
-  background: var(--text-light);
+.verification-slider {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--text-muted), #888);
   border-radius: 50%;
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 0px;
+  left: 0px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.slider-icon {
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px var(--shadow-dark);
 }
 
-.toggle-checkbox:checked + .toggle-label .toggle-switch {
-  background: var(--primary-gold);
+.verification-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
-.toggle-checkbox:checked + .toggle-label .toggle-slider {
+.verification-title {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.verification-subtitle {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* États activé */
+.verification-checkbox:checked + .verification-label .verification-switch {
+  background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.verification-checkbox:checked + .verification-label .verification-slider {
   transform: translateX(24px);
+  background: linear-gradient(135deg, var(--dark-bg), #1a1a1a);
 }
 
-.toggle-checkbox:checked + .toggle-label .toggle-text {
+.verification-checkbox:checked + .verification-label .verification-title {
   color: var(--primary-gold);
+}
+
+.verification-checkbox:checked + .verification-label .verification-subtitle {
+  color: var(--primary-gold);
+  opacity: 0.8;
 }
 
 /* ===== BOUTONS MODERNES ===== */
@@ -2019,7 +2066,7 @@ body {
     gap: 12px;
   }
 
-  .profession-toggle-modern {
+  .profession-verification-toggle {
     display: none;
   }
 
@@ -3147,20 +3194,21 @@ body {
   margin-left: 20px;
 }
 
-.toggle-switch {
+/* Toggle switch pour les paramètres (différent du header) */
+.settings-toggle-switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 }
 
-.toggle-switch input {
+.settings-toggle-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.toggle-slider {
+.settings-toggle-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -3173,7 +3221,7 @@ body {
   border-radius: 34px;
 }
 
-.toggle-slider:before {
+.settings-toggle-slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -3185,12 +3233,12 @@ body {
   border-radius: 50%;
 }
 
-input:checked + .toggle-slider {
+input:checked + .settings-toggle-slider {
   background-color: var(--primary-gold);
   border-color: var(--primary-gold);
 }
 
-input:checked + .toggle-slider:before {
+input:checked + .settings-toggle-slider:before {
   transform: translateX(26px);
   background-color: var(--dark-bg);
 }

@@ -28,19 +28,26 @@ const Header = ({
 
         {/* Contrôles utilisateur */}
         <div className="header-controls">
-          {/* Toggle métiers */}
-          <div className="profession-toggle-modern">
+          {/* Toggle métiers stylé */}
+          <div className="profession-verification-toggle">
             <input
               type="checkbox"
               id="checkProfessionLevels"
               checked={checkProfessionLevels}
               onChange={(e) => setCheckProfessionLevels(e.target.checked)}
-              className="toggle-checkbox"
+              className="verification-checkbox"
             />
-            <label htmlFor="checkProfessionLevels" className="toggle-label">
-              <span className="toggle-text">Vérifier métiers</span>
-              <div className="toggle-switch">
-                <div className="toggle-slider"></div>
+            <label htmlFor="checkProfessionLevels" className="verification-label">
+              <div className="verification-switch">
+                <div className="verification-slider">
+                  <span className="slider-icon">{checkProfessionLevels ? '⚒️' : '❌'}</span>
+                </div>
+              </div>
+              <div className="verification-text">
+                <span className="verification-title">Activer la vérification métier pour le craft</span>
+                <span className="verification-subtitle">
+                  {checkProfessionLevels ? 'Vérifie automatiquement vos niveaux' : 'Aucune vérification des niveaux'}
+                </span>
               </div>
             </label>
           </div>
