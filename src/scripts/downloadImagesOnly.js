@@ -123,7 +123,7 @@ class ImageOnlyDownloader {
     
     // Si on a déjà beaucoup d'images et pas en mode force, skip
     const totalExisting = existing.itemIds.length + existing.resourceIds.length
-    const forceDownload = process.env.FORCE_DOWNLOAD === 'true'
+    const forceDownload = (typeof process !== 'undefined' && process.env?.FORCE_DOWNLOAD === 'true') || false
     
     if (totalExisting > 100 && !forceDownload) {
       console.log('✅ Beaucoup d\'images déjà présentes, skip téléchargement')

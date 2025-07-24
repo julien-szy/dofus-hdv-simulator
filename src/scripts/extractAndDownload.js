@@ -14,8 +14,8 @@ class DataExtractor {
     this.recipes = []
 
     // Configuration depuis les variables d'environnement (GitHub Actions)
-    this.forceDownload = process.env.FORCE_DOWNLOAD === 'true'
-    this.maxImages = parseInt(process.env.MAX_IMAGES) || 0
+    this.forceDownload = (typeof process !== 'undefined' && process.env?.FORCE_DOWNLOAD === 'true') || false
+    this.maxImages = (typeof process !== 'undefined' && parseInt(process.env?.MAX_IMAGES)) || 0
 
     console.log(`🔧 Configuration:`)
     console.log(`   Force download: ${this.forceDownload}`)
@@ -267,17 +267,27 @@ class DataExtractor {
       return true
     }
 
-    // Vérifier si on a déjà des données récentes (moins de 24h)
-    const lastExtraction = localStorage?.getItem?.('last_data_extraction')
-    if (lastExtraction) {
-      const lastTime = parseInt(lastExtraction)
-      const now = Date.now()
-      const hoursSince = (now - lastTime) / (1000 * 60 * 60)
+    // En environnement Node.js, toujours extraire (pas de localStorage)
+    if (typeof window === 'undefined') {
+      console.log('🔄 Environnement Node.js: extraction nécessaire')
+      return true
+    }
 
-      if (hoursSince < 24) {
-        console.log(`⏭️ Données extraites il y a ${hoursSince.toFixed(1)}h, skip extraction`)
-        return false
+    // Vérifier si on a déjà des données récentes (moins de 24h) - seulement côté client
+    try {
+      const lastExtraction = localStorage?.getItem?.('last_data_extraction')
+      if (lastExtraction) {
+        const lastTime = parseInt(lastExtraction)
+        const now = Date.now()
+        const hoursSince = (now - lastTime) / (1000 * 60 * 60)
+
+        if (hoursSince < 24) {
+          console.log(`⏭️ Données extraites il y a ${hoursSince.toFixed(1)}h, skip extraction`)
+          return false
+        }
       }
+    } catch (error) {
+      console.log('⚠️ Pas d\'accès localStorage, extraction nécessaire')
     }
 
     console.log('🔄 Extraction des données nécessaire')
@@ -293,9 +303,13 @@ class DataExtractor {
       if (this.needsDataExtraction()) {
         await this.extractAllData()
 
-        // Marquer la date d'extraction
-        if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('last_data_extraction', Date.now().toString())
+        // Marquer la date d'extraction (seulement côté client)
+        if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem('last_data_extraction', Date.now().toString())
+          } catch (error) {
+            console.log('⚠️ Impossible de sauvegarder dans localStorage')
+          }
         }
       } else {
         console.log('⏭️ Skip extraction des données (récentes)')
@@ -318,8 +332,14 @@ class DataExtractor {
     }
   }
 
-  // Charger les IDs depuis les images existantes
+  // Charger les IDs depuis les images existantes (Node.js seulement)
   async loadExistingImageIds() {
+    // Vérifier qu'on est en environnement Node.js
+    if (typeof window !== 'undefined') {
+      console.log('⚠️ loadExistingImageIds: environnement navigateur, skip')
+      return
+    }
+
     try {
       const fs = await import('fs')
       const path = await import('path')

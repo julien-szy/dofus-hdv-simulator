@@ -15,7 +15,7 @@ class ImageDownloader {
     this.downloadedCount = 0
     this.errorCount = 0
     this.skippedCount = 0
-    this.forceDownload = process.env.FORCE_DOWNLOAD === 'true'
+    this.forceDownload = (typeof process !== 'undefined' && process.env?.FORCE_DOWNLOAD === 'true') || false
   }
 
   // Créer les dossiers nécessaires
