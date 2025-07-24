@@ -17,6 +17,8 @@ import PriceManager from './components/PriceManager.jsx'
 import PriceTrends from './components/PriceTrends.jsx'
 import CacheStats from './components/CacheStats.jsx'
 import UserAuth from './components/UserAuth.jsx'
+import ItemMessage from './components/ItemMessage.jsx'
+import ServerTutorial from './components/ServerTutorial.jsx'
 import './styles/App.css'
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
   const [showPriceTrends, setShowPriceTrends] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
   const [currentServer, setCurrentServer] = useState('')
+  const [itemMessage, setItemMessage] = useState(null)
+  const [showServerTutorial, setShowServerTutorial] = useState(false)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -219,7 +223,10 @@ function App() {
       const hasRecipe = await checkItemHasRecipe(item.ankama_id)
 
       if (!hasRecipe) {
-        alert(`❌ L'objet "${item.name}" ne peut pas être crafté.\n\nCet item n'a pas de recette de craft disponible.`)
+        setItemMessage({
+          type: 'no-recipe',
+          message: `L'objet "${item.name}" ne peut pas être crafté. Cet item n'a pas de recette de craft disponible.`
+        })
         setLoading(false)
         return
       }
@@ -288,6 +295,12 @@ function App() {
 
   // Mettre à jour le prix d'un matériau avec stockage persistant
   const updateMaterialPrice = async (materialId, price, quantityType = 1) => {
+    // Vérifier si un serveur est défini
+    if (!currentServer) {
+      setShowServerTutorial(true)
+      return
+    }
+
     const priceType = `price_${quantityType}`
 
     // 1. Récupérer le nom du matériau si pas déjà en cache
@@ -604,6 +617,22 @@ function App() {
 
       {/* Bouton Cache en position fixe */}
       <CacheStats />
+
+      {/* Messages stylés */}
+      {itemMessage && (
+        <ItemMessage
+          type={itemMessage.type}
+          message={itemMessage.message}
+          onClose={() => setItemMessage(null)}
+        />
+      )}
+
+      {/* Tutoriel serveur */}
+      <ServerTutorial
+        isOpen={showServerTutorial}
+        onClose={() => setShowServerTutorial(false)}
+        onOpenProfile={() => setShowUserProfile(true)}
+      />
     </div>
   )
 }
