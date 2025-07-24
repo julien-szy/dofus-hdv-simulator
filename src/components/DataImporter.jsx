@@ -24,10 +24,17 @@ const DataImporter = ({ isOpen, onClose }) => {
 
   const loadStats = async () => {
     try {
+      console.log('🔄 Chargement des statistiques...')
       const importStats = await dofusDataImporter.getImportStats()
+      console.log('📊 Stats reçues:', importStats)
       setStats(importStats)
     } catch (error) {
-      console.error('Erreur chargement stats:', error)
+      console.error('❌ Erreur chargement stats:', error)
+      setStats({
+        totalItems: 0,
+        byProfession: {},
+        lastUpdate: null
+      })
     }
   }
 
@@ -66,6 +73,33 @@ const DataImporter = ({ isOpen, onClose }) => {
   const addLog = (message, type = 'info') => {
     const timestamp = new Date().toLocaleTimeString()
     setImportLog(prev => [...prev, { timestamp, message, type }])
+  }
+
+  // Test de connexion à la base de données
+  const testDatabaseConnection = async () => {
+    try {
+      addLog('🔍 Test de connexion à la base de données...', 'info')
+
+      const dbUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      addLog(`📡 URL testée: ${dbUrl}`, 'info')
+
+      const response = await fetch(`${dbUrl}?action=get_craftable_items`)
+      addLog(`📡 Réponse: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error')
+
+      if (response.ok) {
+        const data = await response.json()
+        addLog(`📊 Données reçues: ${JSON.stringify(data).substring(0, 200)}...`, 'info')
+        addLog(`📊 Type: ${typeof data}, Array: ${Array.isArray(data)}, Longueur: ${Array.isArray(data) ? data.length : 'N/A'}`, 'info')
+      } else {
+        const errorText = await response.text()
+        addLog(`❌ Erreur: ${errorText}`, 'error')
+      }
+    } catch (error) {
+      addLog(`❌ Erreur de connexion: ${error.message}`, 'error')
+    }
   }
 
   const handleFullImport = async () => {
@@ -290,6 +324,12 @@ const DataImporter = ({ isOpen, onClose }) => {
           <div className="importer-actions">
             <h3>⚙️ Actions</h3>
             <div className="action-buttons">
+              <button
+                onClick={testDatabaseConnection}
+                className="btn btn-secondary"
+              >
+                🔍 Test BDD
+              </button>
               <button
                 onClick={handleFullImport}
                 disabled={importing || updating}

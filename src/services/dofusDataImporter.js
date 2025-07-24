@@ -398,7 +398,10 @@ class DofusDataImporter {
   // Obtenir les statistiques d'importation
   async getImportStats() {
     try {
+      console.log(`🔍 Récupération stats depuis: ${this.dbUrl}?action=get_craftable_items`)
       const response = await fetch(`${this.dbUrl}?action=get_craftable_items`)
+
+      console.log(`📡 Réponse stats: ${response.status} ${response.statusText}`)
 
       if (!response.ok) {
         console.warn(`⚠️ Erreur HTTP ${response.status} pour stats`)
@@ -410,6 +413,8 @@ class DofusDataImporter {
       }
 
       const items = await response.json()
+      console.log(`📊 Items reçus:`, items)
+      console.log(`📊 Type de réponse:`, typeof items, Array.isArray(items))
 
       // Vérifier que items est un array
       if (!Array.isArray(items)) {
