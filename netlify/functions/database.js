@@ -171,6 +171,60 @@ exports.handler = async (event, context) => {
           };
         }
 
+      case 'get_items_by_profession':
+        // Récupérer les items détaillés par métier pour l'admin
+        try {
+          const { profession } = event.queryStringParameters || {};
+          if (!profession) {
+            return {
+              statusCode: 400,
+              headers,
+              body: JSON.stringify({ error: 'Paramètre profession requis' })
+            };
+          }
+
+          const items = await getItemsByProfession(sql, profession);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(items)
+          };
+        } catch (error) {
+          console.error('Erreur get_items_by_profession:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur récupération items par métier', details: error.message })
+          };
+        }
+
+      case 'clean_duplicates':
+        // Nettoyer les doublons pour un métier
+        try {
+          const { profession } = body || {};
+          if (!profession) {
+            return {
+              statusCode: 400,
+              headers,
+              body: JSON.stringify({ error: 'Paramètre profession requis' })
+            };
+          }
+
+          const deletedCount = await cleanDuplicateItems(sql, profession);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({ success: true, deletedCount, message: `${deletedCount} doublons supprimés` })
+          };
+        } catch (error) {
+          console.error('Erreur clean_duplicates:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur nettoyage doublons', details: error.message })
+          };
+        }
+
       case 'save_search_cache':
         // Sauvegarder une recherche dans le cache
         const cachedSearch = await saveSearchCache(sql, body);
@@ -606,6 +660,65 @@ async function getCraftableItems(sql, profession = null, search = null) {
     console.error('❌ Erreur getCraftableItems:', error);
     // Retourner un tableau vide au lieu de throw
     return [];
+  }
+}
+
+// Récupérer les items détaillés par métier pour l'admin
+async function getItemsByProfession(sql, profession) {
+  try {
+    console.log(`🔍 Récupération des items pour le métier: ${profession}`);
+
+    const items = await sql`
+      SELECT
+        item_id,
+        item_name,
+        item_type,
+        profession,
+        level_required,
+        recipe_data,
+        created_at,
+        updated_at
+      FROM craftable_items
+      WHERE profession = ${profession}
+      ORDER BY item_name
+      LIMIT 500
+    `;
+
+    console.log(`✅ ${items.length} items trouvés pour ${profession}`);
+    return items;
+  } catch (error) {
+    console.error(`❌ Erreur récupération items ${profession}:`, error);
+    return [];
+  }
+}
+
+// Fonction pour nettoyer les doublons
+async function cleanDuplicateItems(sql, profession) {
+  try {
+    console.log(`🧹 Nettoyage des doublons pour: ${profession}`);
+
+    // Supprimer les doublons en gardant le plus récent
+    const result = await sql`
+      DELETE FROM craftable_items
+      WHERE id IN (
+        SELECT id FROM (
+          SELECT id,
+                 ROW_NUMBER() OVER (
+                   PARTITION BY item_id, profession
+                   ORDER BY updated_at DESC, created_at DESC
+                 ) as rn
+          FROM craftable_items
+          WHERE profession = ${profession}
+        ) t
+        WHERE t.rn > 1
+      )
+    `;
+
+    console.log(`✅ ${result.count || 0} doublons supprimés pour ${profession}`);
+    return result.count || 0;
+  } catch (error) {
+    console.error(`❌ Erreur nettoyage doublons ${profession}:`, error);
+    return 0;
   }
 }
 

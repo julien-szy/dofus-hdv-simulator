@@ -665,37 +665,7 @@ function App() {
       {/* Bouton Cache en position fixe */}
       <CacheStats />
 
-      {/* Bouton d'urgence pour arrêter les imports */}
-      <button
-        onClick={async () => {
-          try {
-            const { dofusDataImporter } = await import('./services/dofusDataImporter.js')
-            dofusDataImporter.stopImport()
-            alert('🛑 Arrêt des imports demandé !')
-          } catch (error) {
-            console.error('Erreur lors de l\'arrêt:', error)
-            alert('❌ Erreur lors de l\'arrêt des imports')
-          }
-        }}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '20px',
-          backgroundColor: '#dc3545',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '10px 15px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 'bold',
-          zIndex: 1000,
-          boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
-        }}
-        title="Arrêter tous les imports en cours"
-      >
-        🛑 STOP IMPORT
-      </button>
+
 
       {/* Messages stylés */}
       {itemMessage && (

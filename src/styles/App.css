@@ -4333,13 +4333,19 @@ input:checked + .settings-toggle-slider:before {
 
 .job-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   padding: 16px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   transition: all 0.3s ease;
+}
+
+.job-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .job-item:hover {
@@ -4417,6 +4423,67 @@ input:checked + .settings-toggle-slider:before {
   flex-direction: column;
   gap: 8px;
   align-items: flex-end;
+}
+
+.job-items {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.job-items-header h4 {
+  margin: 0 0 12px 0;
+  color: var(--text-gold);
+  font-size: 14px;
+}
+
+.job-items-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.job-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.job-item-row:hover {
+  background: var(--card-hover);
+}
+
+.item-name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.item-level {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin: 0 8px;
+}
+
+.item-type {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.job-items-more {
+  text-align: center;
+  padding: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 13px;
 }
 
 .btn-new {
