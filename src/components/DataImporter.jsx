@@ -15,14 +15,14 @@ const DataImporter = ({ isOpen, onClose }) => {
   const [selectedJobItems, setSelectedJobItems] = useState({})
   const [loadingItems, setLoadingItems] = useState({})
 
-  // Charger les statistiques au démarrage
+  // Charger les statistiques au démarrage - TOUT DÉSACTIVÉ POUR DEBUG
   useEffect(() => {
     if (isOpen) {
       try {
-        console.log('🔄 Chargement des données DataImporter...')
-        loadStats()
-        loadAutoStatus()
-        // Désactivé temporairement pour debug
+        console.log('🔄 DataImporter ouvert - chargement désactivé pour debug')
+        // Tout désactivé temporairement pour isoler l'erreur React #62
+        // loadStats()
+        // loadAutoStatus()
         // loadAvailableJobs()
       } catch (error) {
         console.error('❌ Erreur lors du chargement initial:', error)
@@ -434,7 +434,20 @@ const DataImporter = ({ isOpen, onClose }) => {
         </div>
 
         <div className="importer-content">
-          {/* Statut Auto-Import */}
+          {/* Version ultra-simple pour debug React #62 */}
+          <div className="debug-section">
+            <h3>🐛 Mode Debug React #62</h3>
+            <p>Version ultra-simplifiée pour isoler l'erreur.</p>
+            <p>Si cette version fonctionne, le problème vient du rendu conditionnel complexe.</p>
+
+            <div className="debug-actions">
+              <button className="btn btn-primary">🧪 Test Simple</button>
+              <button className="btn btn-secondary">📊 Test Stats</button>
+            </div>
+          </div>
+
+          {/* Tout le reste temporairement désactivé */}
+          {false && (
           <div className="auto-import-status">
             <h3>🤖 Statut Auto-Importation</h3>
             {autoStatus ? (
@@ -726,6 +739,7 @@ const DataImporter = ({ isOpen, onClose }) => {
               </div>
             </div>
           )}
+          )} {/* Fermeture du bloc conditionnel debug */}
         </div>
 
         <div className="importer-footer">
