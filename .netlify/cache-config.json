@@ -1,0 +1,11 @@
+{
+  "cache": {
+    "paths": [
+      "public/images/**/*",
+      "dist/images/**/*",
+      "node_modules/.cache/**/*",
+      ".cache/**/*"
+    ],
+    "ttl": 86400
+  }
+} 

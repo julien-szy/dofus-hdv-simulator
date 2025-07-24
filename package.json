@@ -20,7 +20,8 @@
     "deploy": "node scripts-node/deployToNetlify.js",
     "deploy-images": "node scripts-node/deployImagesOnly.js",
     "deploy-app": "npm run build && npm run deploy",
-    "push": "node scripts-node/smartPush.js"
+    "push": "node scripts-node/smartPush.js",
+    "build-optimized": "node scripts-node/optimizedBuild.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

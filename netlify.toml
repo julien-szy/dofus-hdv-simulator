@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "npm run build"
+  command = "node scripts-node/optimizedBuild.js"
 
 [functions]
   directory = "netlify/functions"
@@ -12,6 +12,10 @@
 # Cache des dépendances pour accélérer les builds
 [[plugins]]
   package = "@netlify/plugin-cache-core"
+
+# Cache persistant pour les images
+[[plugins]]
+  package = "@netlify/plugin-cache-optim"
 
 # Optimisation des images
 [[plugins]]

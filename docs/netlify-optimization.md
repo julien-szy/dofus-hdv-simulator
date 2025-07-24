@@ -12,6 +12,10 @@ Les déploiements Netlify prennent 20+ minutes à cause des images qui sont re-d
 [[plugins]]
   package = "@netlify/plugin-cache-core"
 
+# Cache persistant pour les images
+[[plugins]]
+  package = "@netlify/plugin-cache-optim"
+
 # Optimisation automatique des images
 [[plugins]]
   package = "@netlify/plugin-image-optim"
@@ -22,6 +26,14 @@ Les déploiements Netlify prennent 20+ minutes à cause des images qui sont re-d
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 ```
+
+### 2. Build Optimisé (`scripts-node/optimizedBuild.js`)
+
+Le script de build optimisé :
+- ✅ Restaure les images depuis le cache Netlify
+- ✅ Évite de re-télécharger les images à chaque build
+- ✅ Copie les images vers le cache pour le prochain build
+- ✅ Accélère significativement les builds suivants
 
 ### 2. Exclusion des Images (`.netlifyignore`)
 
