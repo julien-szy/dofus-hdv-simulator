@@ -12,7 +12,6 @@ class SyncService {
   async syncCalculations(calculations) {
     const user = userService.getCurrentUser();
     if (!user) {
-      console.log('🔄 Pas d\'utilisateur connecté, pas de sync');
       return;
     }
 
@@ -20,9 +19,8 @@ class SyncService {
       for (const calc of calculations) {
         await this.saveCalculation(calc);
       }
-      console.log(`✅ ${calculations.length} calculs synchronisés`);
     } catch (error) {
-      console.error('❌ Erreur sync calculs:', error);
+      console.error('Erreur sync calculs:', error);
     }
   }
 
@@ -55,7 +53,7 @@ class SyncService {
       }
 
       const result = await response.json();
-      console.log('💾 Calcul sauvegardé en BDD:', result.id);
+
       return result;
     } catch (error) {
       console.error('❌ Erreur sauvegarde calcul:', error);
@@ -75,7 +73,7 @@ class SyncService {
       }
 
       const calculations = await response.json();
-      console.log(`📥 ${calculations.length} calculs chargés depuis la BDD`);
+
       
       // Transformer les données pour correspondre au format local
       return calculations.map(calc => {
@@ -87,7 +85,7 @@ class SyncService {
           } else if (typeof calc.calculation_data === 'object') {
             calculationData = calc.calculation_data;
           } else {
-            console.warn('⚠️ calculation_data invalide pour calcul:', calc.id);
+            console.warn('calculation_data invalide pour calcul:', calc.id);
             calculationData = { item: null, materialPrices: {} };
           }
 
@@ -104,7 +102,7 @@ class SyncService {
             timestamp: calc.created_at
           };
         } catch (error) {
-          console.error(`❌ Erreur parsing calcul ${calc.id}:`, error);
+          console.error(`Erreur parsing calcul ${calc.id}:`, error);
           return null; // Sera filtré
         }
       }).filter(calc => calc !== null); // Supprimer les calculs invalides
@@ -140,7 +138,7 @@ class SyncService {
       }
 
       const result = await response.json();
-      console.log(`💰 Prix matériau ${materialName} sauvegardé`);
+
       return result;
     } catch (error) {
       console.error('❌ Erreur sauvegarde prix:', error);
@@ -160,7 +158,7 @@ class SyncService {
       }
 
       const prices = await response.json();
-      console.log(`💰 ${prices.length} prix de matériaux chargés`);
+
       
       // Transformer en format local
       const pricesMap = {};
@@ -202,7 +200,7 @@ class SyncService {
       }
 
       const result = await response.json();
-      console.log(`🔧 ${result.length} métiers sauvegardés`);
+
       return result;
     } catch (error) {
       console.error('❌ Erreur sauvegarde métiers:', error);
@@ -222,7 +220,7 @@ class SyncService {
       }
 
       const professions = await response.json();
-      console.log(`🔧 ${professions.length} métiers chargés`);
+
       
       // Transformer en format local
       const professionsMap = {};
@@ -241,11 +239,8 @@ class SyncService {
   async fullSync() {
     const user = userService.getCurrentUser();
     if (!user) {
-      console.log('🔄 Pas d\'utilisateur connecté, pas de sync complète');
       return;
     }
-
-    console.log('🔄 Début de la synchronisation complète...');
     
     try {
       // Charger toutes les données depuis la BDD
@@ -255,7 +250,7 @@ class SyncService {
         this.loadProfessions()
       ]);
 
-      console.log('✅ Synchronisation complète terminée');
+
       
       return {
         calculations,
@@ -271,7 +266,7 @@ class SyncService {
   // Supprimer un calcul de la BDD
   async deleteCalculation(calculationId) {
     try {
-      console.log(`🗑️ Suppression du calcul ${calculationId} de la BDD...`);
+
 
       const response = await fetch(`${this.baseUrl}?action=delete_calculation`, {
         method: 'POST',
@@ -288,7 +283,7 @@ class SyncService {
       }
 
       const result = await response.json();
-      console.log(`✅ Calcul ${calculationId} supprimé de la BDD`);
+
       return result;
     } catch (error) {
       console.error(`❌ Erreur suppression calcul ${calculationId}:`, error);
