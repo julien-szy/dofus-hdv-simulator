@@ -143,8 +143,10 @@ const DataImporter = ({ isOpen, onClose }) => {
       const result = await dofusDataImporter.importSingleJob(jobId, jobName)
 
       if (result.success) {
-        addLog(`✅ ${jobName}: ${result.totalItems} objets importés depuis ${result.totalRecipes} recettes`, 'success')
+        const icon = getJobIcon(jobName)
+        addLog(`${icon} ${jobName}: ${result.totalItems} objets importés depuis ${result.totalRecipes} recettes`, 'success')
         await loadStats()
+        loadAutoStatus()
       } else {
         addLog(`❌ Erreur ${jobName}: ${result.error}`, 'error')
       }
@@ -158,6 +160,36 @@ const DataImporter = ({ isOpen, onClose }) => {
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Jamais'
     return new Date(timestamp).toLocaleString()
+  }
+
+  // Obtenir l'icône d'un métier
+  const getJobIcon = (jobName) => {
+    const icons = {
+      'Alchimiste': '🧪',
+      'Forgeron d\'Épées': '⚔️',
+      'Forgeron de Dagues': '🗡️',
+      'Forgeron de Marteaux': '🔨',
+      'Forgeron de Pelles': '⛏️',
+      'Forgeron de Haches': '🪓',
+      'Sculpteur d\'Arcs': '🏹',
+      'Sculpteur de Bâtons': '🪄',
+      'Sculpteur de Baguettes': '✨',
+      'Cordonnier': '👢',
+      'Joaillomage': '💎',
+      'Tailleur': '🧵',
+      'Forgeron de Boucliers': '🛡️',
+      'Bricoleur': '🔧',
+      'Mineur': '⛏️',
+      'Bûcheron': '🪓',
+      'Pêcheur': '🎣',
+      'Chasseur': '🏹',
+      'Paysan': '🌾',
+      'Boucher': '🥩',
+      'Poissonnier': '🐟',
+      'Boulanger': '🍞'
+    }
+
+    return icons[jobName] || '⚒️' // Icône par défaut
   }
 
   if (!isOpen) return null
@@ -302,19 +334,33 @@ const DataImporter = ({ isOpen, onClose }) => {
                     return null
                   }
 
+                  // Obtenir l'icône et les stats du métier
+                  const jobIcon = getJobIcon(job.name)
+                  const jobStats = stats?.byProfession?.[job.name] || 0
+
                   return (
                     <div key={job.id} className="job-item">
                       <div className="job-info">
-                        <div className="job-name">{String(job.name)}</div>
-                        <div className="job-id">ID: {String(job.id)}</div>
+                        <div className="job-header">
+                          <span className="job-icon">{jobIcon}</span>
+                          <div className="job-name">{job.name || `Métier ${job.id}`}</div>
+                        </div>
+                        <div className="job-stats">
+                          <span className="job-count">{jobStats} objets</span>
+                          <span className="job-id">ID: {job.id}</span>
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleJobImport(job.id, String(job.name))}
-                        disabled={jobImporting[job.id] || importing || updating}
-                        className="btn btn-sm btn-job-import"
-                      >
-                        {jobImporting[job.id] ? '🔄' : '📥'} Import
-                      </button>
+                      <div className="job-actions">
+                        <button
+                          onClick={() => handleJobImport(job.id, job.name)}
+                          disabled={jobImporting[job.id] || importing || updating}
+                          className={`btn btn-sm btn-job-import ${jobStats > 0 ? 'btn-update' : 'btn-new'}`}
+                          title={jobStats > 0 ? `Mettre à jour (${jobStats} objets)` : 'Premier import'}
+                        >
+                          {jobImporting[job.id] ? '🔄' : jobStats > 0 ? '🔄' : '📥'}
+                          {jobImporting[job.id] ? 'Import...' : jobStats > 0 ? 'Maj' : 'Import'}
+                        </button>
+                      </div>
                     </div>
                   )
                 })}
