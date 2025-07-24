@@ -26,7 +26,9 @@
     "force-deploy": "node scripts-node/forceDeploy.js",
     "quick-deploy": "node scripts-node/quickDeploy.js",
     "ultra-fast-build": "node scripts-node/ultraFastBuild.js",
-    "ultra-fast-deploy": "node scripts-node/ultraFastDeploy.js"
+    "ultra-fast-deploy": "node scripts-node/ultraFastDeploy.js",
+    "clear-cache": "node scripts-node/clearNetlifyCache.js",
+    "optimize-lfs": "node scripts-node/optimizeGitLFS.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
