@@ -7,6 +7,7 @@ const Header = ({
   setShowPriceManager,
   setShowPriceTrends,
   setShowDataImporter,
+  setShowNetlifyExtractor,
   checkProfessionLevels,
   setCheckProfessionLevels
 }) => {
@@ -78,6 +79,18 @@ const Header = ({
             <span className="btn-text">Prix</span>
             <div className="btn-glow"></div>
           </button>
+
+          {/* Bouton Extracteur Netlify (visible seulement pour admins) */}
+          {isAdmin() && (
+            <button
+              className="btn-modern btn-netlify"
+              onClick={() => setShowNetlifyExtractor(true)}
+            >
+              <span className="btn-icon">🌐</span>
+              <span className="btn-text">Extract</span>
+              <div className="btn-glow"></div>
+            </button>
+          )}
 
           {/* Bouton Admin (visible seulement pour Snoopiisz et admins) */}
           {isAdmin() && (

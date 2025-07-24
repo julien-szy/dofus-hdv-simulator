@@ -10,7 +10,10 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "extract-data": "node src/scripts/extractAndDownload.js",
+    "download-images": "node src/scripts/downloadImages.js",
+    "test-extraction": "node src/scripts/testExtraction.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

@@ -23,6 +23,7 @@ import UserAuth from './components/UserAuth.jsx'
 import ItemMessage from './components/ItemMessage.jsx'
 import ServerTutorial from './components/ServerTutorial.jsx'
 import DataImporter from './components/DataImporter.jsx'
+import NetlifyExtractor from './components/NetlifyExtractor.jsx'
 import './styles/App.css'
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
   const [itemMessage, setItemMessage] = useState(null)
   const [showServerTutorial, setShowServerTutorial] = useState(false)
   const [showDataImporter, setShowDataImporter] = useState(false)
+  const [showNetlifyExtractor, setShowNetlifyExtractor] = useState(false)
 
   // Charger les données sauvegardées au démarrage
   useEffect(() => {
@@ -611,6 +613,7 @@ function App() {
         setShowPriceManager={setShowPriceManager}
         setShowPriceTrends={setShowPriceTrends}
         setShowDataImporter={setShowDataImporter}
+        setShowNetlifyExtractor={setShowNetlifyExtractor}
         checkProfessionLevels={checkProfessionLevels}
         setCheckProfessionLevels={setCheckProfessionLevels}
       />
@@ -687,6 +690,11 @@ function App() {
       <DataImporter
         isOpen={showDataImporter}
         onClose={() => setShowDataImporter(false)}
+      />
+
+      <NetlifyExtractor
+        isOpen={showNetlifyExtractor}
+        onClose={() => setShowNetlifyExtractor(false)}
       />
     </div>
   )
