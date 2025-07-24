@@ -308,9 +308,9 @@ async function initializeTables(sql) {
     CREATE TABLE IF NOT EXISTS craftable_items (
       id SERIAL PRIMARY KEY,
       item_id INTEGER UNIQUE NOT NULL,
-      item_name VARCHAR(255) NOT NULL,
-      item_type VARCHAR(100),
-      profession VARCHAR(100) NOT NULL,
+      item_name VARCHAR(500) NOT NULL,
+      item_type VARCHAR(200),
+      profession VARCHAR(200) NOT NULL,
       level_required INTEGER DEFAULT 1,
       item_data JSONB,
       created_at TIMESTAMP DEFAULT NOW(),
@@ -333,7 +333,7 @@ async function initializeTables(sql) {
   await sql`
     CREATE TABLE IF NOT EXISTS search_cache (
       id SERIAL PRIMARY KEY,
-      search_term VARCHAR(255) NOT NULL,
+      search_term VARCHAR(500) NOT NULL,
       search_results JSONB NOT NULL,
       search_count INTEGER DEFAULT 1,
       created_at TIMESTAMP DEFAULT NOW(),
@@ -349,6 +349,31 @@ async function initializeTables(sql) {
   await sql`
     CREATE INDEX IF NOT EXISTS idx_search_cache_count ON search_cache(search_count DESC)
   `;
+
+  // Migration : Augmenter la taille des colonnes si nécessaire
+  try {
+    await sql`
+      ALTER TABLE craftable_items
+      ALTER COLUMN item_name TYPE VARCHAR(500),
+      ALTER COLUMN item_type TYPE VARCHAR(200),
+      ALTER COLUMN profession TYPE VARCHAR(200)
+    `;
+    console.log('✅ Migration des colonnes craftable_items effectuée');
+  } catch (error) {
+    // Ignorer si les colonnes ont déjà la bonne taille
+    console.log('ℹ️ Migration des colonnes ignorée (déjà à jour)');
+  }
+
+  try {
+    await sql`
+      ALTER TABLE search_cache
+      ALTER COLUMN search_term TYPE VARCHAR(500)
+    `;
+    console.log('✅ Migration des colonnes search_cache effectuée');
+  } catch (error) {
+    // Ignorer si les colonnes ont déjà la bonne taille
+    console.log('ℹ️ Migration search_cache ignorée (déjà à jour)');
+  }
 
   console.log('✅ All tables initialized successfully');
 }

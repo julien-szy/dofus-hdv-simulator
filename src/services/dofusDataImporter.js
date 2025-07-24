@@ -79,22 +79,33 @@ class DofusDataImporter {
     }
   }
 
-  // Formater une recette pour la BDD
+  // Formater une recette pour la BDD avec validation des longueurs
   formatRecipeForDB(recipe, jobName) {
     const resultItem = recipe.result
-    
+
+    // Fonction pour tronquer les chaînes trop longues
+    const truncateString = (str, maxLength) => {
+      if (!str) return ''
+      return str.length > maxLength ? str.substring(0, maxLength - 3) + '...' : str
+    }
+
+    // Valider et tronquer les champs si nécessaire
+    const itemName = truncateString(resultItem.name, 497) // 500 - 3 pour "..."
+    const itemType = truncateString(resultItem.type?.name || 'Inconnu', 197)
+    const profession = truncateString(jobName, 197)
+
     return {
       item_id: resultItem.id,
-      item_name: resultItem.name,
-      item_type: resultItem.type?.name || 'Inconnu',
-      profession: jobName,
+      item_name: itemName,
+      item_type: itemType,
+      profession: profession,
       level_required: recipe.level || 1,
       item_data: {
         ankama_id: resultItem.id,
-        name: resultItem.name,
+        name: resultItem.name, // Nom complet dans le JSON
         type: resultItem.type || { name: 'Inconnu' },
         level: recipe.level || 1,
-        profession: jobName,
+        profession: jobName, // Nom complet dans le JSON
         description: resultItem.description || '',
         craftable: true,
         recipe: {
@@ -129,10 +140,24 @@ class DofusDataImporter {
           // 3. Formater chaque recette pour la BDD
           for (const recipe of recipes) {
             if (recipe.result && recipe.result.id) {
-              const formattedItem = this.formatRecipeForDB(recipe, job.name)
-              allCraftableItems.push(formattedItem)
-              totalItems++
-              jobItemCount++
+              try {
+                const formattedItem = this.formatRecipeForDB(recipe, job.name)
+
+                // Vérifier les longueurs avant d'ajouter
+                if (formattedItem.item_name.length > 500) {
+                  console.warn(`⚠️ Nom trop long (${formattedItem.item_name.length}): ${formattedItem.item_name}`)
+                }
+                if (formattedItem.profession.length > 200) {
+                  console.warn(`⚠️ Métier trop long (${formattedItem.profession.length}): ${formattedItem.profession}`)
+                }
+
+                allCraftableItems.push(formattedItem)
+                totalItems++
+                jobItemCount++
+              } catch (error) {
+                console.error(`❌ Erreur formatage recette ${recipe.id}:`, error)
+                console.error(`📋 Recette problématique:`, recipe)
+              }
             } else {
               console.warn(`⚠️ Recette sans résultat valide:`, recipe)
             }
@@ -152,22 +177,35 @@ class DofusDataImporter {
       console.log(`📦 ${totalItems} objets craftables formatés`)
       
       // 4. Sauvegarder en BDD par chunks pour éviter les timeouts
-      const chunkSize = 100
+      const chunkSize = 50 // Réduire la taille pour éviter les erreurs
       let savedCount = 0
-      
+
       for (let i = 0; i < allCraftableItems.length; i += chunkSize) {
         const chunk = allCraftableItems.slice(i, i + chunkSize)
-        
+
         try {
           await this.saveCraftableItemsChunk(chunk)
           savedCount += chunk.length
           console.log(`💾 ${savedCount}/${totalItems} objets sauvegardés...`)
         } catch (error) {
           console.error(`❌ Erreur sauvegarde chunk ${i}-${i + chunkSize}:`, error)
+          console.error(`📋 Premier item du chunk problématique:`, chunk[0])
+
+          // Essayer de sauvegarder item par item pour identifier le problème
+          for (const item of chunk) {
+            try {
+              await this.saveCraftableItemsChunk([item])
+              savedCount++
+              console.log(`✅ Item sauvé individuellement: ${item.item_name}`)
+            } catch (itemError) {
+              console.error(`❌ Item problématique: ${item.item_name}`, itemError)
+              console.error(`📋 Données de l'item:`, item)
+            }
+          }
         }
-        
+
         // Pause entre les chunks
-        await this.sleep(200)
+        await this.sleep(300)
       }
       
       console.log(`✅ Importation terminée ! ${savedCount} objets craftables importés`)
