@@ -9,6 +9,7 @@ import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices, migr
 import syncService from './services/syncService.js'
 import userService from './services/userService.js'
 import trendsService from './services/trendsService.js'
+import autoImportService from './services/autoImportService.js'
 import Header from './components/Header.jsx'
 import SearchForm from './components/SearchForm.jsx'
 import RecipeDisplay from './components/RecipeDisplay.jsx'
@@ -68,6 +69,9 @@ function App() {
       const userServer = trendsService.getCurrentUserServer()
       setCurrentServer(userServer || '')
       console.log(`🌍 Serveur utilisateur: ${userServer || 'Non défini'}`)
+
+      // Démarrer l'auto-importation en arrière-plan
+      autoImportService.startAutoImport()
 
       console.log(`👤 Utilisateur connecté: ${user.username}, synchronisation...`)
       await syncUserData()
@@ -169,6 +173,12 @@ function App() {
     window.addEventListener('serverChanged', (event) => {
       setCurrentServer(event.detail || '')
       console.log(`🌍 Serveur changé: ${event.detail || 'Non défini'}`)
+    })
+
+    // Écouter les notifications d'auto-import
+    window.addEventListener('autoImportNotification', (event) => {
+      const { type, message } = event.detail
+      setItemMessage({ type, message })
     })
 
     return () => {

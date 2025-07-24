@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import dofusDataImporter from '../services/dofusDataImporter.js'
+import autoImportService from '../services/autoImportService.js'
 
 const DataImporter = ({ isOpen, onClose }) => {
   const [importing, setImporting] = useState(false)
@@ -7,11 +8,13 @@ const DataImporter = ({ isOpen, onClose }) => {
   const [stats, setStats] = useState(null)
   const [importLog, setImportLog] = useState([])
   const [progress, setProgress] = useState(0)
+  const [autoStatus, setAutoStatus] = useState(null)
 
   // Charger les statistiques au démarrage
   useEffect(() => {
     if (isOpen) {
       loadStats()
+      loadAutoStatus()
     }
   }, [isOpen])
 
@@ -24,6 +27,11 @@ const DataImporter = ({ isOpen, onClose }) => {
     }
   }
 
+  const loadAutoStatus = () => {
+    const status = autoImportService.getStatus()
+    setAutoStatus(status)
+  }
+
   const addLog = (message, type = 'info') => {
     const timestamp = new Date().toLocaleTimeString()
     setImportLog(prev => [...prev, { timestamp, message, type }])
@@ -31,20 +39,21 @@ const DataImporter = ({ isOpen, onClose }) => {
 
   const handleFullImport = async () => {
     if (importing) return
-    
+
     setImporting(true)
     setImportLog([])
     setProgress(0)
-    
+
     try {
-      addLog('🚀 Début de l\'importation complète...', 'info')
-      
-      const result = await dofusDataImporter.importAllCraftableData()
-      
+      addLog('🔧 Import forcé par admin...', 'info')
+
+      const result = await autoImportService.forceFullImport()
+
       if (result.success) {
         addLog(`✅ Importation terminée ! ${result.totalItems} objets importés depuis ${result.totalJobs} métiers`, 'success')
         setProgress(100)
         await loadStats()
+        loadAutoStatus()
       } else {
         addLog('❌ Erreur lors de l\'importation', 'error')
       }
@@ -57,18 +66,19 @@ const DataImporter = ({ isOpen, onClose }) => {
 
   const handleUpdate = async () => {
     if (updating) return
-    
+
     setUpdating(true)
     setImportLog([])
-    
+
     try {
-      addLog('🔄 Début de la mise à jour...', 'info')
-      
-      const result = await dofusDataImporter.updateCraftableData()
-      
+      addLog('🔧 Mise à jour forcée par admin...', 'info')
+
+      const result = await autoImportService.forceUpdate()
+
       if (result.success) {
         addLog(`✅ Mise à jour terminée ! ${result.newItems} nouveaux objets ajoutés`, 'success')
         await loadStats()
+        loadAutoStatus()
       } else {
         addLog('❌ Erreur lors de la mise à jour', 'error')
       }
@@ -95,6 +105,45 @@ const DataImporter = ({ isOpen, onClose }) => {
         </div>
 
         <div className="importer-content">
+          {/* Statut Auto-Import */}
+          <div className="auto-import-status">
+            <h3>🤖 Statut Auto-Importation</h3>
+            {autoStatus ? (
+              <div className="status-grid">
+                <div className="status-item">
+                  <div className="status-label">Statut</div>
+                  <div className={`status-value ${autoStatus.importInProgress ? 'importing' : 'idle'}`}>
+                    {autoStatus.importInProgress ? '🔄 Import en cours...' : '✅ Actif'}
+                  </div>
+                </div>
+                <div className="status-item">
+                  <div className="status-label">Dernière vérification</div>
+                  <div className="status-value">{autoStatus.lastCheck}</div>
+                </div>
+                <div className="status-item">
+                  <div className="status-label">Dernier import</div>
+                  <div className="status-value">{autoStatus.lastImport}</div>
+                </div>
+                <div className="status-item">
+                  <div className="status-label">Prochaine vérification</div>
+                  <div className="status-value">{autoStatus.nextCheck}</div>
+                </div>
+                <div className="status-item">
+                  <div className="status-label">Temps depuis dernier import</div>
+                  <div className="status-value">{autoStatus.timeSinceLastImport}</div>
+                </div>
+                <div className="status-item">
+                  <div className="status-label">Mise à jour nécessaire</div>
+                  <div className={`status-value ${autoStatus.needsUpdate ? 'needs-update' : 'up-to-date'}`}>
+                    {autoStatus.needsUpdate ? '⚠️ Oui' : '✅ Non'}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="loading">Chargement du statut...</div>
+            )}
+          </div>
+
           {/* Statistiques */}
           <div className="importer-stats">
             <h3>📊 Statistiques actuelles</h3>

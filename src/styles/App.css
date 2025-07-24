@@ -4077,6 +4077,64 @@ input:checked + .settings-toggle-slider:before {
   gap: 32px;
 }
 
+.auto-import-status {
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.auto-import-status h3 {
+  color: var(--text-light);
+  font-size: 1.2rem;
+  margin: 0 0 20px 0;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.status-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-value {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.status-value.importing {
+  color: var(--primary-gold);
+  animation: pulse 1.5s infinite;
+}
+
+.status-value.idle {
+  color: var(--accent-green);
+}
+
+.status-value.needs-update {
+  color: #ff9800;
+}
+
+.status-value.up-to-date {
+  color: var(--accent-green);
+}
+
 .importer-stats {
   background: var(--darker-bg);
   border: 1px solid var(--border-color);

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import UserAuth from './UserAuth.jsx'
 import CacheStats from './CacheStats.jsx'
+import userService from '../services/userService.js'
 
 const Header = ({
   setShowPriceManager,
@@ -10,6 +11,16 @@ const Header = ({
   setCheckProfessionLevels
 }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
+
+  // Vérifier si l'utilisateur est admin
+  const isAdmin = () => {
+    const user = userService.getCurrentUser()
+    if (!user) return false
+
+    // Liste des admins autorisés
+    const adminUsernames = ['Snoopiisz', 'snoopiisz'] // Ajouter d'autres admins ici
+    return adminUsernames.includes(user.username)
+  }
 
   return (
     <header className="hdv-header">
@@ -68,16 +79,18 @@ const Header = ({
             <div className="btn-glow"></div>
           </button>
 
-          {/* Bouton Admin (temporaire) */}
-          <button
-            className="btn-modern btn-admin"
-            onClick={() => setShowDataImporter(true)}
-            title="Administration - Importation des données"
-          >
-            <span className="btn-icon">🔧</span>
-            <span className="btn-text">Admin</span>
-            <div className="btn-glow"></div>
-          </button>
+          {/* Bouton Admin (visible seulement pour Snoopiisz et admins) */}
+          {isAdmin() && (
+            <button
+              className="btn-modern btn-admin"
+              onClick={() => setShowDataImporter(true)}
+              title="Administration - Gestion des données DofusDB"
+            >
+              <span className="btn-icon">🔧</span>
+              <span className="btn-text">Admin</span>
+              <div className="btn-glow"></div>
+            </button>
+          )}
 
           {/* Authentification */}
           <div className="auth-container">
