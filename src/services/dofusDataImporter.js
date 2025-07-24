@@ -21,9 +21,10 @@ class DofusDataImporter {
       }
 
       const data = await response.json()
-      console.log(`✅ ${data.data.length} métiers récupérés`)
-      
-      return data.data
+      console.log(`✅ ${data.data?.length || 0} métiers récupérés sur ${data.total || 'inconnu'} total`)
+      console.log('📋 Métiers trouvés:', data.data?.map(j => `${j.name} (${j.id})`).join(', '))
+
+      return data.data || []
     } catch (error) {
       console.error('❌ Erreur récupération métiers:', error)
       throw error
@@ -44,9 +45,15 @@ class DofusDataImporter {
       }
 
       const data = await response.json()
-      console.log(`✅ ${data.data.length} recettes récupérées pour ${jobName}`)
-      
-      return data.data
+      console.log(`✅ ${data.data?.length || 0} recettes récupérées pour ${jobName} sur ${data.total || 'inconnu'} total`)
+
+      if (data.data && data.data.length > 0) {
+        console.log(`🎯 Premières recettes ${jobName}:`, data.data.slice(0, 3).map(r => r.result?.name || 'Sans nom'))
+      } else {
+        console.warn(`⚠️ Aucune recette trouvée pour ${jobName}`)
+      }
+
+      return data.data || []
     } catch (error) {
       console.error(`❌ Erreur récupération recettes pour ${jobName}:`, error)
       throw error
@@ -114,20 +121,28 @@ class DofusDataImporter {
       // 2. Pour chaque métier, récupérer ses recettes
       for (const job of jobs) {
         try {
+          console.log(`\n🔄 Traitement du métier: ${job.name} (${job.id})`)
           const recipes = await this.fetchJobRecipes(job.id, job.name)
-          
+
+          let jobItemCount = 0
+
           // 3. Formater chaque recette pour la BDD
           for (const recipe of recipes) {
             if (recipe.result && recipe.result.id) {
               const formattedItem = this.formatRecipeForDB(recipe, job.name)
               allCraftableItems.push(formattedItem)
               totalItems++
+              jobItemCount++
+            } else {
+              console.warn(`⚠️ Recette sans résultat valide:`, recipe)
             }
           }
-          
+
+          console.log(`✅ ${job.name}: ${jobItemCount} objets ajoutés (${recipes.length} recettes traitées)`)
+
           // Petite pause pour éviter de surcharger l'API
           await this.sleep(100)
-          
+
         } catch (error) {
           console.warn(`⚠️ Erreur pour le métier ${job.name}:`, error)
           continue

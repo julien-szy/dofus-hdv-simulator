@@ -4247,6 +4247,16 @@ input:checked + .settings-toggle-slider:before {
   background: linear-gradient(135deg, #1976d2, #2196f3);
 }
 
+.btn-debug {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  border-color: #ff9800;
+  flex: 0.5;
+}
+
+.btn-debug:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f57c00, #ff9800);
+}
+
 .action-descriptions {
   display: flex;
   flex-direction: column;

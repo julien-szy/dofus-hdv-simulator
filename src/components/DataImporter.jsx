@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import dofusDataImporter from '../services/dofusDataImporter.js'
 import autoImportService from '../services/autoImportService.js'
+import debugDofusAPI from '../utils/debugDofusAPI.js'
 
 const DataImporter = ({ isOpen, onClose }) => {
   const [importing, setImporting] = useState(false)
@@ -86,6 +87,19 @@ const DataImporter = ({ isOpen, onClose }) => {
       addLog(`❌ Erreur: ${error.message}`, 'error')
     } finally {
       setUpdating(false)
+    }
+  }
+
+  const handleDebugAPI = async () => {
+    setImportLog([])
+    addLog('🔍 Début du debug API DofusDB...', 'info')
+
+    try {
+      // Lancer le debug complet
+      await debugDofusAPI.runFullDebug()
+      addLog('✅ Debug terminé - Vérifiez la console pour les détails', 'success')
+    } catch (error) {
+      addLog(`❌ Erreur debug: ${error.message}`, 'error')
     }
   }
 
@@ -192,13 +206,21 @@ const DataImporter = ({ isOpen, onClose }) => {
               >
                 {importing ? '🔄 Importation en cours...' : '📥 Importation complète'}
               </button>
-              
+
               <button
                 onClick={handleUpdate}
                 disabled={importing || updating}
                 className="btn btn-secondary btn-update"
               >
                 {updating ? '🔄 Mise à jour...' : '🔄 Mise à jour incrémentale'}
+              </button>
+
+              <button
+                onClick={handleDebugAPI}
+                disabled={importing || updating}
+                className="btn btn-warning btn-debug"
+              >
+                🔍 Debug API
               </button>
             </div>
 
