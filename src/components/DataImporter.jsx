@@ -616,10 +616,9 @@ const DataImporter = ({ isOpen, onClose }) => {
             <h3>⚒️ Import par Métier</h3>
             <div className="job-import-description">
               <p>Importez les recettes d'un métier spécifique. Utile pour tester ou corriger des données manquantes.</p>
-              <p><strong>🐛 Temporairement désactivé pour debug de l'erreur React #62</strong></p>
             </div>
 
-            {false && availableJobs.length > 0 ? (
+            {availableJobs.length > 0 ? (
               <div className="jobs-grid">
                 {availableJobs.map((job) => {
                   // Protection contre les objets invalides
