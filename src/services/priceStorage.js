@@ -14,23 +14,29 @@ export const loadStoredPrices = () => {
 }
 
 // Sauvegarder un prix pour un matériau
-export const savePrice = (materialId, priceType, price) => {
+export const savePrice = (materialId, priceType, price, materialName = null) => {
   try {
     const storedPrices = loadStoredPrices()
-    
+
     if (!storedPrices[materialId]) {
       storedPrices[materialId] = {
         price_1: 0,
         price_10: 0,
-        price_100: 0
+        price_100: 0,
+        name: materialName || `Matériau ${materialId}`
       }
     }
-    
+
+    // Mettre à jour le nom si fourni
+    if (materialName) {
+      storedPrices[materialId].name = materialName
+    }
+
     storedPrices[materialId][priceType] = parseFloat(price) || 0
-    
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedPrices))
-    console.log(`💾 Prix sauvegardé: ${materialId} - ${priceType} = ${price}`)
-    
+    console.log(`💾 Prix sauvegardé: ${materialName || materialId} - ${priceType} = ${price}`)
+
     return storedPrices
   } catch (error) {
     console.error('Erreur lors de la sauvegarde du prix:', error)
@@ -104,6 +110,40 @@ export const importPrices = (jsonData) => {
   }
 }
 
+// Migrer les anciens prix pour ajouter les noms manquants
+export const migratePricesWithNames = async (getMaterialDetailsFunc) => {
+  try {
+    const storedPrices = loadStoredPrices()
+    let hasChanges = false
+
+    for (const [materialId, priceData] of Object.entries(storedPrices)) {
+      // Si le nom n'existe pas, le récupérer
+      if (!priceData.name) {
+        try {
+          const materialDetails = await getMaterialDetailsFunc(materialId)
+          priceData.name = materialDetails.name || `Matériau ${materialId}`
+          hasChanges = true
+          console.log(`📝 Nom ajouté pour matériau ${materialId}: ${priceData.name}`)
+        } catch (error) {
+          console.warn(`⚠️ Impossible de récupérer le nom pour ${materialId}:`, error)
+          priceData.name = `Matériau ${materialId}`
+          hasChanges = true
+        }
+      }
+    }
+
+    if (hasChanges) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(storedPrices))
+      console.log('✅ Migration des noms de matériaux terminée')
+    }
+
+    return storedPrices
+  } catch (error) {
+    console.error('❌ Erreur lors de la migration des prix:', error)
+    return loadStoredPrices()
+  }
+}
+
 export default {
   loadStoredPrices,
   savePrice,
@@ -112,5 +152,6 @@ export default {
   removeMaterialPrice,
   clearAllPrices,
   exportPrices,
-  importPrices
+  importPrices,
+  migratePricesWithNames
 }

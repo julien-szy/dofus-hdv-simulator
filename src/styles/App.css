@@ -2398,6 +2398,17 @@ body {
   font-family: monospace;
 }
 
+.price-material-name {
+  color: var(--text-light);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: help;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .price-value {
   color: var(--primary-gold);
   font-weight: 500;

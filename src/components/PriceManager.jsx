@@ -46,9 +46,11 @@ const PriceManager = ({ isOpen, onClose }) => {
     }
   }
 
-  const filteredPrices = Object.entries(storedPrices).filter(([materialId, prices]) =>
-    materialId.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredPrices = Object.entries(storedPrices).filter(([materialId, prices]) => {
+    const materialName = prices.name || `Matériau ${materialId}`
+    return materialName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           materialId.toLowerCase().includes(searchTerm.toLowerCase())
+  })
 
   const formatPrice = (price) => {
     return price > 0 ? price.toLocaleString() + ' K' : '-'
@@ -107,7 +109,7 @@ const PriceManager = ({ isOpen, onClose }) => {
             ) : (
               <div className="price-table">
                 <div className="price-table-header">
-                  <div>Matériau ID</div>
+                  <div>Matériau</div>
                   <div>Prix x1</div>
                   <div>Prix x10</div>
                   <div>Prix x100</div>
@@ -115,7 +117,9 @@ const PriceManager = ({ isOpen, onClose }) => {
                 </div>
                 {filteredPrices.map(([materialId, prices]) => (
                   <div key={materialId} className="price-table-row">
-                    <div className="price-material-id">{materialId}</div>
+                    <div className="price-material-name" title={`ID: ${materialId}`}>
+                      {prices.name || `Matériau ${materialId}`}
+                    </div>
                     <div className="price-value">{formatPrice(prices.price_1)}</div>
                     <div className="price-value">{formatPrice(prices.price_10)}</div>
                     <div className="price-value">{formatPrice(prices.price_100)}</div>
@@ -123,6 +127,7 @@ const PriceManager = ({ isOpen, onClose }) => {
                       <button
                         onClick={() => handleRemovePrice(materialId)}
                         className="btn btn-danger btn-sm"
+                        title={`Supprimer ${prices.name || materialId}`}
                       >
                         🗑️
                       </button>

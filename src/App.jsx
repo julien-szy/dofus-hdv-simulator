@@ -4,7 +4,7 @@ import { saveToLocalStorage, loadFromLocalStorage, STORAGE_KEYS } from './utils/
 import { searchItems, getItemDetails, getMaterialDetails, getItemRecipe, checkItemHasRecipe } from './services/dofusDbApi.js'
 import { enrichItemWithProfession } from './utils/professionUtils.js'
 import { calculateCraftCost } from './utils/craftCalculations.js'
-import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices } from './services/priceStorage.js'
+import { loadStoredPrices, savePrice, getMaterialPrice, getAllStoredPrices, migratePricesWithNames } from './services/priceStorage.js'
 import syncService from './services/syncService.js'
 import userService from './services/userService.js'
 import Header from './components/Header.jsx'
@@ -47,7 +47,8 @@ function App() {
       setPlayerProfessions(loadFromLocalStorage(STORAGE_KEYS.PROFESSIONS, {}))
       setCheckProfessionLevels(loadFromLocalStorage(STORAGE_KEYS.CHECK_LEVELS, true))
 
-      // Charger les prix stockés localement
+      // Charger les prix stockés localement et migrer les noms manquants
+      await migratePricesWithNames(getMaterialDetails)
       const storedPrices = getAllStoredPrices()
       console.log(`💰 ${Object.keys(storedPrices).length} prix chargés depuis le stockage local`)
 
@@ -254,10 +255,19 @@ function App() {
   const updateMaterialPrice = async (materialId, price, quantityType = 1) => {
     const priceType = `price_${quantityType}`
 
-    // 1. Sauvegarder en localStorage
-    const updatedStoredPrices = savePrice(materialId, priceType, price)
+    // 1. Récupérer le nom du matériau si pas déjà en cache
+    let materialName = null
+    try {
+      const materialDetails = await getMaterialDetails(materialId)
+      materialName = materialDetails.name
+    } catch (error) {
+      console.warn('Impossible de récupérer le nom du matériau:', error)
+    }
 
-    // 2. Mettre à jour l'état local
+    // 2. Sauvegarder en localStorage avec le nom
+    const updatedStoredPrices = savePrice(materialId, priceType, price, materialName)
+
+    // 3. Mettre à jour l'état local
     setMaterialPrices(prev => ({
       ...prev,
       [materialId]: {
@@ -266,14 +276,14 @@ function App() {
       }
     }))
 
-    // 3. Synchroniser avec la BDD si utilisateur connecté
+    // 4. Synchroniser avec la BDD si utilisateur connecté
     const user = userService.getCurrentUser()
     if (user) {
       try {
         const materialData = updatedStoredPrices[materialId]
         await syncService.syncMaterialPrice(
           materialId,
-          materialData.name || 'Matériau inconnu',
+          materialData.name || materialName || 'Matériau inconnu',
           {
             x1: materialData.price_1,
             x10: materialData.price_10,
@@ -285,7 +295,7 @@ function App() {
       }
     }
 
-    // 3. Mettre à jour tous les calculs existants
+    // 5. Mettre à jour tous les calculs existants
     setCraftCalculations(prevCalculations =>
       prevCalculations.map(calc => {
         // Vérifier si ce calcul utilise ce matériau
