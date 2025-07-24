@@ -154,13 +154,22 @@ exports.handler = async (event, context) => {
 
       case 'get_craftable_items':
         // Récupérer les objets craftables
-        const { profession, search } = event.queryStringParameters;
-        const craftableItems = await getCraftableItems(sql, profession, search);
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify(craftableItems)
-        };
+        try {
+          const { profession, search } = event.queryStringParameters || {};
+          const craftableItems = await getCraftableItems(sql, profession, search);
+          return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify(craftableItems)
+          };
+        } catch (error) {
+          console.error('Erreur get_craftable_items:', error);
+          return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ error: 'Erreur récupération objets craftables', details: error.message })
+          };
+        }
 
       case 'save_search_cache':
         // Sauvegarder une recherche dans le cache
@@ -543,36 +552,47 @@ async function saveCraftableItems(sql, itemsData) {
 }
 
 async function getCraftableItems(sql, profession = null, search = null) {
-  let query = sql`SELECT * FROM craftable_items`;
+  try {
+    let query;
 
-  if (profession && search) {
-    query = sql`
-      SELECT * FROM craftable_items
-      WHERE profession = ${profession}
-      AND (item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'})
-      ORDER BY item_name
-    `;
-  } else if (profession) {
-    query = sql`
-      SELECT * FROM craftable_items
-      WHERE profession = ${profession}
-      ORDER BY item_name
-    `;
-  } else if (search) {
-    query = sql`
-      SELECT * FROM craftable_items
-      WHERE item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'}
-      ORDER BY item_name
-    `;
-  } else {
-    query = sql`
-      SELECT * FROM craftable_items
-      ORDER BY profession, item_name
-    `;
+    if (profession && search) {
+      query = sql`
+        SELECT * FROM craftable_items
+        WHERE profession = ${profession}
+        AND (item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'})
+        ORDER BY item_name
+        LIMIT 1000
+      `;
+    } else if (profession) {
+      query = sql`
+        SELECT * FROM craftable_items
+        WHERE profession = ${profession}
+        ORDER BY item_name
+        LIMIT 1000
+      `;
+    } else if (search) {
+      query = sql`
+        SELECT * FROM craftable_items
+        WHERE item_name ILIKE ${'%' + search + '%'} OR item_type ILIKE ${'%' + search + '%'}
+        ORDER BY item_name
+        LIMIT 1000
+      `;
+    } else {
+      // Limiter la requête sans filtre pour éviter les timeouts
+      query = sql`
+        SELECT * FROM craftable_items
+        ORDER BY profession, item_name
+        LIMIT 5000
+      `;
+    }
+
+    const items = await query;
+    console.log(`✅ getCraftableItems: ${items.length} items récupérés`);
+    return items;
+  } catch (error) {
+    console.error('❌ Erreur getCraftableItems:', error);
+    throw error;
   }
-
-  const items = await query;
-  return items;
 }
 
 // Fonctions pour le cache de recherche

@@ -31,29 +31,51 @@ class DofusDataImporter {
     }
   }
 
-  // Récupérer toutes les recettes d'un métier
+  // Récupérer toutes les recettes d'un métier avec pagination
   async fetchJobRecipes(jobId, jobName) {
     try {
       console.log(`📥 Récupération des recettes pour ${jobName} (ID: ${jobId})...`)
-      
-      const response = await fetch(
-        `${this.baseApiUrl}/recipes?jobId=${jobId}&$skip=0&$limit=1000&lang=fr`
-      )
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+
+      let allRecipes = []
+      let skip = 0
+      const limit = 100 // Limite par page
+      let hasMore = true
+
+      while (hasMore) {
+        const response = await fetch(
+          `${this.baseApiUrl}/recipes?jobId=${jobId}&$skip=${skip}&$limit=${limit}&lang=fr`
+        )
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
+        const recipes = data.data || []
+
+        console.log(`📄 Page ${Math.floor(skip/limit) + 1}: ${recipes.length} recettes récupérées (total: ${data.total || 'inconnu'})`)
+
+        allRecipes = allRecipes.concat(recipes)
+
+        // Vérifier s'il y a encore des données
+        hasMore = recipes.length === limit && allRecipes.length < (data.total || 0)
+        skip += limit
+
+        // Pause entre les pages pour éviter de surcharger l'API
+        if (hasMore) {
+          await this.sleep(150)
+        }
       }
 
-      const data = await response.json()
-      console.log(`✅ ${data.data?.length || 0} recettes récupérées pour ${jobName} sur ${data.total || 'inconnu'} total`)
+      console.log(`✅ ${allRecipes.length} recettes TOTALES récupérées pour ${jobName}`)
 
-      if (data.data && data.data.length > 0) {
-        console.log(`🎯 Premières recettes ${jobName}:`, data.data.slice(0, 3).map(r => r.result?.name || 'Sans nom'))
+      if (allRecipes.length > 0) {
+        console.log(`🎯 Premières recettes ${jobName}:`, allRecipes.slice(0, 3).map(r => r.result?.name || 'Sans nom'))
       } else {
         console.warn(`⚠️ Aucune recette trouvée pour ${jobName}`)
       }
 
-      return data.data || []
+      return allRecipes
     } catch (error) {
       console.error(`❌ Erreur récupération recettes pour ${jobName}:`, error)
       throw error
@@ -339,6 +361,84 @@ class DofusDataImporter {
     } catch (error) {
       console.error('❌ Erreur récupération stats:', error)
       return null
+    }
+  }
+
+  // Importer un métier spécifique
+  async importSingleJob(jobId, jobName) {
+    try {
+      console.log(`🎯 Import spécifique du métier: ${jobName}`)
+
+      // Récupérer les recettes du métier
+      const recipes = await this.fetchJobRecipes(jobId, jobName)
+
+      if (recipes.length === 0) {
+        return {
+          success: true,
+          jobName,
+          totalItems: 0,
+          message: 'Aucune recette trouvée'
+        }
+      }
+
+      // Formater les recettes
+      const craftableItems = []
+      for (const recipe of recipes) {
+        if (recipe.result && recipe.result.id) {
+          try {
+            const formattedItem = this.formatRecipeForDB(recipe, jobName)
+            craftableItems.push(formattedItem)
+          } catch (error) {
+            console.error(`❌ Erreur formatage recette ${recipe.id}:`, error)
+          }
+        }
+      }
+
+      console.log(`📦 ${craftableItems.length} objets formatés pour ${jobName}`)
+
+      // Sauvegarder par chunks
+      const chunkSize = 25 // Plus petit pour éviter les erreurs
+      let savedCount = 0
+
+      for (let i = 0; i < craftableItems.length; i += chunkSize) {
+        const chunk = craftableItems.slice(i, i + chunkSize)
+
+        try {
+          await this.saveCraftableItemsChunk(chunk)
+          savedCount += chunk.length
+          console.log(`💾 ${savedCount}/${craftableItems.length} objets sauvés pour ${jobName}`)
+        } catch (error) {
+          console.error(`❌ Erreur sauvegarde chunk ${jobName}:`, error)
+
+          // Essayer item par item
+          for (const item of chunk) {
+            try {
+              await this.saveCraftableItemsChunk([item])
+              savedCount++
+            } catch (itemError) {
+              console.error(`❌ Item problématique ${jobName}: ${item.item_name}`, itemError)
+            }
+          }
+        }
+
+        await this.sleep(200)
+      }
+
+      return {
+        success: true,
+        jobName,
+        totalRecipes: recipes.length,
+        totalItems: savedCount,
+        timestamp: new Date().toISOString()
+      }
+
+    } catch (error) {
+      console.error(`❌ Erreur import métier ${jobName}:`, error)
+      return {
+        success: false,
+        jobName,
+        error: error.message
+      }
     }
   }
 

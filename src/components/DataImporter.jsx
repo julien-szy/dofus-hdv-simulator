@@ -10,12 +10,15 @@ const DataImporter = ({ isOpen, onClose }) => {
   const [importLog, setImportLog] = useState([])
   const [progress, setProgress] = useState(0)
   const [autoStatus, setAutoStatus] = useState(null)
+  const [availableJobs, setAvailableJobs] = useState([])
+  const [jobImporting, setJobImporting] = useState({})
 
   // Charger les statistiques au démarrage
   useEffect(() => {
     if (isOpen) {
       loadStats()
       loadAutoStatus()
+      loadAvailableJobs()
     }
   }, [isOpen])
 
@@ -31,6 +34,16 @@ const DataImporter = ({ isOpen, onClose }) => {
   const loadAutoStatus = () => {
     const status = autoImportService.getStatus()
     setAutoStatus(status)
+  }
+
+  const loadAvailableJobs = async () => {
+    try {
+      const jobs = await dofusDataImporter.fetchAllJobs()
+      setAvailableJobs(jobs || [])
+    } catch (error) {
+      console.error('Erreur chargement métiers:', error)
+      setAvailableJobs([])
+    }
   }
 
   const addLog = (message, type = 'info') => {
@@ -100,6 +113,28 @@ const DataImporter = ({ isOpen, onClose }) => {
       addLog('✅ Debug terminé - Vérifiez la console pour les détails', 'success')
     } catch (error) {
       addLog(`❌ Erreur debug: ${error.message}`, 'error')
+    }
+  }
+
+  const handleJobImport = async (jobId, jobName) => {
+    if (jobImporting[jobId]) return
+
+    setJobImporting(prev => ({ ...prev, [jobId]: true }))
+    addLog(`🎯 Import du métier: ${jobName}`, 'info')
+
+    try {
+      const result = await dofusDataImporter.importSingleJob(jobId, jobName)
+
+      if (result.success) {
+        addLog(`✅ ${jobName}: ${result.totalItems} objets importés depuis ${result.totalRecipes} recettes`, 'success')
+        await loadStats()
+      } else {
+        addLog(`❌ Erreur ${jobName}: ${result.error}`, 'error')
+      }
+    } catch (error) {
+      addLog(`❌ Erreur import ${jobName}: ${error.message}`, 'error')
+    } finally {
+      setJobImporting(prev => ({ ...prev, [jobId]: false }))
     }
   }
 
@@ -232,6 +267,36 @@ const DataImporter = ({ isOpen, onClose }) => {
                 <strong>Mise à jour incrémentale :</strong> Ajoute seulement les nouveaux objets craftables.
               </div>
             </div>
+          </div>
+
+          {/* Import par métier */}
+          <div className="job-import-section">
+            <h3>⚒️ Import par Métier</h3>
+            <div className="job-import-description">
+              <p>Importez les recettes d'un métier spécifique. Utile pour tester ou corriger des données manquantes.</p>
+            </div>
+
+            {availableJobs.length > 0 ? (
+              <div className="jobs-grid">
+                {availableJobs.map((job) => (
+                  <div key={job.id} className="job-item">
+                    <div className="job-info">
+                      <div className="job-name">{job.name}</div>
+                      <div className="job-id">ID: {job.id}</div>
+                    </div>
+                    <button
+                      onClick={() => handleJobImport(job.id, job.name)}
+                      disabled={jobImporting[job.id] || importing || updating}
+                      className="btn btn-sm btn-job-import"
+                    >
+                      {jobImporting[job.id] ? '🔄' : '📥'} Import
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="loading">Chargement des métiers...</div>
+            )}
           </div>
 
           {/* Barre de progression */}
