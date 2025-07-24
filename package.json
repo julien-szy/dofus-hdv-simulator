@@ -21,7 +21,9 @@
     "deploy-images": "node scripts-node/deployImagesOnly.js",
     "deploy-app": "npm run build && npm run deploy",
     "push": "node scripts-node/smartPush.js",
-    "build-optimized": "node scripts-node/optimizedBuild.js"
+    "build-optimized": "node scripts-node/optimizedBuild.js",
+    "build-simple": "node scripts-node/simpleBuild.js",
+    "force-deploy": "node scripts-node/forceDeploy.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

@@ -43,7 +43,24 @@ class OptimizedBuilder {
       
       // Copier les images vers le cache
       console.log('📦 Copie des images vers le cache Netlify...');
-      execSync(`cp -r "${this.imagesDir}"/* "${cacheImagesDir}/"`, { stdio: 'inherit' });
+      // Utiliser une méthode cross-platform
+      const { copyFileSync, mkdirSync } = await import('fs');
+      const { glob } = await import('glob');
+      
+      const imageFiles = await glob('**/*', { 
+        cwd: this.imagesDir, 
+        nodir: true,
+        absolute: true 
+      });
+      
+      for (const file of imageFiles) {
+        const relativePath = path.relative(this.imagesDir, file);
+        const targetPath = path.join(cacheImagesDir, relativePath);
+        const targetDir = path.dirname(targetPath);
+        
+        mkdirSync(targetDir, { recursive: true });
+        copyFileSync(file, targetPath);
+      }
       
       console.log('✅ Images copiées vers le cache');
     } catch (error) {
@@ -71,7 +88,24 @@ class OptimizedBuilder {
           
           // Restaurer les images depuis le cache
           console.log('🔄 Restauration des images depuis le cache...');
-          execSync(`cp -r "${cacheImagesDir}"/* "${this.imagesDir}/"`, { stdio: 'inherit' });
+          // Utiliser une méthode cross-platform
+          const { copyFileSync, mkdirSync } = await import('fs');
+          const { glob } = await import('glob');
+          
+          const cachedFiles = await glob('**/*', { 
+            cwd: cacheImagesDir, 
+            nodir: true,
+            absolute: true 
+          });
+          
+          for (const file of cachedFiles) {
+            const relativePath = path.relative(cacheImagesDir, file);
+            const targetPath = path.join(this.imagesDir, relativePath);
+            const targetDir = path.dirname(targetPath);
+            
+            mkdirSync(targetDir, { recursive: true });
+            copyFileSync(file, targetPath);
+          }
           
           console.log('✅ Images restaurées depuis le cache');
           return true;

@@ -1,25 +1,18 @@
 [build]
   publish = "dist"
-  command = "node scripts-node/optimizedBuild.js"
+  command = "npm run build"
 
 [functions]
   directory = "netlify/functions"
 
-# Optimisations pour éviter de re-déployer les images
+# Optimisations pour accélérer les builds
 [build.environment]
   NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # Cache des dépendances pour accélérer les builds
 [[plugins]]
   package = "@netlify/plugin-cache-core"
-
-# Cache persistant pour les images
-[[plugins]]
-  package = "@netlify/plugin-cache-optim"
-
-# Optimisation des images
-[[plugins]]
-  package = "@netlify/plugin-image-optim"
 
 # Headers pour le cache des images
 [[headers]]
