@@ -485,6 +485,7 @@ const DataImporter = ({ isOpen, onClose }) => {
               <div className="loading">Chargement du statut...</div>
             )}
           </div>
+          )}
 
           {/* Statistiques */}
           <div className="importer-stats">
@@ -738,7 +739,6 @@ const DataImporter = ({ isOpen, onClose }) => {
                 ))}
               </div>
             </div>
-          )}
           )} {/* Fermeture du bloc conditionnel debug */}
         </div>
 
