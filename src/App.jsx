@@ -22,7 +22,7 @@ import CacheStats from './components/CacheStats.jsx'
 import UserAuth from './components/UserAuth.jsx'
 import ItemMessage from './components/ItemMessage.jsx'
 import ServerTutorial from './components/ServerTutorial.jsx'
-import DataImporter from './components/DataImporterSimple.jsx'
+import DataImporter from './components/DataImporter.jsx'
 import './styles/App.css'
 
 function App() {

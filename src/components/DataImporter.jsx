@@ -19,9 +19,11 @@ const DataImporter = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       try {
+        console.log('🔄 Chargement des données DataImporter...')
         loadStats()
         loadAutoStatus()
-        loadAvailableJobs()
+        // Désactivé temporairement pour debug
+        // loadAvailableJobs()
       } catch (error) {
         console.error('❌ Erreur lors du chargement initial:', error)
       }
@@ -595,14 +597,15 @@ const DataImporter = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Import par métier */}
+          {/* Import par métier - Temporairement désactivé pour debug */}
           <div className="job-import-section">
             <h3>⚒️ Import par Métier</h3>
             <div className="job-import-description">
               <p>Importez les recettes d'un métier spécifique. Utile pour tester ou corriger des données manquantes.</p>
+              <p><strong>🐛 Temporairement désactivé pour debug de l'erreur React #62</strong></p>
             </div>
 
-            {availableJobs.length > 0 ? (
+            {false && availableJobs.length > 0 ? (
               <div className="jobs-grid">
                 {availableJobs.map((job) => {
                   // Protection contre les objets invalides
