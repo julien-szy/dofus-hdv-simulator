@@ -1518,19 +1518,7 @@ body {
   box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
 }
 
-/* Bouton Netlify */
-.btn-netlify {
-  background: linear-gradient(135deg, #00d4aa, #00b894);
-  color: white;
-  border: 1px solid rgba(0, 212, 170, 0.3);
-  font-weight: 600;
-}
 
-.btn-netlify:hover {
-  background: linear-gradient(135deg, #00b894, #00a085);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
-}
 
 /* Bouton Login */
 .btn-login {
@@ -2471,6 +2459,27 @@ body {
 .btn-sm {
   padding: 6px 12px;
   font-size: 0.8rem;
+}
+
+.btn-clear {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  font-weight: 600;
+}
+
+.btn-clear:hover {
+  background: linear-gradient(135deg, #c82333, #bd2130);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+}
+
+.btn-clear:disabled {
+  background: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ===== PROFIL UTILISATEUR ===== */
@@ -4666,176 +4675,7 @@ input:checked + .settings-toggle-slider:before {
   }
 }
 
-/* ===== EXTRACTEUR NETLIFY ===== */
-.netlify-extractor-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  z-index: 1000003;
-  padding: 20px;
-}
 
-.netlify-extractor-content {
-  position: fixed;
-  top: 5vh;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  width: 95%;
-  max-width: 1000px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-}
-
-.netlify-extractor-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.netlify-extractor-close {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.netlify-extractor-close:hover {
-  background: var(--card-hover);
-  color: var(--text-light);
-}
-
-.netlify-extractor-body {
-  padding: 24px;
-}
-
-.extraction-info {
-  background: linear-gradient(135deg,
-    rgba(255, 193, 7, 0.1),
-    rgba(255, 152, 0, 0.05)
-  );
-  border: 1px solid rgba(255, 193, 7, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
-}
-
-.extraction-info h4 {
-  color: #ffc107;
-  margin: 0 0 12px 0;
-}
-
-.extraction-info ul {
-  margin: 0;
-  padding-left: 20px;
-  color: var(--text-muted);
-}
-
-.extraction-actions {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.extraction-progress {
-  margin-bottom: 24px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: var(--darker-bg);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.jobs-list {
-  margin-bottom: 24px;
-}
-
-.jobs-list h4 {
-  color: var(--text-light);
-  margin-bottom: 16px;
-}
-
-.jobs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 12px;
-}
-
-.job-card {
-  background: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.job-info {
-  flex: 1;
-}
-
-.job-name {
-  color: var(--text-light);
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.job-id {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-family: monospace;
-}
-
-.extraction-recommendations {
-  background: linear-gradient(135deg,
-    rgba(59, 130, 246, 0.1),
-    rgba(37, 99, 235, 0.05)
-  );
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.extraction-recommendations h4 {
-  color: #3b82f6;
-  margin: 0 0 12px 0;
-}
-
-.extraction-recommendations p {
-  margin: 8px 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
 
 @media (max-width: 768px) {
   .cache-stats-grid {

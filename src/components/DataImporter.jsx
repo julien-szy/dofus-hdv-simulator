@@ -88,6 +88,59 @@ const DataImporter = ({ isOpen, onClose }) => {
     setImportLog(prev => [...prev, { timestamp, message, type }])
   }
 
+  // Vider complètement la base de données
+  const handleClearDatabase = async () => {
+    if (importing || updating) return
+
+    const confirmed = confirm(
+      '⚠️ ATTENTION !\n\n' +
+      'Cette action va SUPPRIMER TOUTES les données de la base :\n' +
+      '• Tous les objets craftables\n' +
+      '• Toutes les recettes\n' +
+      '• Toutes les statistiques\n\n' +
+      'Cette action est IRRÉVERSIBLE !\n\n' +
+      'Êtes-vous sûr de vouloir continuer ?'
+    )
+
+    if (!confirmed) return
+
+    setImporting(true)
+    setImportLog([])
+
+    try {
+      addLog('🗑️ Suppression de toutes les données...', 'warning')
+
+      const baseUrl = import.meta.env.DEV
+        ? 'http://localhost:8888/.netlify/functions/database'
+        : '/.netlify/functions/database'
+
+      const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'clear_all_data' })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      if (result.success) {
+        addLog('✅ Base de données vidée avec succès', 'success')
+        addLog('💡 Vous pouvez maintenant relancer un import complet', 'info')
+        await loadStats()
+        loadAutoStatus()
+      } else {
+        addLog(`❌ Erreur: ${result.error}`, 'error')
+      }
+    } catch (error) {
+      addLog(`❌ Erreur lors de la suppression: ${error.message}`, 'error')
+    } finally {
+      setImporting(false)
+    }
+  }
+
   // Test de connexion à la base de données
   const testDatabaseConnection = async () => {
     try {
@@ -123,20 +176,40 @@ const DataImporter = ({ isOpen, onClose }) => {
     setProgress(0)
 
     try {
-      addLog('🔧 Import forcé par admin...', 'info')
+      addLog('🚀 Début de l\'import complet forcé par admin...', 'info')
+      addLog('📡 Connexion à l\'API DofusDB...', 'info')
+
+      // Écouter les événements de progression
+      const handleProgress = (event) => {
+        if (event.detail.type === 'import_progress') {
+          setProgress(event.detail.progress || 0)
+          addLog(event.detail.message, event.detail.logType || 'info')
+        }
+      }
+
+      window.addEventListener('dofus_import_progress', handleProgress)
 
       const result = await autoImportService.forceFullImport()
 
+      window.removeEventListener('dofus_import_progress', handleProgress)
+
       if (result.success) {
-        addLog(`✅ Importation terminée ! ${result.totalItems} objets importés depuis ${result.totalJobs} métiers`, 'success')
+        addLog(`🎉 Import complet terminé avec succès !`, 'success')
+        addLog(`📊 Résultats:`, 'info')
+        addLog(`   • ${result.totalItems} objets craftables importés`, 'success')
+        addLog(`   • ${result.totalJobs} métiers traités`, 'success')
+        addLog(`   • Base de données mise à jour`, 'success')
         setProgress(100)
         await loadStats()
         loadAutoStatus()
+      } else if (result.error) {
+        addLog(`❌ Erreur lors de l'importation: ${result.error}`, 'error')
       } else {
-        addLog('❌ Erreur lors de l\'importation', 'error')
+        addLog('❌ Erreur inconnue lors de l\'importation', 'error')
       }
     } catch (error) {
-      addLog(`❌ Erreur: ${error.message}`, 'error')
+      addLog(`❌ Erreur fatale: ${error.message}`, 'error')
+      console.error('Erreur import complet:', error)
     } finally {
       setImporting(false)
     }
@@ -403,6 +476,16 @@ const DataImporter = ({ isOpen, onClose }) => {
                   <div className="stat-label">Objets craftables</div>
                 </div>
                 <div className="stat-item">
+                  <div className="stat-value">{Object.keys(stats.byProfession || {}).length}</div>
+                  <div className="stat-label">Métiers</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-value">
+                    {stats.lastUpdate ? new Date(stats.lastUpdate).toLocaleDateString() : 'Jamais'}
+                  </div>
+                  <div className="stat-label">Dernière MAJ</div>
+                </div>
+                <div className="stat-item">
                   <div className="stat-value">{Object.keys(stats.byProfession).length}</div>
                   <div className="stat-label">Métiers</div>
                 </div>
@@ -465,6 +548,14 @@ const DataImporter = ({ isOpen, onClose }) => {
               </button>
 
               <button
+                onClick={handleClearDatabase}
+                disabled={importing || updating}
+                className="btn btn-danger btn-clear"
+              >
+                🗑️ Vider BDD
+              </button>
+
+              <button
                 onClick={extractResources}
                 disabled={importing || updating}
                 className="btn btn-info"
@@ -476,7 +567,22 @@ const DataImporter = ({ isOpen, onClose }) => {
 
             <div className="action-descriptions">
               <div className="action-desc">
-                <strong>Importation complète :</strong> Récupère tous les métiers et toutes leurs recettes depuis DofusDB. Peut prendre plusieurs minutes.
+                <strong>🔍 Test BDD :</strong> Vérifie la connexion à la base de données et affiche les informations de debug.
+              </div>
+              <div className="action-desc">
+                <strong>📥 Importation complète :</strong> Récupère TOUS les métiers et leurs recettes depuis DofusDB. Peut prendre 10-30 minutes.
+              </div>
+              <div className="action-desc">
+                <strong>🔄 Mise à jour incrémentale :</strong> Met à jour seulement les nouveaux objets depuis la dernière importation.
+              </div>
+              <div className="action-desc">
+                <strong>🔍 Debug API :</strong> Teste les endpoints DofusDB et affiche les informations de debug détaillées.
+              </div>
+              <div className="action-desc">
+                <strong>🗑️ Vider BDD :</strong> <span style="color: #dc3545;">SUPPRIME TOUTES</span> les données. Utilisez avant un import complet si problème.
+              </div>
+              <div className="action-desc">
+                <strong>🧪 Extraire Ressources :</strong> Analyse les recettes pour extraire toutes les ressources nécessaires.
               </div>
               <div className="action-desc">
                 <strong>Mise à jour incrémentale :</strong> Ajoute seulement les nouveaux objets craftables.
